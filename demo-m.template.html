@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#F5F1E7">
+<title>小小河工 · 清河巡河</title>
+<style>
+:root{
+  --paper:#F5F1E7; --paper2:#FBF8F0; --ink:#0A2E33; --teal:#0E4A52; --teal2:#2F7C82;
+  --gold:#C6A15B; --gold-d:#9A7A2E; --seal:#B5432F; --blue:#7FAEC3;
+  --muted:#8B9895; --body:#394F50; --line:rgba(10,46,51,.13); --line2:rgba(10,46,51,.07);
+  --serif:"Songti SC","STSong","Noto Serif SC",serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{background:#08262B;font-family:var(--sans);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  -webkit-font-smoothing:antialiased;}
+#app{position:relative;width:100%;max-width:430px;height:100%;max-height:920px;
+  background:var(--paper);overflow:hidden;box-shadow:0 40px 90px -40px rgba(0,0,0,.65);}
+@media(min-width:481px){#app{border-radius:18px;}}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;
+  opacity:0;visibility:hidden;transition:opacity .38s var(--ease);z-index:1;}
+.screen.on{opacity:1;visibility:visible;z-index:2;}
+
+/* ---------- 通用 ---------- */
+.btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:54px;
+  border:0;border-radius:3px;font-family:var(--sans);font-size:15px;letter-spacing:.14em;
+  background:var(--gold);color:#2A1F09;cursor:pointer;transition:transform .18s var(--ease),opacity .3s;}
+.btn:active{transform:scale(.982);}
+.btn[disabled]{opacity:.38;pointer-events:none;}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--teal);}
+.btn.dark{background:var(--ink);color:#F1EDE2;}
+.arw{width:18px;height:8px;position:relative;}
+.arw::before{content:"";position:absolute;left:0;top:3.5px;width:18px;height:1px;background:currentColor;opacity:.8;}
+.arw::after{content:"";position:absolute;right:0;top:1.5px;width:5px;height:5px;
+  border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(-45deg);opacity:.8;}
+.eyebrow{font-size:10px;letter-spacing:.3em;color:var(--gold-d);}
+
+/* ---------- 封面 ---------- */
+#s-cover{padding:0 24px;background:linear-gradient(180deg,#F8F4EA 0%,#F5F1E7 58%,#EDE8D8 100%);}
+.cv-head{padding-top:58px;}
+.cv-title{margin-top:14px;font-family:var(--serif);font-size:72px;letter-spacing:.05em;
+  line-height:1.0;color:var(--ink);}
+.cv-sub{margin-top:16px;font-family:var(--sans);font-size:12.5px;color:#5E7A79;letter-spacing:.26em;}
+.cv-hero{margin:16px -24px 0;height:228px;}
+.cv-promise{margin-top:auto;font-family:var(--serif);font-size:18px;color:var(--ink);letter-spacing:.04em;line-height:1.6;}
+.cv-line{margin-top:12px;font-size:11.5px;letter-spacing:.14em;color:var(--muted);padding-bottom:2px;}
+.cv-story b{color:var(--ink);font-weight:600;}
+.cv-story em{font-style:normal;color:var(--gold-d);}
+.cv-bottom{margin-top:18px;padding-bottom:calc(24px + env(safe-area-inset-bottom));}
+.cv-meta{margin-top:14px;display:flex;justify-content:center;gap:8px;
+  font-size:10.5px;letter-spacing:.18em;color:var(--muted);}
+.cv-meta i{width:3px;height:3px;border-radius:50%;background:var(--gold);align-self:center;}
+
+/* ---------- 地图 ---------- */
+.hud{padding:46px 24px 12px;display:flex;align-items:flex-end;justify-content:space-between;}
+.hud h2{font-family:var(--serif);font-size:23px;letter-spacing:.1em;margin-top:6px;}
+.hud-r{display:flex;gap:20px;text-align:right;}
+.hud-r .k{font-size:9.5px;letter-spacing:.2em;color:var(--muted);}
+.hud-r .v{font-family:var(--serif);font-size:19px;margin-top:4px;}
+.hud-r .v small{font-size:11px;color:var(--muted);}
+.train-bar{margin:2px 24px 6px;padding:11px 14px;border:1px solid var(--line);border-radius:3px;
+  background:var(--paper2);display:flex;align-items:center;justify-content:space-between;
+  font-size:11.5px;color:var(--body);letter-spacing:.06em;cursor:pointer;flex:none;}
+.train-bar b{font-family:var(--serif);font-size:14px;color:var(--ink);}
+.train-bar span:last-child{font-size:10.5px;color:var(--muted);letter-spacing:.12em;}
+.route{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;position:relative;padding-bottom:78px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.route::-webkit-scrollbar{display:none;}
+.rows{position:relative;padding:6px 0 16px;}
+.river{position:absolute;left:0;top:0;pointer-events:none;}
+.stan{position:relative;display:flex;align-items:center;gap:15px;height:74px;
+  padding:0 24px;cursor:pointer;}
+.stan:active{background:rgba(10,46,51,.03);}
+.stan.cur{background:linear-gradient(90deg,rgba(181,67,47,.055),rgba(181,67,47,0) 70%);}
+.stan .nd{width:36px;height:36px;border-radius:50%;flex:none;display:flex;align-items:center;
+  justify-content:center;font-family:var(--serif);font-size:12px;
+  background:#F8F4E9;border:1px solid #C0B8A4;color:#A29B89;transition:all .3s var(--ease);z-index:1;}
+.stan.done .nd{background:var(--blue);border-color:var(--blue);color:#fff;}
+.stan.cur .nd{background:var(--seal);border-color:var(--seal);color:#fff;
+  box-shadow:0 0 0 6px rgba(181,67,47,.13);}
+.stan .info{flex:1;min-width:0;}
+.stan .nm{font-size:15px;color:#7C8A86;letter-spacing:.04em;}
+.stan.done .nm{color:var(--ink);}
+.stan.cur .nm{color:#8E3423;font-weight:600;}
+.stan .meta{font-size:10.5px;color:var(--muted);margin-top:3px;letter-spacing:.08em;}
+.chip{font-size:10px;padding:6px 11px;border-radius:2px;background:var(--seal);color:#fff;
+  letter-spacing:.14em;flex:none;animation:blink 1.8s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.55}}
+.bar{padding:12px 24px 30px;border-top:1px solid var(--line2);background:var(--paper);}
+.pp-btn{display:flex;align-items:center;justify-content:space-between;width:100%;height:50px;
+  padding:0 16px;border:1px solid var(--line);border-radius:3px;background:var(--paper2);
+  font-family:var(--sans);font-size:13px;color:var(--ink);letter-spacing:.06em;cursor:pointer;}
+.pp-btn .r{font-size:11px;color:var(--muted);letter-spacing:.14em;}
+
+/* 引导 */
+.coach{position:absolute;right:24px;z-index:6;background:var(--ink);color:#F1EDE2;
+  font-size:11.5px;padding:10px 14px;border-radius:3px;letter-spacing:.08em;
+  opacity:0;transform:translateY(6px);transition:.4s var(--ease);pointer-events:none;}
+.coach.on{opacity:1;transform:none;}
+
+/* ---------- 站点 ---------- */
+.st-head{padding:46px 24px 10px;display:flex;align-items:center;gap:13px;}
+.back{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:none;
+  font-size:17px;color:var(--teal);cursor:pointer;flex:none;line-height:1;}
+.st-head h2{font-family:var(--serif);font-size:21px;letter-spacing:.1em;}
+.st-kicker{font-size:10px;letter-spacing:.22em;color:var(--muted);margin-bottom:4px;}
+.dots{display:flex;gap:5px;margin-left:auto;padding-right:2px;}
+.dots i{width:6px;height:6px;border-radius:50%;background:rgba(10,46,51,.14);transition:.3s;}
+.dots i.on{background:var(--gold);width:16px;border-radius:3px;}
+.st-body{flex:1;min-height:0;overflow-y:auto;padding:4px 24px 16px;scrollbar-width:none;overscroll-behavior:contain;}
+.st-body::-webkit-scrollbar{display:none;}
+.st-foot{flex:none;padding:10px 24px calc(26px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--line2);}
+.story{font-size:13px;line-height:1.9;color:var(--body);padding-left:14px;
+  border-left:1px solid rgba(198,161,91,.5);margin:8px 0 22px;}
+.q{font-size:18px;line-height:1.6;color:var(--ink);margin-bottom:18px;letter-spacing:.01em;}
+.q .mk{font-family:var(--serif);color:var(--gold);margin-right:7px;}
+.opt{display:flex;align-items:center;gap:12px;min-height:56px;padding:14px 15px;margin-bottom:9px;
+  border:1px solid var(--line);border-radius:3px;background:rgba(255,255,255,.55);
+  font-size:14.5px;color:var(--body);transition:all .2s var(--ease);cursor:pointer;}
+.opt:active{transform:scale(.99);}
+.opt .k{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);font-size:10.5px;
+  display:flex;align-items:center;justify-content:center;color:var(--muted);flex:none;}
+.opt.ok{border-color:#3E8E6E;background:#EDF5F0;color:#2C6B51;}
+.opt.ok .k{background:#3E8E6E;border-color:#3E8E6E;color:#fff;}
+.opt.no{border-color:#C0716B;background:#FAEFEE;color:#9C4A45;}
+.opt.no .k{background:#C0716B;border-color:#C0716B;color:#fff;}
+.opt.dead{pointer-events:none;opacity:.5;}
+.opt.pick{border-color:var(--teal);background:#EFF4F2;}
+.opt.pick .k{background:var(--teal);border-color:var(--teal);color:#fff;}
+.tchip{display:inline-block;font-size:10px;letter-spacing:.18em;color:var(--gold-d);
+  border:1px solid rgba(198,161,91,.5);padding:6px 11px;border-radius:2px;}
+.tsrc{font-size:10.5px;color:var(--muted);letter-spacing:.08em;margin:10px 0 18px;}
+.tq{font-family:var(--serif);font-size:19px;line-height:1.55;margin-bottom:16px;}
+.reply{margin-top:16px;padding:14px;background:#EEF3F0;border:1px solid rgba(14,74,82,.1);
+  border-radius:3px;font-size:12.5px;line-height:1.8;color:#1E4A4F;display:none;}
+.reply.on{display:block;}
+.note-l{font-size:11px;letter-spacing:.16em;color:var(--muted);margin-bottom:10px;}
+.note-i{width:100%;min-height:86px;padding:14px;border:1px solid var(--line);border-radius:3px;
+  background:rgba(255,255,255,.6);font-family:var(--sans);font-size:14px;color:var(--ink);
+  line-height:1.6;resize:none;outline:none;}
+.note-i:focus{border-color:var(--teal);}
+.photo-row{display:flex;gap:10px;margin-top:14px;}
+.ph{flex:1;height:104px;border:1px dashed rgba(10,46,51,.25);border-radius:3px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  font-size:10.5px;color:var(--muted);cursor:pointer;background:rgba(255,255,255,.4);overflow:hidden;position:relative;}
+.ph img{width:100%;height:100%;object-fit:cover;}
+.pv{flex:1;height:104px;border:1px solid var(--line);border-radius:3px;display:none;
+  align-items:center;justify-content:center;font-size:10.5px;color:var(--muted);}
+.pv.on{display:flex;}
+
+/* ---------- 底部抽屉 ---------- */
+.mask{position:absolute;inset:0;background:rgba(6,30,34,.42);opacity:0;pointer-events:none;
+  transition:.35s;z-index:29;}
+.mask.on{opacity:1;pointer-events:auto;}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:80%;background:var(--paper2);
+  border-radius:16px 16px 0 0;transform:translateY(102%);transition:transform .45s var(--ease);
+  z-index:30;display:flex;flex-direction:column;box-shadow:0 -24px 60px -30px rgba(0,0,0,.5);}
+.sheet.on{transform:none;}
+.sh-head{padding:18px 22px 14px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line2);}
+.sh-head h3{font-family:var(--serif);font-size:18px;letter-spacing:.14em;}
+.sh-close{background:none;border:0;font-size:12px;color:var(--muted);letter-spacing:.18em;cursor:pointer;}
+.sh-stats{display:flex;padding:16px 22px;border-bottom:1px solid var(--line2);}
+.sh-stats div{flex:1;text-align:left;}
+.sh-stats b{display:block;font-family:var(--serif);font-size:21px;font-weight:400;color:var(--teal);}
+.sh-stats span{display:block;margin-top:5px;font-size:9.5px;letter-spacing:.16em;color:var(--muted);}
+.sh-list{flex:1;overflow-y:auto;padding:8px 22px 26px;}
+.prow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line2);
+  font-size:12px;color:#96A09B;}
+.prow .i{font-family:var(--serif);font-size:10px;width:16px;color:#BDB6A4;}
+.prow .n{width:84px;flex:none;}
+.prow .t{font-size:9.5px;color:#B3BBB6;flex:none;width:56px;}
+.prow .r{flex:1;text-align:right;color:var(--muted);font-size:10.5px;}
+.prow.on{color:var(--ink);}
+.prow.on .r{color:var(--teal);}
+.prow .s{width:16px;height:16px;border-radius:50%;border:1px solid #CFC7B4;flex:none;
+  display:flex;align-items:center;justify-content:center;color:transparent;font-size:9px;font-family:var(--serif);}
+.prow.on .s{background:var(--seal);border-color:var(--seal);color:#fff;}
+
+/* ---------- 结局 ---------- */
+#s-end{padding:0 24px;overflow-y:auto;}
+.en-head{padding-top:52px;}
+.en-title{margin-top:12px;font-family:var(--serif);font-size:34px;line-height:1.25;letter-spacing:.04em;}
+.en-story{margin-top:14px;font-size:12.5px;line-height:1.9;color:var(--body);}
+.en-stats{display:flex;margin-top:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:18px 0;}
+.en-stats div{flex:1;text-align:center;border-left:1px solid var(--line);}
+.en-stats div:first-child{border-left:0;}
+.en-stats b{display:block;font-family:var(--serif);font-size:22px;font-weight:400;color:var(--teal);}
+.en-stats span{display:block;margin-top:6px;font-size:9.5px;letter-spacing:.12em;color:var(--muted);}
+.en-medal{margin-top:22px;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;
+  border:1px solid rgba(198,161,91,.5);border-radius:2px;font-size:10.5px;letter-spacing:.16em;color:var(--gold-d);}
+.en-list{margin-top:20px;border-top:1px solid var(--line2);}
+.en-actions{margin-top:20px;padding-bottom:34px;display:flex;flex-direction:column;gap:10px;}
+
+/* ---------- 盖章 ---------- */
+.stamp{position:absolute;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;opacity:0;background:rgba(245,241,231,.55);backdrop-filter:blur(2px);}
+.stamp.on{animation:stIn 1.3s var(--ease) forwards;}
+@keyframes stIn{
+  0%{opacity:0;}12%{opacity:1;}75%{opacity:1;}100%{opacity:0;}
+}
+.seal{width:132px;height:132px;border:3px solid var(--seal);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;color:var(--seal);
+  font-family:var(--serif);font-size:34px;letter-spacing:.1em;
+  transform:rotate(-8deg) scale(1.5);}
+.stamp.on .seal{animation:sealIn .65s cubic-bezier(.2,1.6,.4,1) forwards;}
+@keyframes sealIn{0%{transform:rotate(-8deg) scale(1.7);opacity:0}60%{opacity:1}100%{transform:rotate(-8deg) scale(1);opacity:1}}
+.stamp-t{position:absolute;bottom:38%;font-size:11px;letter-spacing:.3em;color:var(--seal);}
+
+/* ---------- toast ---------- */
+.toast{position:absolute;left:50%;bottom:110px;transform:translate(-50%,8px);z-index:45;
+  background:rgba(10,46,51,.94);color:#F1EDE2;font-size:11.5px;letter-spacing:.12em;
+  padding:10px 18px;border-radius:3px;opacity:0;pointer-events:none;transition:.35s var(--ease);}
+.toast.on{opacity:1;transform:translate(-50%,0);}
+
+.tabbar{position:absolute;left:0;right:0;bottom:0;display:none;border-top:1px solid var(--line);
+  background:var(--paper);z-index:20;padding-bottom:env(safe-area-inset-bottom);}
+.tabbar.on{display:flex;}
+.tabbar button{flex:1;height:58px;background:none;border:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;font-family:var(--sans);font-size:10px;
+  letter-spacing:.14em;color:var(--muted);cursor:pointer;}
+.tabbar button.on{color:var(--teal);}
+.tabbar b{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.3;}
+.tabbar button.on b{opacity:1;background:var(--seal);}
+.filters{display:flex;gap:8px;padding:8px 24px 6px;overflow-x:auto;scrollbar-width:none;flex:none;}
+.filters::-webkit-scrollbar{display:none;}
+.filters button{flex:none;padding:7px 13px;border-radius:20px;border:1px solid var(--line);
+  background:transparent;font-family:var(--sans);font-size:11px;color:var(--muted);letter-spacing:.06em;cursor:pointer;}
+.filters button.on{background:var(--ink);border-color:var(--ink);color:#F1EDE2;}
+.reclist{flex:1;min-height:0;overflow-y:auto;padding:2px 0 84px;scrollbar-width:none;}
+.reclist::-webkit-scrollbar{display:none;}
+.rec{display:flex;gap:12px;padding:14px 24px;border-bottom:1px solid var(--line2);cursor:pointer;}
+.rec:active{background:rgba(10,46,51,.03);}
+.rec .d2{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none;}
+.rec .bd{flex:1;min-width:0;}
+.rec .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+.rec .pt{font-size:13.5px;color:var(--ink);}
+.rec .tm{font-size:10px;color:var(--muted);letter-spacing:.05em;flex:none;}
+.rec .vl{font-size:12px;color:var(--teal);margin-top:4px;}
+.rec .nt{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.5;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;}
+.rec .who{font-size:9.5px;color:#B3BBB6;letter-spacing:.1em;margin-top:5px;}
+.dt-head{padding:46px 24px 6px;display:flex;align-items:center;gap:13px;}
+.dt-head h2{font-family:var(--serif);font-size:20px;letter-spacing:.08em;}
+.dt-body{flex:1;min-height:0;overflow-y:auto;padding:2px 24px 30px;}
+.kv{display:flex;padding:11px 0;border-bottom:1px solid var(--line2);}
+.kv .k{width:74px;flex:none;color:var(--muted);font-size:10.5px;letter-spacing:.12em;padding-top:2px;}
+.kv .v{flex:1;color:var(--ink);font-size:12.5px;}
+.dt-note{margin-top:18px;padding:14px;background:var(--paper2);border:1px solid var(--line);
+  border-radius:3px;font-size:13px;line-height:1.8;color:var(--body);}
+.sec{margin-top:26px;font-size:10.5px;letter-spacing:.2em;color:var(--muted);}
+#s-passport{padding-bottom:84px;}
+.pp-top{padding:46px 24px 0;}
+.pp-card{margin:16px 24px 0;padding:18px;border:1px solid var(--line);border-radius:4px;
+  background:linear-gradient(135deg,#FCF8EC,#F7F0DE);display:flex;align-items:center;gap:16px;}
+.pp-seal{width:50px;height:50px;border:1.5px solid rgba(181,67,47,.6);border-radius:3px;flex:none;
+  display:flex;align-items:center;justify-content:center;color:var(--seal);font-family:var(--serif);
+  font-size:14px;line-height:1.15;text-align:center;}
+.pp-name{font-family:var(--serif);font-size:18px;letter-spacing:.18em;}
+.pp-rank{margin-top:6px;font-size:10.5px;letter-spacing:.16em;color:var(--gold-d);}
+#s-passport .sh-list{flex:1;overflow-y:auto;padding:6px 24px 20px;}
+#s-explore{padding:0 24px calc(84px + env(safe-area-inset-bottom));overflow-y:auto;min-height:0;}
+.ex-hero{margin-top:46px;}
+.ex-title{font-family:var(--serif);font-size:25px;letter-spacing:.08em;margin-top:8px;line-height:1.35;}
+.ex-sub{margin-top:10px;font-size:12.5px;line-height:1.85;color:var(--body);}
+.ex-shot{margin-top:20px;height:180px;border:1px dashed rgba(10,46,51,.25);border-radius:4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  background:rgba(255,255,255,.45);cursor:pointer;overflow:hidden;position:relative;}
+.ex-shot img{width:100%;height:100%;object-fit:cover;}
+.ex-shot .em{font-size:24px;color:var(--gold-d);font-weight:300;line-height:1;}
+.ex-shot span{font-size:11.5px;color:var(--muted);letter-spacing:.12em;}
+.ex-state{margin-top:16px;font-size:11.5px;color:var(--muted);letter-spacing:.1em;text-align:center;min-height:18px;}
+.ex-cands{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.ex-cands button{padding:9px 14px;border:1px solid var(--line);border-radius:20px;background:transparent;
+  font-family:var(--sans);font-size:12px;color:var(--body);cursor:pointer;}
+.ex-cands button:active{background:var(--ink);color:#F1EDE2;border-color:var(--ink);}
+.ex-card{margin-top:16px;border:1px solid rgba(198,161,91,.42);border-radius:4px;
+  background:linear-gradient(135deg,#FCF8EC,#F8F1DE);padding:18px 18px 16px;}
+.ex-card h3{font-family:var(--serif);font-size:19px;letter-spacing:.1em;}
+.ex-card .tag2{display:inline-block;margin-top:8px;font-size:9.5px;letter-spacing:.16em;
+  color:var(--gold-d);border:1px solid rgba(198,161,91,.5);padding:4px 9px;border-radius:2px;}
+.ex-card .f{margin-top:13px;}
+.ex-card .f b{display:block;font-size:9px;letter-spacing:.22em;color:var(--gold-d);margin-bottom:4px;}
+.ex-card .f p{font-size:12.5px;line-height:1.8;color:var(--body);}
+.ex-card .f p em{font-style:normal;color:var(--ink);}
+.ex-save{margin-top:16px;}
+.ex-foot{margin-top:20px;padding:14px 0;border-top:1px solid var(--line2);display:flex;
+  justify-content:space-between;font-size:12px;color:var(--muted);letter-spacing:.06em;cursor:pointer;}
+.ex-foot b{font-family:var(--serif);color:var(--ink);font-weight:400;font-size:14px;}
+.note-row{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--line2);}
+.note-row .nn{font-family:var(--serif);font-size:15px;color:var(--ink);}
+.note-row .tg{font-size:9.5px;letter-spacing:.12em;color:var(--gold-d);
+  border:1px solid rgba(198,161,91,.45);padding:3px 8px;border-radius:2px;margin-left:auto;}
+.note-row .tt{font-size:10px;color:var(--muted);}
+body.static *,body.static *::before{transition:none!important;animation:none!important;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- 封面 -->
+  <section class="screen on" id="s-cover">
+    <div class="cv-head">
+      <div class="eyebrow">北京清河</div>
+      <h1 class="cv-title">小小河工</h1>
+      <div class="cv-sub">AI 公民河流教育计划</div>
+    </div>
+    <div class="cv-hero" id="hero"></div>
+    <p class="cv-promise">走一趟，替这条河记十件事。</p>
+    <p class="cv-line">23.6 公里　·　十座水闸　·　四条支流</p>
+    <div class="cv-bottom">
+      <button class="btn" onclick="enterApp()">开始<span class="arw"></span></button>
+      <div class="cv-meta"><span>线上培训</span><i></i><span>线下巡河</span><i></i><span>自由探索</span></div>
+    </div>
+  </section>
+
+  <!-- 地图 -->
+  <section class="screen" id="s-map">
+    <div class="hud">
+      <div>
+        <div class="eyebrow">海淀 · 清河</div>
+        <h2>巡河路线</h2>
+      </div>
+      <div class="hud-r">
+        <div><div class="k">已巡</div><div class="v"><span id="m-km">0.0</span><small> km</small></div></div>
+        <div><div class="k">印章</div><div class="v"><span id="m-stamp">0</span><small> /10</small></div></div>
+      </div>
+    </div>
+    <div class="train-bar" id="train-bar" onclick="toggleTrain()">
+      <span id="tb-l">上岗培训 · <b id="tb-n">0</b>/10</span>
+      <span id="tb-r">完成后领护照 ›</span>
+    </div>
+    <div class="route" id="route">
+      <div class="rows" id="rows"><svg class="river" id="river"></svg></div>
+    </div>
+    <div class="coach" id="coach">从这里开始 · 点一下</div>
+  </section>
+
+  <!-- 站点 -->
+  <section class="screen" id="s-station">
+    <div class="st-head">
+      <button class="back" onclick="backToMap()">‹</button>
+      <div>
+        <div class="st-kicker" id="st-kicker">第 1 站 · 共 10 站</div>
+        <h2 id="st-name">安河闸</h2>
+      </div>
+      <div class="dots" id="dots"><i class="on"></i><i></i><i></i></div>
+    </div>
+    <div class="st-body" id="st-body"></div>
+    <div class="st-foot"><button class="btn" id="st-cta" disabled>下一步<span class="arw"></span></button></div>
+  </section>
+
+  <!-- 结局 -->
+  <section class="screen" id="s-end">
+    <div class="en-head">
+      <div class="eyebrow">巡河收官　·　编号 NO.057</div>
+      <h1 class="en-title">你的第一条<br>巡河线。</h1>
+      <div class="en-story" id="en-story">
+        十站走完，护照上多了十枚章。你记下的这些，已经进入清河健康地图。<br>
+        下个季节，同一个点位，你会看见不一样的东西。
+      </div>
+      <div class="en-stats">
+        <div><b id="e-km">19.1</b><span>公里航程</span></div>
+        <div><b>10</b><span>条记录</span></div>
+        <div><b id="e-note">0</b><span>条手写</span></div>
+      </div>
+      <div class="en-medal">民间河长 · NO.057</div>
+      <div class="en-list" id="en-list"></div>
+      <div class="en-actions">
+        <button class="btn" onclick="restart()">再走一次<span class="arw"></span></button>
+        <button class="btn ghost" onclick="openSheet()">查看护照</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 记录流 -->
+  <section class="screen" id="s-records">
+    <div class="hud" style="padding-bottom:6px">
+      <div>
+        <div class="eyebrow">清河 · 公开记录</div>
+        <h2>点位记录</h2>
+      </div>
+      <div class="hud-r"><div><div class="k">总记录</div><div class="v"><span id="r-total">0</span><small> 条</small></div></div></div>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="reclist" id="reclist"></div>
+  </section>
+
+  <!-- 探索 -->
+  <section class="screen" id="s-explore">
+    <div class="ex-hero">
+      <div class="eyebrow">自由探索 · 不需要定位</div>
+      <h2 class="ex-title">随手拍一张，<br>听听它在系统里干什么。</h2>
+      <p class="ex-sub">芦苇、柳树、岸石、水鸟——你在清河岸边看到的每一样东西，都在滨水系统的设计里有一个角色。拍下来，我告诉你它是什么角色。</p>
+    </div>
+    <label class="ex-shot" id="ex-shot">
+      <div class="em">＋</div>
+      <span>拍照 / 选图</span>
+      <input type="file" accept="image/*" capture="environment" hidden id="ex-file">
+    </label>
+    <div class="ex-state" id="ex-state">今天已有 0 张自然笔记</div>
+    <div class="ex-cands" id="ex-cands"></div>
+    <div id="ex-card"></div>
+    <div class="ex-foot" onclick="openNotes()">
+      <span>我的自然笔记</span><span><b id="ex-n">0</b> 张 ›</span>
+    </div>
+  </section>
+
+  <!-- 自然笔记 -->
+  <section class="screen" id="s-notes">
+    <div class="dt-head">
+      <button class="back" onclick="showTab('explore')">‹</button>
+      <div><div class="st-kicker">自由探索 · 不经定位</div><h2>自然笔记</h2></div>
+    </div>
+    <div class="dt-body" id="notes-body"></div>
+  </section>
+
+  <!-- 记录详情 -->
+  <section class="screen" id="s-detail">
+    <div class="dt-head">
+      <button class="back" onclick="showTab('records')">‹</button>
+      <div><div class="st-kicker" id="dt-kick">点位记录</div><h2 id="dt-title">清河闸</h2></div>
+    </div>
+    <div class="dt-body" id="dt-body"></div>
+  </section>
+
+  <!-- 护照（Tab） -->
+  <section class="screen" id="s-passport">
+    <div class="pp-top">
+      <div class="eyebrow">编号 NO.057 · 海淀 · 清河</div>
+      <h2 style="font-family:var(--serif);font-size:24px;letter-spacing:.1em;margin-top:6px">河工护照</h2>
+    </div>
+    <div class="pp-card">
+      <div class="pp-seal">河<br>工</div>
+      <div><div class="pp-name">小小河工</div><div class="pp-rank" id="pp-rank">见习河工 · 请完成第一站</div></div>
+    </div>
+    <div class="sh-stats" style="margin:16px 24px 0;border-top:1px solid var(--line);padding-left:0;padding-right:0">
+      <div style="padding-left:0"><b id="q-km">0.0</b><span>已巡公里</span></div>
+      <div><b id="q-stamp">0</b><span>印章</span></div>
+      <div><b id="q-rec">0</b><span>现场记录</span></div>
+      <div><b id="q-note">0</b><span>自然笔记</span></div>
+    </div>
+    <div class="sh-list" id="sh-list" style="padding-bottom:10px"></div>
+  </section>
+
+  <nav class="tabbar" id="tabbar">
+    <button data-tab="map" onclick="showTab('map')"><b></b>巡河</button>
+    <button data-tab="records" onclick="showTab('records')"><b></b>记录</button>
+    <button data-tab="explore" onclick="showTab('explore')"><b></b>探索</button>
+    <button data-tab="passport" onclick="showTab('passport')"><b></b>护照</button>
+  </nav>
+
+  <!-- 抽屉 -->
+  <div class="mask" id="mask" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet">
+    <div class="sh-head"><h3>河工护照</h3><button class="sh-close" onclick="closeSheet()">收起</button></div>
+    <div class="sh-stats">
+      <div><b id="p-km">0.0</b><span>已巡公里</span></div>
+      <div><b id="p-stamp">0</b><span>印章</span></div>
+      <div><b id="p-rec">0</b><span>巡河记录</span></div>
+    </div>
+    <div class="sh-list" id="sh-list"></div>
+  </div>
+
+  <div class="stamp" id="stamp"><div class="seal" id="seal">章</div><div class="stamp-t">已收入河工护照</div></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/*__DATA__*/
+
+/* ---------------- 状态 ---------------- */
+let cur=0, records=[], step=0, picked=null, correct=0;
+let mode='train', trainDone=0, fieldDone=0, arrived=false;
+const $=id=>document.getElementById(id);
+if(location.search.indexOf('static')>-1) document.body.classList.add('static');
+
+/* ---------------- 工具 ---------------- */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  $(id).classList.add('on');
+  if(['s-map','s-records','s-passport'].indexOf(id)<0) $('tabbar').classList.remove('on');
+}
+let tt;
+function toast(m){
+  const t=$('toast');t.textContent=m;t.classList.add('on');
+  clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2000);
+}
+function sealStamp(n){
+  $('seal').textContent=n;
+  const s=$('stamp');s.classList.remove('on');void s.offsetWidth;s.classList.add('on');
+}
+
+/* ---------------- 公共记录（示例数据） ---------------- */
+const PUBLIC=[
+ {p:'清河闸',pt:'05',t:'水文观测',v:'透明度 · 低',tm:'10-19 14:32',who:'NO.041',note:'水面浮着一层薄薄的绿'},
+ {p:'沈家闸',pt:'09',t:'异常通报',v:'垃圾 · 少量',tm:'10-18 09:10',who:'NO.023',note:''},
+ {p:'树村闸',pt:'03',t:'岸线观察',v:'岸型 · 自然土坡',tm:'10-17 16:45',who:'NO.088',note:'芦苇比上个月高了半截'},
+ {p:'京包闸',pt:'04',t:'物种观察',v:'水鸟 · 岸边停歇',tm:'10-15 07:20',who:'NO.012',note:'三只白鹭，没敢靠近'},
+ {p:'沙子营闸',pt:'10',t:'物种观察',v:'水鸟 · 未观测',tm:'10-12 15:05',who:'NO.041',note:''},
+ {p:'安河闸',pt:'01',t:'水文观测',v:'透明度 · 高',tm:'10-10 11:30',who:'NO.057',note:'能看见水底的石头，很滑'}
+];
+const TDOT={'水文观测':'#4E7F97','物种观察':'#3E8E6E','岸线观察':'#9A7A2E','异常通报':'#B5432F'};
+let filter='全部', pointFilter=null;
+let notes=[];  // {n,tag,tm}  source=explore
+
+/* ---------------- 导航 ---------------- */
+function showTab(t){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  $('s-'+t).classList.add('on');
+  $('tabbar').classList.add('on');
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.tab===t));
+  if(t==='map'){ buildMap(); updateTrainBar(); }
+  if(t==='records') renderRecords();
+  if(t==='explore') renderExplore();
+  if(t==='passport') renderPassport();
+}
+function myRecords(){
+  const out=[];
+  records.forEach((r,i)=>{ if(r) out.push({p:GATES[i].name,pt:String(i+1).padStart(2,'0'),
+    t:r.type,v:r.rec,tm:'今天',who:'NO.057',note:r.note||'',mine:true,source:'field'}); });
+  return out;
+}
+function renderRecords(){
+  pointFilter=null;
+  $('filters').style.display='none';
+  $('s-records').querySelector('h2').textContent='点位';
+  renderPointList();
+}
+function recsOf(name){
+  const mine=myRecords().filter(r=>r.p===name);
+  return [...mine,...PUBLIC.filter(r=>r.p===name)];
+}
+function renderPointList(){
+  const all=[...myRecords(),...PUBLIC];
+  $('r-total').textContent=all.length;
+  const L=$('reclist'); L.innerHTML='';
+  GATES.forEach((g,i)=>{
+    const rs=recsOf(g.name);
+    const d=document.createElement('div');
+    d.className='rec';
+    d.innerHTML=`<span class="d2" style="background:${rs.length?'#B5432F':'#D8D2C2'}"></span>
+      <div class="bd">
+        <div class="top"><span class="pt">${g.name}</span><span class="tm">${rs.length?rs.length+' 条':'暂无'}</span></div>
+        <div class="vl">${rs.length?rs[0].v:'还没有记录——第一条等你来写'}</div>
+        <div class="who">点位 ${String(i+1).padStart(2,'0')}　${g.type}</div>
+      </div>`;
+    d.onclick=()=>{ pointFilter=g.name; renderPointRecs(g.name); };
+    L.appendChild(d);
+  });
+}
+function renderPointRecs(name){
+  $('s-records').querySelector('h2').textContent=name;
+  $('r-total').textContent=recsOf(name).length;
+  const f=$('filters'); f.style.display='flex';
+  if(!f.dataset.done2){
+    const b=document.createElement('button'); b.textContent='‹ 返回点位';
+    b.onclick=()=>{ f.style.display='none'; renderRecords(); };
+    f.innerHTML=''; f.appendChild(b); f.dataset.done2='1';
+  }
+  const L=$('reclist'); L.innerHTML='';
+  const rs=recsOf(name);
+  if(!rs.length){ L.innerHTML='<div style="padding:40px 24px;font-size:12px;color:var(--muted);line-height:1.9">这个点位还没有任何记录。<br>下一位到这里的河工，会看到你写的第一条。</div>'; return; }
+  rs.forEach(r=>{
+    const d=document.createElement('div'); d.className='rec';
+    d.innerHTML=`<span class="d2" style="background:${TDOT[r.t]||'#9AA'}"></span>
+      <div class="bd">
+        <div class="top"><span class="pt">${r.t}</span><span class="tm">${r.tm}</span></div>
+        <div class="vl">${r.v}</div>
+        ${r.note?`<div class="nt">${r.note}</div>`:''}
+        <div class="who">${r.who}${r.mine?' · 我':''}</div>
+      </div>`;
+    d.onclick=()=>openDetail(r);
+    L.appendChild(d);
+  });
+}
+function renderList(){
+  const all=[...myRecords(),...PUBLIC];
+  $('r-total').textContent=all.length;
+  const L=$('reclist'); L.innerHTML='';
+  all.filter(r=>filter==='全部'||r.t===filter).forEach(r=>{
+    const d=document.createElement('div'); d.className='rec';
+    d.innerHTML=`<span class="d2" style="background:${TDOT[r.t]||'#9AA'}"></span>
+      <div class="bd">
+        <div class="top"><span class="pt">${r.p} · ${r.pt}</span><span class="tm">${r.tm}</span></div>
+        <div class="vl">${r.v}</div>
+        ${r.note?`<div class="nt">${r.note}</div>`:''}
+        <div class="who">${r.who}${r.mine?' · 我':''}　${r.t}</div>
+      </div>`;
+    d.onclick=()=>openDetail(r);
+    L.appendChild(d);
+  });
+}
+function openDetail(r){
+  $('dt-kick').textContent=r.t;
+  $('dt-title').textContent=r.p;
+  const same=[...myRecords(),...PUBLIC].filter(x=>x.p===r.p&&x.v!==r.v||x.p===r.p&&x.tm!==r.tm).filter(x=>!(x.p===r.p&&x.v===r.v&&x.tm===r.tm));
+  $('dt-body').innerHTML=`
+    <div class="kv"><div class="k">点位</div><div class="v">${r.p} · 点位 ${r.pt}</div></div>
+    <div class="kv"><div class="k">时间</div><div class="v">${r.tm}</div></div>
+    <div class="kv"><div class="k">类型</div><div class="v">${r.t}</div></div>
+    <div class="kv"><div class="k">观测</div><div class="v">${r.v}</div></div>
+    <div class="kv"><div class="k">观察者</div><div class="v">${r.who}${r.mine?' · 我':''}</div></div>
+    <div class="kv"><div class="k">来源</div><div class="v">${r.source==='explore'?'自由探索':'现场出勤'}</div></div>
+    <div class="kv"><div class="k">许可</div><div class="v">CC BY-NC 4.0 · 匿名</div></div>
+    ${r.note?`<div class="dt-note">“${r.note}”</div>`:''}
+    <div class="sec">同一点位的其他记录</div><div id="same"></div>`;
+  const S=$('same');
+  if(!same.length) S.innerHTML='<div style="font-size:11.5px;color:var(--muted);padding:10px 0;line-height:1.7">还没有别的记录。<br>第一条永远是最难的。</div>';
+  same.forEach(x=>{
+    const d=document.createElement('div'); d.className='kv';
+    d.innerHTML=`<div class="k">${x.tm}</div><div class="v">${x.v} <span style="color:var(--muted);font-size:11px">· ${x.who}</span></div>`;
+    S.appendChild(d);
+  });
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  $('s-detail').classList.add('on'); $('tabbar').classList.remove('on');
+}
+function renderPassport(){
+  const n=Math.min(cur,10), km=(n>0?META[n-1].km:0);
+  $('q-km').textContent=km.toFixed(1); $('q-stamp').textContent=n; $('q-rec').textContent=records.length;
+  if($('q-note')) $('q-note').textContent=notes.length;
+  $('pp-rank').textContent=rankOf(n)+(n>=10?' · 已获证':' · 请继续巡查');
+  const L=$('sh-list'); L.innerHTML='';
+  GATES.forEach((g,i)=>{
+    const done=i<cur;
+    const d=document.createElement('div'); d.className='prow'+(done?' on':'');
+    d.innerHTML=`<span class="i">${String(i+1).padStart(2,'0')}</span>
+      <span class="n">${g.name}</span><span class="t">${g.type.slice(0,2)}</span>
+      <span class="r">${done?(records[i]&&records[i].rec||''):''}</span>
+      <span class="s">${done?'章':''}</span>`;
+    L.appendChild(d);
+  });
+}
+
+/* ---------------- 自由探索 ---------------- */
+const KB=[
+ {n:'芦苇',tag:'生态护岸',f1:'细高、穗状花序，成片长在浅水边',
+  f2:'它是生态护岸的主力。用植物代替水泥，岸线才「软」得下来。',
+  f3:'这片芦苇同时也是水鸟的隐蔽所——人靠得太近，它们就不来了。'},
+ {n:'香蒲',tag:'水质过滤',f1:'叶片细长直立，顶端有香肠状的穗',
+  f2:'挺水植物的根区能吸收氮磷，人工湿地常拿它做「过滤层」。',
+  f3:'它长得越旺，说明这一段水里的养分越多。'},
+ {n:'垂柳',tag:'遮阴固岸',f1:'枝条下垂，贴着水边生长',
+  f2:'耐水湿、根系能固岸，是老河道的标配，也是遮阴与停留点。',
+  f3:'柳树下的水面通常更凉，夏天鱼爱待在这儿。'},
+ {n:'白鹭',tag:'指示物种',f1:'白色、长腿长颈，常在浅水里静立',
+  f2:'它是这条河的指示物种。慢行系统要求「保持距离」，就是为它留的。',
+  f3:'它出现的地方，通常鱼也够多——这是条完整食物链的证据。'},
+ {n:'岸边石',tag:'硬质护岸',f1:'整齐砌筑或裸露的卵石带',
+  f2:'硬质护岸防冲刷，但生物少。北京这几年正在把它逐步「软化」成土坡。',
+  f3:'如果你脚下这段还是硬的，说明它还没轮到改造。'},
+ {n:'木栈道',tag:'慢行系统',f1:'架空在水面或岸边',
+  f2:'它是滨水慢行系统的一部分：让人靠近，又不踩坏岸边的植物。',
+  f3:'立水桥以东约 17 公里，只走人、不走车。'},
+ {n:'浮萍',tag:'富营养信号',f1:'水面一层均匀的绿膜',
+  f2:'设计上要保证水体流动，否则养分容易积住——浮萍就是信号。',
+  f3:'看到这个，记一条「水色偏绿」很有价值。'},
+ {n:'野草',tag:'低维护',f1:'低矮、成片、不修剪',
+  f2:'这类「不整齐」的草是有意留的：省水、招虫、喂鸟。',
+  f3:'看起来乱，其实比草坪有用得多。'}
+];
+let exState='idle', exImg=null, exCount=0, exDone=[];
+function renderExplore(){
+  const st=$('ex-state'), cs=$('ex-cands'), card=$('ex-card'), shot=$('ex-shot');
+  cs.innerHTML=''; card.innerHTML='';
+  if(exState==='idle'){
+    st.textContent='今天已有 '+exCount+' 张自然笔记';
+    shot.style.display='flex';
+  }else if(exState==='loading'){
+    shot.style.display='flex';
+    st.textContent='正在看这张照片…';
+    setTimeout(()=>{ exState='pick'; renderExplore(); }, 1100);
+  }else if(exState==='pick'){
+    shot.style.display='flex';
+    st.textContent='看起来像下面这些，是哪一个？';
+    KB.forEach(k=>{
+      const b=document.createElement('button'); b.textContent=k.n;
+      b.onclick=()=>{ exState='done'; exPick=k; renderExplore(); };
+      cs.appendChild(b);
+    });
+    const b2=document.createElement('button'); b2.textContent='都不是';
+    b2.onclick=()=>{ exState='done'; exPick=null; renderExplore(); };
+    cs.appendChild(b2);
+  }else{
+    shot.style.display='flex';
+    st.textContent='';
+    if(exPick){
+      const k=exPick;
+      card.innerHTML=`<div class="ex-card">
+        <h3>${k.n}</h3><div class="tag2">${k.tag}</div>
+        <div class="f"><b>一眼认出来</b><p>${k.f1}</p></div>
+        <div class="f"><b>它在滨水系统里的角色</b><p>${k.f2}</p></div>
+        <div class="f"><b>再往前一步</b><p>${k.f3}</p></div>
+      </div>
+      <button class="btn ghost ex-save" onclick="saveNote()">收进我的自然笔记</button>`;
+    }else{
+      card.innerHTML=`<div class="ex-card">
+        <h3>还没认出来</h3><div class="tag2">下次再试</div>
+        <div class="f"><b>可以这样拍</b><p>靠近一点、拍清楚叶子或花序的形状，最好带上它长在什么位置——水边、岸上、还是石头缝里。</p></div>
+        <div class="f"><b>为什么位置重要</b><p>同一种草，长在水边和长在步道边，在系统里的角色是不一样的。</p></div>
+      </div>`;
+    }
+  }
+}
+function saveNote(){
+  notes.push({n:exPick?exPick.n:'未识别',tag:exPick?exPick.tag:'—',tm:'今天'});
+  $('ex-n').textContent=notes.length;
+  toast('已收进自然笔记');
+  exState='idle'; exPick=null; exImg=null;
+  const sh=$('ex-shot'); sh.innerHTML='<div class="em">＋</div><span>拍照 / 选图</span><input type="file" accept="image/*" capture="environment" hidden id="ex-file">';
+  bindEx();
+  renderExplore();
+}
+function openNotes(){
+  const b=$('notes-body');
+  if(!notes.length){ b.innerHTML='<div style="font-size:12px;color:var(--muted);line-height:1.9;padding:20px 0">还没有笔记。<br>走到哪儿拍到哪儿，回来这里就能看见。</div>'; }
+  else{
+    b.innerHTML='';
+    notes.slice().reverse().forEach(n=>{
+      const d=document.createElement('div'); d.className='note-row';
+      d.innerHTML=`<div><div class="nn">${n.n}</div><div class="tt">${n.tm} · 自由探索</div></div>
+        <span class="tg">${n.tag}</span>`;
+      b.appendChild(d);
+    });
+  }
+  show('s-notes');
+}
+function bindEx(){
+  const f=$('ex-file');
+  if(!f) return;
+  f.onchange=e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      $('ex-shot').innerHTML='<img src="'+ev.target.result+'">';
+      exState='loading'; renderExplore();
+    };
+    r.readAsDataURL(file);
+  };
+}
+
+/* ---------------- 封面河流 ---------------- */
+(function hero(){
+  const W=430,H=186;
+  const svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" preserveAspectRatio="none">
+    <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8FBACE" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#4E7F97" stop-opacity=".35"/></linearGradient></defs>
+    <path d="M -40 132 C 80 118, 120 58, 215 56 C 310 54, 320 120, 430 104"
+      fill="none" stroke="#BFD9E4" stroke-width="52" stroke-opacity=".55" stroke-linecap="round"/>
+    <path d="M -40 132 C 80 118, 120 58, 215 56 C 310 54, 320 120, 430 104"
+      fill="none" stroke="url(#g1)" stroke-width="34" stroke-linecap="round"/>
+    <circle cx="120" cy="98" r="9" fill="#B5432F"/>
+    <circle cx="120" cy="98" r="15" fill="none" stroke="#B5432F" stroke-opacity=".3"/>
+    <circle cx="300" cy="96" r="4" fill="#F5F1E7" stroke="#BDB6A4"/>
+    <circle cx="360" cy="103" r="4" fill="#F5F1E7" stroke="#BDB6A4"/>
+  </svg>`;
+  $('hero').innerHTML=svg;
+})();
+
+/* ---------------- 地图 ---------------- */
+function rankOf(n){
+  if(n>=10) return '民间河长';
+  if(n>=7) return '河段长';
+  if(n>=4) return '巡河员';
+  return '见习河工';
+}
+function buildMap(){
+  const rows=$('rows');
+  rows.querySelectorAll('.stan').forEach(e=>e.remove());
+  GATES.forEach((g,i)=>{
+    const d=document.createElement('div');
+    d.className='stan'+(i<cur?' done':'')+(i===cur?' cur':'');
+    d.innerHTML=`<div class="nd">${String(i+1).padStart(2,'0')}</div>
+      <div class="info">
+        <div class="nm">${g.name}</div>
+        <div class="meta">${g.type}${i<cur?' · '+records[i].rec:''}</div>
+      </div>
+      ${i===cur?'<span class="chip">开始</span>':(i<cur?'<span style="font-size:11px;color:#B5432F">已盖</span>':'')}`;
+    d.onclick=()=>{ if(i===cur){ openStation(i); } else if(i<cur){ toast('这一站已经走过'); } else { toast('先走完前面的站'); } };
+    rows.appendChild(d);
+  });
+  drawRiver();
+  updateHud();
+}
+function drawRiver(){
+  const rows=$('rows');
+  const y0=6+37, stepY=74, n=GATES.length;
+  const H=6+n*stepY+16;
+  const pts=[];
+  for(let i=0;i<n;i++){
+    const x=41+Math.sin(i*1.15)*8;
+    pts.push([x, y0+i*stepY]);
+  }
+  let d=`M ${pts[0][0]} ${pts[0][1]-26}`;
+  d+=` L ${pts[0][0]} ${pts[0][1]}`;
+  for(let i=0;i<n-1;i++){
+    const [x1,y1]=pts[i], [x2,y2]=pts[i+1];
+    const mx=(x1+x2)/2, my=(y1+y2)/2;
+    d+=` Q ${x1} ${my}, ${mx} ${my}`;
+    if(i===n-2) d+=` Q ${x2} ${my}, ${x2} ${y2+26}`;
+  }
+  $('river').outerHTML=`<svg class="river" id="river" width="430" height="${H}" viewBox="0 0 430 ${H}">
+    <path d="${d}" fill="none" stroke="#BFD9E4" stroke-width="24" stroke-opacity=".62" stroke-linecap="round"/>
+    <path d="${d}" fill="none" stroke="#7FAEC4" stroke-width="10" stroke-opacity=".55" stroke-linecap="round"/>
+  </svg>`;
+  $('river').style.cssText='position:absolute;left:0;top:0;pointer-events:none;';
+  document.querySelector('.rows').style.minHeight=H+'px';
+}
+function updateHud(){
+  const n=Math.min(cur,10), km=(n>0?META[n-1].km:0);
+  $('m-km').textContent=km.toFixed(1);
+  $('m-stamp').textContent=n;
+  const curEl=document.querySelector('.stan.cur');
+  if(curEl){ setTimeout(()=>curEl.scrollIntoView({block:'center',behavior:'smooth'}),80); }
+}
+function enterApp(){ mode='field'; showTab('map'); }
+function toggleTrain(){
+  if(mode==='train'){ mode='field'; cur=fieldDone; }
+  else { mode='train'; cur=trainDone; }
+  buildMap(); updateTrainBar();
+}
+function updateTrainBar(){
+  const l=$('tb-l'), r=$('tb-r'), n=$('tb-n');
+  if(!l) return;
+  n.textContent=trainDone;
+  if(mode==='train'){
+    l.innerHTML='上岗培训中 · <b id="tb-n">'+trainDone+'</b>/10';
+    r.textContent='切换回现场巡河 ›';
+  }else{
+    l.innerHTML= trainDone>=10 ? '上岗培训 · 已完成' : '上岗培训 · <b id="tb-n">'+trainDone+'</b>/10';
+    r.textContent= trainDone>=10 ? '查看护照 ›' : '完成后领护照 ›';
+  }
+}
+function startMode(m){
+  mode=m; cur=(m==='train'?trainDone:fieldDone);
+  showTab('map'); updateTrainBar();
+  toast(m==='train'?'上岗培训 · 先认得这十座闸':'现场巡河 · 到达点位才会解锁');
+}
+function startTrip(){
+  showTab('map');
+  setTimeout(()=>{ const c=$('coach'); c.classList.add('on');
+    setTimeout(()=>c.classList.remove('on'),2600); },700);
+}
+function backToMap(){ show('s-map'); buildMap(); }
+
+/* ---------------- 站点 ---------------- */
+function openStation(i){
+  cur=i; step=0; picked=null; arrived=(mode==='field')?false:true;
+  $('st-name').textContent=GATES[i].name;
+  $('st-kicker').textContent=(mode==='train'?'上岗培训':'现场巡河')+` · 第 ${i+1} 站`;
+  renderStep(); show('s-station');
+}
+function seq(){ return mode==='train'?['quiz']:['arrive','task','note']; }
+function setDots(){
+  const box=$('dots'), n=seq().length;
+  box.innerHTML='';
+  for(let i=0;i<n;i++){const d=document.createElement('i'); if(i===step)d.className='on'; box.appendChild(d);}
+}
+function renderStep(){
+  setDots();
+  const g=GATES[cur], b=$('st-body'), cta=$('st-cta');
+  cta.disabled=true; cta.onclick=null;
+  const S=seq()[step];
+  if(S==='arrive'){
+    b.innerHTML=`<div style="padding-top:6px"><span class="tchip">现场出勤</span></div>
+      <div class="tsrc">需要确认你已经到达这个点位</div>
+      <div class="tq">你到${g.name}了吗？</div>
+      <div class="reply on" style="margin-top:4px">定位只用来确认点位，不上传轨迹。到不了也没关系——可以先做上岗培训。</div>`;
+    cta.textContent=arrived?'下一步':'我已到达这个点位'; cta.disabled=false;
+    cta.onclick=()=>{ if(!arrived){ arrived=true; toast('已确认 · 任务已掉落'); renderStep(); } else { step=1; renderStep(); } };
+    return;
+  }
+  if(S==='quiz'){
+    b.innerHTML=`
+      <div class="story">${g.story}</div>
+      <div class="q"><span class="mk">Q</span>${g.q}</div>
+      <div id="opts"></div>`;
+    const box=$('opts');
+    g.opts.forEach((t,k)=>{
+      const d=document.createElement('div');
+      d.className='opt';
+      d.innerHTML=`<span class="k">${'ABCD'[k]}</span><span>${t}</span>`;
+      d.onclick=()=>answerQuiz(k,d);
+      box.appendChild(d);
+    });
+    cta.textContent='下一关';
+  }else if(S==='task'){
+    b.innerHTML=`
+      <div style="padding-top:4px"><span class="tchip">${g.type}</span></div>
+      <div class="tsrc">任务来源：${g.src}　·　完成后计入护照</div>
+      <div class="tq">${g.task.q}</div>
+      <div id="opts"></div>
+      <div class="reply" id="reply"></div>`;
+    const box=$('opts');
+    g.task.opts.forEach((o,k)=>{
+      const d=document.createElement('div');
+      d.className='opt';
+      d.innerHTML=`<span class="k">${k+1}</span><span>${o.t}</span>`;
+      d.onclick=()=>pickTask(k,d);
+      box.appendChild(d);
+    });
+    cta.textContent='下一步'; cta.onclick=()=>{ step=2; renderStep(); };
+  }else{
+    b.innerHTML=`
+      <div class="note-l">补一句你看到的（选填）</div>
+      <div style="font-size:11.5px;line-height:1.7;color:#9AA5A1;margin:-4px 0 10px">这句话会跟点位、时间一起存进这条河的记录里。</div>
+      <textarea class="note-i" id="note" placeholder="比如：水边的石头很滑，芦苇已经白了"></textarea>
+      <div class="note-l" style="margin-top:20px">拍一张（选填）</div>
+      <div class="photo-row">
+        <label class="ph" id="ph">＋ 拍照 / 选图<input type="file" accept="image/*" capture="environment" hidden id="file"></label>
+        <div class="pv" id="pv">未选择</div>
+      </div>`;
+    $('file').onchange=e=>{
+      const f=e.target.files[0]; if(!f) return;
+      const r=new FileReader();
+      r.onload=ev=>{ $('ph').innerHTML=`<img src="${ev.target.result}" alt="">`; };
+      r.readAsDataURL(f);
+    };
+    cta.textContent='提交这条记录'; cta.disabled=false;
+    cta.onclick=submitRecord;
+  }
+  document.querySelector('.st-body').scrollTop=0;
+}
+function answerQuiz(k,el){
+  const g=GATES[cur];
+  const all=[...document.querySelectorAll('#opts .opt')];
+  if(k===g.ans){
+    el.classList.add('ok'); all.forEach(o=>o.classList.add('dead'));
+    correct++;
+    toast('答对了 · 闸门打开');
+    $('st-cta').disabled=false;
+    $('st-cta').textContent='下一关';
+    $('st-cta').onclick=()=>{
+      if(cur>=9){ trainDone=10; toast('上岗培训完成 · 去领护照'); showTab('passport'); }
+      else { trainDone=Math.max(trainDone,cur+1); openStation(cur+1); }
+    };
+  }else{
+    el.classList.add('no','dead');
+    toast('再想想：'+g.hint.slice(0,16)+'…');
+  }
+}
+function pickTask(k,el){
+  const g=GATES[cur];
+  [...document.querySelectorAll('#opts .opt')].forEach((o,i)=>{
+    o.classList.remove('pick'); o.classList.add('dead');
+    if(i===k){ o.classList.remove('dead'); o.classList.add('pick'); }
+  });
+  const r=$('reply');
+  r.textContent=g.task.opts[k].r; r.classList.add('on');
+  picked=k;
+  $('st-cta').disabled=false;
+}
+function submitRecord(){
+  const g=GATES[cur];
+  const note=($('note')&&$('note').value||'').trim();
+  const hasPhoto=$('ph')&&$('ph').querySelector('img');
+  const rec=g.task.opts[picked]?g.task.opts[picked].rec:'—';
+  records[cur]={gate:g.name,type:g.type,rec,note,photo:!!hasPhoto};
+  sealStamp(records.length<10?String(cur+1).padStart(2,'0'):'✓');
+  setTimeout(()=>{
+    fieldDone=Math.max(fieldDone,cur+1);
+    cur=cur+1;
+    if(cur>=10){ finish(); } else { backToMap(); toast('已记录 · 还剩 '+(10-cur)+' 站'); }
+  },1350);
+}
+
+/* ---------------- 护照 ---------------- */
+function openSheet(){
+  showTab('passport'); return;
+  $('mask').classList.add('on'); $('sheet').classList.add('on');
+  const L=$('sh-list'); L.innerHTML='';
+  GATES.forEach((g,i)=>{
+    const done=i<cur;
+    const d=document.createElement('div');
+    d.className='prow'+(done?' on':'');
+    d.innerHTML=`<span class="i">${String(i+1).padStart(2,'0')}</span>
+      <span class="n">${g.name}</span><span class="t">${g.type.slice(0,2)}</span>
+      <span class="r">${done?(records[i].rec||''):''}</span>
+      <span class="s">${done?'章':''}</span>`;
+    L.appendChild(d);
+  });
+}
+function closeSheet(){ showTab('map'); }
+
+/* ---------------- 结束 ---------------- */
+function finish(){
+  const noteCount=records.filter(r=>r&&r.note).length;
+  $('e-note').textContent=noteCount;
+  $('e-km').textContent=META[9].km.toFixed(1);
+  const L=$('en-list'); L.innerHTML='';
+  records.forEach((r,i)=>{
+    const d=document.createElement('div');
+    d.className='prow on';
+    d.innerHTML=`<span class="i">${String(i+1).padStart(2,'0')}</span>
+      <span class="n">${r.gate}</span><span class="t">${r.type.slice(0,2)}</span>
+      <span class="r">${r.note?r.note.slice(0,10):r.rec}</span><span class="s">章</span>`;
+    L.appendChild(d);
+  });
+  show('s-end');
+}
+function restart(){ cur=0;records=[];correct=0; startTrip(); }
+
+buildMap(); updateTrainBar();
+bindEx();
+
+(function(){
+  const h=location.hash;
+  if(h==='#map') startMode('train');
+  else if(h==='#field') startMode('field');
+  else if(h==='#arrive'){ mode='field'; showTab('map'); setTimeout(function(){openStation(0);},100); }
+  else if(h==='#records') showTab('records');
+  else if(h==='#explore') showTab('explore');
+  else if(h==='#explore2'){ showTab('explore'); exState='done'; exPick=KB[0]; renderExplore(); }
+  else if(h==='#notes'){
+    notes=[{n:'芦苇',tag:'生态护岸',tm:'10-20'},{n:'岸边石',tag:'硬质护岸',tm:'10-18'},{n:'浮萍',tag:'富营养信号',tm:'10-17'}];
+    showTab('explore'); document.getElementById('ex-n').textContent=notes.length; openNotes();
+  }
+  else if(h==='#passport'){ startMode('train'); showTab('passport'); }
+  else if(h==='#detail'){ showTab('records'); setTimeout(function(){renderPointRecs('清河闸');setTimeout(function(){openDetail(recsOf('清河闸')[0]);},120);},120); }
+  else if(h==='#station') openStation(0);
+  else if(h==='#end'){
+    records=GATES.map(function(g,i){return {gate:g.name,type:g.type,rec:g.task.opts[i%3].rec,note:i%3===0?'水边的石头很滑':'',photo:false};});
+    cur=10; fieldDone=10; finish();
+  }
+})();
+</script>
+</body>
+</html>
