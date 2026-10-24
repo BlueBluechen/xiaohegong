@@ -85,6 +85,36 @@ body{
 .bt-river svg{width:100%;height:100%;display:block;}
 
 /* ============================================================
+   答题提示标签
+   ------------------------------------------------------------
+   题目偏难，需要台阶。但不能把提示摊在题干下面 ——
+   那样每个人都会先看提示再答题，题就白出了。
+   做成一个小标签，点开才给一句方向性的提示（不是答案）。
+   ============================================================ */
+.q-hint-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  margin:2px 0 14px;padding:6px 12px;
+  background:transparent;border:1px dashed rgba(201,162,75,.5);
+  border-radius:20px;cursor:pointer;transition:.16s;
+  font-family:inherit;font-size:11px;letter-spacing:1.2px;color:var(--gold-d);
+}
+.q-hint-btn:active{transform:scale(.97);}
+.q-hint-btn .ic{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;border-radius:50%;
+  border:1px solid rgba(201,162,75,.6);
+  font-size:9px;line-height:1;
+}
+.q-hint-btn.seen{border-style:solid;border-color:rgba(201,162,75,.28);color:#A89870;opacity:.75;}
+.q-hint{
+  display:none;margin:0 0 14px;padding:12px 14px;
+  background:rgba(201,162,75,.09);border-left:2px solid var(--gold);
+  font-size:12.5px;line-height:1.9;color:var(--body);
+}
+.q-hint.on{display:block;animation:pop .32s ease both;}
+.q-hint b{color:var(--gold-d);}
+
+/* ============================================================
    护照页
    ------------------------------------------------------------
    纸质感靠三件事：暖白纸、极细的金线、一个印章。
@@ -1232,11 +1262,13 @@ body{
     </div>
   </div>
   <div class="in-body">
-    <div class="bub">欢迎上工。<br>我是这一段的看闸人，姓周。</div>
-    <div class="bub">在拿到第一枚章之前，先认认这条河——<br>
+    <div class="bub">小河工，欢迎上工。<br>我是这一段的看闸人，姓周。</div>
+    <div class="bub">在你能下河之前，先认认这条河——<br>
       <span class="river-name">北京清河</span><br>
       它 <b>23.6 公里</b>，<b>十座闸</b>，从西山一直流到温榆河。</div>
-    <div class="bub">我会随手考你几道。<br>答对了，你就<b>能去河边干活了</b>。</div>
+    <div class="bub">考你六道，答对四道就算过。<br>
+      想不出来的时候，可以点「给点提示」——<br>
+      <b>我在这儿，不是来难住你的。</b></div>
   </div>
   <div class="in-bot">
     <button class="btn btn-gold" id="btn-intro-go">开始考核</button>
@@ -1255,6 +1287,15 @@ body{
   </div>
   <div class="qz-body">
     <div class="qz-q" id="q-text"></div>
+
+    <!-- 提示：题目确实偏难，但不能白给。
+         做成默认收起的标签，点开才看 —— 主动求提示和被动看答案，
+         对孩子的意义不一样。看过提示这题不加连击，也不影响过关。 -->
+    <button class="q-hint-btn" id="q-hint-btn">
+      <span class="ic">?</span><span>给点提示</span>
+    </button>
+    <div class="q-hint" id="q-hint"></div>
+
     <div id="q-opts"></div>
     <div class="tip" id="q-tip"></div>
     <div class="know" id="q-know">
@@ -2206,12 +2247,52 @@ function pickQuiz(){
   return arr.slice(0,6);
 }
 
+bindHint();
+
 $('btn-intro-go').onclick=()=>{
   QSET=pickQuiz(); QI=0; qCombo=0;
   if(!S.quiz.done) S.quiz.right=0;
   $('q-pts').textContent=S.pts;
   show('s-quiz'); renderQ();
 };
+
+/* ============================================================
+   提示
+   ------------------------------------------------------------
+   每道题自带 hint（原本只在答错后才显示）。这里改成随时可点，
+   但看过提示这一题不加连击 —— 提示是台阶，不是免费分。
+   ============================================================ */
+let hintUsed=false;
+
+function resetHintBtn(){
+  hintUsed=false;
+  const b=$('q-hint-btn'), box=$('q-hint');
+  if(!b||!box) return;
+  b.classList.remove('seen');
+  b.querySelector('span:last-child').textContent='给点提示';
+  box.classList.remove('on');
+  box.textContent='';
+}
+
+function bindHint(){
+  const b=$('q-hint-btn'); if(!b) return;
+  b.onclick=()=>{
+    const q=QSET[QI]; if(!q) return;
+    const box=$('q-hint');
+    if(box.classList.contains('on')){       // 再点一次收起，不重复计
+      box.classList.remove('on');
+      return;
+    }
+    // 提示不能等于答案：hint 是线索句，题干里没有；这里再挡一次闸名兜底
+    const h=(q.hint||'').replace(q.name||'###','那 座 闸');
+    box.innerHTML='<b>老周小声说：</b>'+h;
+    box.classList.add('on');
+    b.classList.add('seen');
+    b.querySelector('span:last-child').textContent='收起提示';
+    hintUsed=true;                          // 这题不给连击
+    updCombo();
+  };
+}
 
 function renderQ(){
   const q=QSET[QI];
@@ -2240,6 +2321,7 @@ function renderQ(){
 
   $('q-tip').className='tip';
   $('q-know').className='know';
+  resetHintBtn();
   $('btn-next').disabled=true;
   $('btn-next').textContent=QI>=QSET.length-1?'交卷':'下一题';
   document.querySelector('.qz-body').scrollTop=0;
@@ -2262,10 +2344,12 @@ function pickQ(k,el){
     all.forEach(o=>o.classList.add('dead'));
     el.classList.remove('dead'); el.classList.add('ok');
 
-    qCombo++;
+    // 看过提示的这题不给连击，但答对仍然算分 —— 提示是台阶，不是惩罚
+    if(hintUsed) qCombo=0; else qCombo++;
     let gain=20, note='积分已计入护照';
-    if(qFirst){ gain+=10; note='一次答对　·　额外 +10'; }
-    if(qCombo>=3){ gain+=10; note='连击 ×'+qCombo+'　·　额外 +10'; }
+    if(hintUsed) note='看过提示　·　不计连击';
+    if(qFirst && !hintUsed){ gain+=10; note='一次答对　·　额外 +10'; }
+    if(qCombo>=3 && !hintUsed){ gain+=10; note='连击 ×'+qCombo+'　·　额外 +10'; }
     addPts(gain);
     if(qFirst) S.quiz.right++;
     if(!S.quiz.seen.includes(q.id)) S.quiz.seen.push(q.id);
@@ -2387,7 +2471,7 @@ function finishQuiz(){
   if(master){
     more.style.display='none';
     go.className='btn btn-gold';
-    go.textContent='进我的护照';
+    go.textContent='去探索页 ›';
     go.onclick=goHome;
   }else{
     // 主按钮 = 继续答（金色），次按钮 = 先去看护照（描边）
@@ -2401,7 +2485,7 @@ function finishQuiz(){
       show('s-quiz'); renderQ();
     };
     go.className='btn btn-line on-dark';
-    go.textContent='先去看我的护照';
+    go.textContent='先去探索页 ›';
     go.onclick=goHome;
   }
 
@@ -2409,12 +2493,16 @@ function finishQuiz(){
   vibrate([14,60,24]);
 }
 
-/* 考核结束后回岔路，不回主页：
-   通过考核的孩子应该看到「上岗培训」这一项已经变成了可再挑战，
-   并且能顺手去拓印 —— 直接跳主页会把这个衔接丢掉。 */
+/* 考核结束后直接进「探索」页，不再回岔路。
+   岔路是「还没选路的人」用的；考完试的人已经选过了，
+   再把他丢回选择页等于让他重做一次决定。
+   探索页里能看到考核结果、知识卡和今天能做什么 —— 才是下一步。 */
 function goHome(){
   $('grant').classList.remove('on');
-  renderFork(); show('s-fork');
+  locate();
+  show('s-home');
+  switchTab('explore');
+  renderHome();
 }
 $('gr-go').onclick=goHome;
 

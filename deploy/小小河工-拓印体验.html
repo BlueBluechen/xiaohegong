@@ -106,7 +106,7 @@ body{
 /* ---------- 成品 ---------- */
 #s-card{padding-top:38px;padding-bottom:34px;}
 .res-k{font-size:10px;letter-spacing:4px;color:var(--gold);text-align:center;}
-.res-h{font-family:"Songti SC",serif;font-size:19px;letter-spacing:1.5px;text-align:center;margin-top:10px;}
+.res-h{font-family:"Songti SC",serif;font-size:17px;letter-spacing:1.5px;text-align:center;margin-top:16px;}
 .res-h em{font-style:normal;color:var(--gold-l);}
 
 /* 竖版对半卡：上半原片（2:1）+ 下半完整拓印图（1:1）+ 文字带。
@@ -124,14 +124,15 @@ body{
 }
 @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.95);}to{opacity:1;transform:none;}}
 /* 上半：原片，固定 2:1（宽度决定高度，不靠百分比拉伸） */
-.poster .top{aspect-ratio:2/1;overflow:hidden;background:#E8E2D5;flex:0 0 auto;}
+.poster .top{width:100%;aspect-ratio:2/1;overflow:hidden;background:#E8E2D5;flex:0 0 auto;}
 .poster .top img{width:100%;height:100%;object-fit:cover;display:block;}
-.poster .bot{flex:0 0 auto;display:flex;flex-direction:column;background:#FCF9F4;}
-/* 下半：拓印图，正方形。图本身就是居中处理过的 1:1，cover 不会再切主体 */
-.poster .art{aspect-ratio:1/1;overflow:hidden;background:#FCF9F4;flex:0 0 auto;}
+/* 卡上现在只有两张图，不再有文字带。
+   下半必须严格跟随上半宽度 —— 用 width:100% + aspect-ratio 而不是
+   flex 撑开，否则会出现「下半比上半宽一截」的错位。 */
+.poster .bot{flex:0 0 auto;width:100%;background:#FCF9F4;}
+.poster .art{width:100%;aspect-ratio:1/1;overflow:hidden;background:#FCF9F4;}
 .poster .art img{width:100%;height:100%;object-fit:cover;object-position:center;
   display:block;}
-.poster .wd{flex:0 0 auto;text-align:center;padding:3% 0 5%;}
 .poster .cn{
   font-family:"Songti SC",serif;font-weight:600;font-size:16px;
   letter-spacing:5px;color:#3A3A3A;line-height:1;text-indent:5px;
@@ -170,6 +171,10 @@ body{
   font-size:10.5px;line-height:1.9;color:#8FB0B1;
 }
 .res-note b{color:var(--cream);font-weight:500;}
+.cost{text-align:center;font-size:10.5px;line-height:1.9;color:#5C8388;margin-top:12px;}
+.cost b{color:var(--gold-l);font-weight:500;}
+.cost.lack{color:#D08A76;}
+.cost.lack b{color:#E5A492;}
 .res-bot{max-width:302px;margin:22px auto 0;}
 .res-bot .btn+.btn{margin-top:9px;}
 .res-save-tip{text-align:center;font-size:10px;color:#5C8388;margin-top:11px;line-height:1.7;}
@@ -247,10 +252,10 @@ body{
   <!-- 2. 拍/选照片 -->
   <div class="scr" id="s-up">
     <div class="up-top">
-      <div class="up-k">第　一　步</div>
-      <div class="up-h">先拍一张</div>
-      <div class="up-d">桥、闸、水鸟、芦苇——<b>拍你看见的那一个</b>。
-        照片会发到服务器印成拓印卡，<b>用完即弃、不存档</b>。</div>
+      <div class="up-k">第　一　步　·　<span id="up-who">—</span></div>
+      <div class="up-h">先拍一张，或上传一张</div>
+      <div class="up-d">桥、闸、水鸟、芦苇——<b>拍你看见的那一个</b>。<br>
+        把你喜欢的照片，转绘成拓印效果。</div>
     </div>
 
     <div class="drop" id="drop">
@@ -266,10 +271,9 @@ body{
 
     <div style="margin-top:22px;padding-bottom:34px">
       <button class="btn btn-gold" id="btn-render" disabled>印　出　来</button>
-      <button class="btn btn-line" id="btn-noimg" style="margin-top:9px">没拍照？挑一张内置的</button>
-      <div style="text-align:center;font-size:10px;color:#5C8388;margin-top:10px;line-height:1.7">
-        内置图是已经拓印好的样子<br>不拍照也能先印一张带走
-      </div>
+      <button class="btn btn-line" id="btn-noimg" style="margin-top:9px">没想法？看看拓印效果</button>
+      <!-- 费用必须在下手之前说清楚：生成成功才扣，余额不足直接拦住 -->
+      <div class="cost" id="cost-line">每张拓印卡消耗 <b>50</b> 积分　·　你现在有 <b id="cost-pts">0</b> 分</div>
     </div>
   </div>
 
@@ -283,32 +287,14 @@ body{
   <!-- 4. 成品 -->
   <div class="scr" id="s-card">
     <div class="res-k">拓　印　卡</div>
-    <div class="res-h" id="res-h">印好了，<em>收下吧</em></div>
 
+    <!-- 卡片只放两张图：上原片、下拓印。
+         名字、日期、题材这些一律去掉 —— 这是一张「作品」，
+         不是通行证，不该被文字切碎。 -->
     <div class="poster" id="poster">
       <div class="top" id="p-top"><img id="p-photo" alt=""></div>
       <div class="bot">
         <div class="art"><img id="p-art" alt=""></div>
-        <div class="wd"><div class="cn" id="p-cn">黑天鹅</div></div>
-      </div>
-      <div class="tag" id="p-tag">自带图</div>
-      <div class="who"><span id="p-who">小石头</span><span id="p-date"></span></div>
-    </div>
-
-    <div class="res-meta">
-      <span id="p-gate">—</span><b>拓印体验</b>
-    </div>
-    <div class="res-note" id="res-note"></div>
-
-    <div class="subj" id="subj-box" style="display:none">
-      <div class="subj-h" id="subj-h">印哪一样？</div>
-      <div class="subj-g" id="subj-g"></div>
-      <!-- 自定义名字：内置那几样之外的东西怎么办？
-           清河里不止桥闸鸟苇 —— 荷花、野鸭、一只蝉、一块石头。
-           不让孩子写，就等于告诉他「你看见的不算」。 -->
-      <div class="subj-own">
-        <input id="in-own" type="text" maxlength="8" placeholder="自己写一个名字">
-        <button class="btn btn-line btn-sm" id="btn-own">就用它</button>
       </div>
     </div>
 
@@ -316,7 +302,8 @@ body{
       <button class="btn btn-gold" id="btn-keep">印进护照</button>
       <button class="btn btn-line" id="btn-another">换一张照片</button>
       <button class="btn btn-line" id="btn-passport">去河边干活 ›</button>
-      <div class="res-save-tip">想留下来，长按卡片截图<br>手机换了就没了，护照里也只是这张小图</div>
+      <!-- 收尾语放最下面 -->
+      <div class="res-h" id="res-h">印好了，<em>收下吧</em></div>
     </div>
 
     <div id="mywall" style="display:none">
@@ -337,6 +324,11 @@ body{
    写入时只动 name 和 mcards，绝不覆盖 recs / quiz / ck 等字段。
    ============================================================ */
 const SKEY='xxhg_v4';
+
+/* 每印一张的积分消耗。
+   放在这里而不是使用处附近 —— refreshCost() 在初始化阶段就要读它，
+   放后面会撞上 TDZ（Cannot access 'STAMP_COST' before initialization）。 */
+const STAMP_COST = 50;
 const STAMP_KEY='xhg_stamp_v1';   // 只放「这台手机印过哪些」的轻量索引
 
 function readS(){
@@ -378,7 +370,6 @@ const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
 
 let ME='', S0=readS(), PHOTO=null, RENDERED=null, SUBJ=0, USED_PHOTO=false;
-let OWN='';   // 自定义名字（为空则用内置题材的 cn）
 
 function toast(m){
   const t=$('toast'); t.textContent=m; t.classList.add('on');
@@ -395,7 +386,6 @@ function show(id){
 const inName=$('in-name'), btnGo=$('btn-go');
 S0=readS();
 ME=S0.name||'';
-if(ME){ inName.value=ME; btnGo.disabled=false; }
 inName.addEventListener('input',()=>{ btnGo.disabled=!inName.value.trim(); });
 inName.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!btnGo.disabled) btnGo.click(); });
 
@@ -410,6 +400,7 @@ btnGo.onclick=()=>{
   resetUp();
   show('s-up');
 };
+
 
 /* ============================================================
    2. 拍照 / 选图
@@ -426,7 +417,37 @@ function resetUp(){
   fileIn.value='';
   $('repick').style.display='none';
   $('btn-render').disabled=true;
-  $('subj-box').style.display='none';
+  refreshCost();
+}
+
+/* 费用行：余额够就正常显示，不够就直接变红并禁用出图按钮。
+   宁可在这里拦住，也别让人拍完照才发现印不了。 */
+function refreshCost(){
+  const pts=myPoints();
+  const line=$('cost-line'), num=$('cost-pts');
+  if(!line) return;
+  if(num) num.textContent=pts;
+  const lack = pts < STAMP_COST;
+  line.classList.toggle('lack', lack);
+  if(lack){
+    line.innerHTML='每张拓印卡消耗 <b>50</b> 积分　·　你现在有 <b>'+pts+'</b> 分<br>'+
+                   '<span style="color:#D08A76">积分不够。去河边做一次现场记录，能得 25 分。</span>';
+    if(PHOTO){ $('btn-render').disabled=true; }
+  }
+}
+
+/* 已经有名字（建过档或在本页写过）的人，不再问一遍。
+   问第二遍等于告诉他「上次那句没记住」，也白白多一次点击。
+   直接进拍照页，顶部给他看「谁在印」。
+   注意：这段必须放在 resetUp/drop 定义之后 ——
+   它要调用 resetUp()，而 resetUp 里用到了 const drop。 */
+if(ME){
+  inName.value=ME;
+  btnGo.disabled=false;
+  resetUp();
+  show('s-up');
+  const who=$('up-who');
+  if(who) who.textContent=ME;
 }
 
 drop.onclick=()=>{ if(!PHOTO) fileIn.click(); };
@@ -449,7 +470,6 @@ fileIn.onchange=ev=>{
       drop.appendChild(fileIn);
       $('repick').style.display='flex';
       $('btn-render').disabled=false;
-      $('p-tag').textContent='我的照片';
     };
     img.onerror=()=>toast('这张读不出来，换一张');
     img.src=e2.target.result;
@@ -460,13 +480,20 @@ fileIn.onchange=ev=>{
 /* 不拍照，用内置图 */
 $('btn-noimg').onclick=()=>{
   PHOTO=null; USED_PHOTO=false;
-  SUBJ=0; OWN='';
-  const ow=$('in-own'); if(ow) ow.value='';
+  SUBJ=0;
   doRender();
 };
 
 /* 印出来 */
-$('btn-render').onclick=()=>{ doRender(); };
+$('btn-render').onclick=()=>{
+  // 双保险：按钮 disabled 已经挡一次，这里再挡一次（防止快捷键/脚本触发）
+  if(myPoints() < STAMP_COST){
+    toast('积分不够，印不了。去河边做一次记录吧');
+    refreshCost();
+    return;
+  }
+  doRender();
+};
 
 /* ============================================================
    3. 拓印渲染（纯前端 canvas：孔版分色 + 颗粒 + 纸底透出）
@@ -489,21 +516,50 @@ $('btn-render').onclick=()=>{ doRender(); };
    ============================================================ */
 const AI_ENDPOINT = '/api/stamp';   // 部署后由 server.js 提供
 
+/* ============================================================
+   积分：每印一张 50 分
+   ------------------------------------------------------------
+   为什么在这里扣而不是点按钮时扣：
+     点按钮只代表「想做」，真正要花钱和算力的是服务端出图。
+     先扣了再失败，用户会觉得被骗；所以扣分放在出图之后。
+   积分不足就不让开始 —— 在进入拍照页之前就讲清楚，
+   别让他拍完了才发现印不了。
+   ============================================================ */
+
+function myPoints(){
+  const d=readS();
+  return (typeof d.pts==='number') ? d.pts : 0;
+}
+
+function spendPoints(n){
+  const d=readS();
+  const cur=(typeof d.pts==='number') ? d.pts : 0;
+  if(cur<n) return false;
+  writeS({pts: cur-n});
+  return true;
+}
+
 function doRender(){
   show('s-work');
   if(!PHOTO){ paintCard(); show('s-card'); return; }
+
+  let charged=false;   // 只扣一次，降级路径不能重复扣
 
   renderByAI(PHOTO)
     .then(url=>{
       RENDERED = url;
       $('wk-d').textContent='AI 重绘完成';
+      charged = spendPoints(STAMP_COST);
+      if(charged) $('wk-d').textContent='AI 重绘完成　·　-'+STAMP_COST+' 分';
     })
     .catch(err=>{
       // 降级：本地网点。用户不该看到技术报错，只给一句人话。
       console.warn('AI 重绘不可用，降级本地网点：', err && err.message);
       try{
         RENDERED = posterize(PHOTO, SUBJECTS[SUBJ].ink);
-        $('wk-d').textContent='已用本地拓印';
+        // 降级是「没享受到 AI 那一步」，这次不扣分。
+        // 但要让孩子知道：这一张是本地印的，不是 AI 转绘的。
+        $('wk-d').textContent='已用本地拓印（未扣分）';
       }catch(e){ RENDERED=null; }
     })
     .then(()=>{
@@ -705,94 +761,31 @@ function posterize(img, ink){
 
 /* ============================================================
    4. 拼卡
-   ============================================================ */
-function renderSubjects(){
-  const g=$('subj-g');
-  g.innerHTML=SUBJECTS.map((s,i)=>`
-    <div class="sj${(i===SUBJ && !OWN)?' on':''}" data-i="${i}">
-      <img src="${ART[s.key]}" alt="${s.cn}">
-      <div class="n">${s.cn.replace(/\s/g,'')}</div>
-    </div>`).join('');
-  g.querySelectorAll('.sj').forEach(el=>{
-    el.onclick=()=>{
-      SUBJ=+el.dataset.i;
-      OWN='';                        // 选内置的就清掉自定义名
-      const ow2=$('in-own'); if(ow2) ow2.value='';
-      g.querySelectorAll('.sj').forEach(x=>x.classList.remove('on'));
-      el.classList.add('on');
-      paintCard();   // 有照片时只改名字，RENDERED 已存在不会被覆盖
-      toast((USED_PHOTO?'名字改成 ':'换成 ')+SUBJECTS[SUBJ].cn.replace(/\s/g,''));
-    };
-  });
+   ============================================================
+   卡上不写字了，所以这里不再有题材选择区 ——
+   「这一张是什么」和自定义名字都去掉了（见结果页结构）。 */
 
-  /* 自定义名字：清河里不止桥闸鸟苇。
-     孩子看见荷花、蝉、一块好看的石头，也该能印下来。
-     上限 8 字——卡上那行最多放得下这些，再多会挤成两行。 */
-  const own=$('in-own'), bo=$('btn-own');
-  if(bo) bo.onclick=()=>{
-    const v=(own.value||'').trim().replace(/\s+/g,'');
-    if(!v){ toast('先写一个名字'); return; }
-    OWN=v.slice(0,8);
-    g.querySelectorAll('.sj').forEach(x=>x.classList.remove('on'));  // 自定义时内置不选中
-    own.blur();                     // 收起键盘，让人看见卡变了
-    paintCard();
-    toast('名字写成 '+OWN);
-  };
-  if(own) own.onkeydown=e=>{ if(e.key==='Enter'){ e.preventDefault(); bo.click(); } };
-}
-
+/* 拼卡：只拼两张图。
+   卡上不再有名字、日期、题材 —— 那些信息留在护照和记录里，
+   卡片本身是一张「作品」，文字只会把它切碎。 */
 function paintCard(){
   const s=SUBJECTS[SUBJ];
-
   const poster=$('poster');
 
   if(USED_PHOTO && PHOTO){
-    // 有照片：对半卡，上半原片、下半拓印
     poster.classList.remove('solo');
     $('p-top').style.display='';
     $('p-photo').src=PHOTO.src;
     $('p-art').src=RENDERED||ART[s.key];
-    $('p-tag').textContent='我的照片';
     $('btn-another').style.display='';
   }else{
-    // 无照片：整张就是拓印图（skill 格式 A），不能留一块空的原片区
+    // 没照片：只有拓印图，原片区收起
     poster.classList.add('solo');
     $('p-top').style.display='none';
     $('p-art').src=ART[s.key];
-    $('p-tag').textContent='自带图';
-    $('btn-another').style.display='none';   // 没照片，没什么可换
+    $('btn-another').style.display='';
   }
-
-  // 自定义名字优先；没有就用内置题材的中文名
-  $('p-cn').textContent = OWN || s.cn;
-  $('p-who').textContent=ME;
-  $('p-date').textContent=fmtDate(new Date());
-  $('p-gate').textContent=USED_PHOTO?'你拍的那一张':s.gate;
-
-  $('res-h').innerHTML=USED_PHOTO?'印好了，<em>收下吧</em>':'印好了，<em>收下吧</em>';
-  $('res-note').innerHTML = USED_PHOTO
-    ? '上半是你拍的原片，下半是它的拓印。<br><b>原片只留在本机；拓印时照片发到服务器，不存档。</b>'
-    : s.note+'<br><b>想印自己的照片，回去点「换一张照片」。</b>';
-
-  // 有照片时题材选择是隐藏的（下半就是照片的拓印）；
-  // 无照片时才让孩子挑一张内置图
-  /* 题材选择两种模式都要显示：
-       无照片 —— 决定印哪一张内置图
-       有照片 —— 照片的拓印已经生成，这时题材只决定卡上写什么名字。
-                 之前这里对有照片的情况直接隐藏，SUBJ 永远是 0，
-                 结果所有照片都印成「黑天鹅」—— 图是鸳鸯，字写黑天鹅。 */
-  $('subj-box').style.display='';
-  const sh=$('subj-h');
-  if(sh) sh.textContent = USED_PHOTO ? '这一张是什么？' : '印哪一样？';
-  /* 两种模式都要渲染题材区：
-       无照片 —— 用来挑内置图
-       有照片 —— 用来定卡上的名字，也支持自己写一个
-     之前这里是 if(!USED_PHOTO)，有照片时整个区不渲染，
-     连自定义名字的按钮都没绑上事件，点了没反应。 */
-  renderSubjects();
 }
-
-function fmtDate(d){ return d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate()); }
 
 /* ============================================================
    5. 印进护照（写回共享状态）
@@ -802,9 +795,9 @@ $('btn-keep').onclick=()=>{
   const card={
     id:'s'+Date.now()+Math.floor(Math.random()*900),
     gateId:0,                       // 0 = 未绑定点位（拓印体验页印的）
-    gateName:USED_PHOTO?'我的照片':s.gate,
+    gateName:USED_PHOTO?'我的照片':(SUBJECTS[SUBJ].gate||'拓印'),
     ts:Date.now(),
-    cn: OWN || s.cn,           // 存实际印出来的名字，不是题材默认名
+    cn: s.cn,                  // 卡上不写字了，但档案里要留一个可读名字
     art:s.key,
     hasPhoto:USED_PHOTO,
     label:USED_PHOTO?'拓印体验':'内置题材',
