@@ -795,8 +795,17 @@ function makeThumb(src){
   });
 }
 
+/* 回主产品。
+   线上主产品的部署名是 index.html，本地是「小小河工.html」——
+   直接写死任何一个都会在另一边 404。
+   所以按协议判断：http(s) 走 index.html，file:// 走中文名。
+   （本地双击打开时是 file://，线上访问时是 https://） */
+function homeUrl(){
+  const online = /^https?:$/.test(location.protocol);
+  return (online ? 'index.html' : encodeURI('小小河工.html')) + '#home?tab=explore';
+}
 $('btn-another').onclick=()=>{ resetUp(); show('s-up'); };
-$('btn-passport').onclick=()=>{ location.href='小小河工.html#home?tab=explore'; };
+$('btn-passport').onclick=()=>{ location.href=homeUrl(); };
 
 /* ============================================================
    6. 这台手机印过的

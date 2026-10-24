@@ -939,6 +939,10 @@ body{
   </div>
   <div class="bt-bot">
     <button class="btn btn-gold" id="btn-boot">开始</button>
+    <!-- 全新访客的第二条路。
+         推介会上扫码的人还没打算注册，但可能愿意玩一下拓印。
+         把入口放在开场页，才真的「零门槛」；放在注册之后就不成立了。 -->
+    <button class="btn btn-line" id="btn-boot-stamp" style="margin-top:9px">先印一张拓印卡试试</button>
     <div style="margin-top:11px;text-align:center;font-size:10px;letter-spacing:2px;color:#5C8388">
       23.6 公里　·　十座水闸　·　四条支流
     </div>
@@ -1115,8 +1119,18 @@ body{
         <div id="mod-explore"></div>
       </div>
 
+      <!-- 拓印体验是独立页面，这里只是入口。
+           为什么单独做一个页面而不是塞进主产品：
+           它不需要护照、不需要答题、不需要到场，推介会上扫码就能玩。
+           做成同一页里的一个浮层，反而会把那三个前置流程捆进去。 -->
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">04</span><span class="t">拓印体验</span></div>
+        <div class="hm-sec-d">拍下你看见的那一个，印成一张卡带走。不用先领护照。</div>
+        <div id="mod-stamp"></div>
+      </div>
+
       <div class="hm-sec" style="padding-bottom:20px">
-        <div class="hm-sec-h"><span class="no">04</span><span class="t">河边正在发生</span><span class="r" id="hm-r-feed"></span></div>
+        <div class="hm-sec-h"><span class="no">05</span><span class="t">河边正在发生</span><span class="r" id="hm-r-feed"></span></div>
         <div class="hm-sec-d">别人的到场记录。你没空去的时候，这条河也有人看着。</div>
         <div id="mod-feed"></div>
       </div>
@@ -1821,6 +1835,12 @@ function fmtShort(ts){
 /* ============================================================
    启动
    ============================================================ */
+/* 拓印体验页的文件名。
+   用 encodeURI 编码：中文路径在部分客户端（微信内置浏览器）会被截断，
+   所以链接一律走 URL 编码，不直接拼中文。
+   放在这里是因为开场页的入口（更靠前）也要用它。 */
+const STAMP_PAGE = encodeURI('小小河工-拓印体验.html');
+
 function boot(){
   S.recs=seedRecords().concat(S.recs);
   /* 三种情况：
@@ -1838,6 +1858,12 @@ $('btn-boot').onclick=()=>{
   else if(S.name){ show('s-home'); switchTab('explore'); renderHome(); }
   else show('s-register');
 };
+
+/* 开场页的拓印入口：直接跳，不建档、不答题。
+   这条路径刻意不写任何状态 —— 玩完回来还是全新访客，
+   要不要领护照由他自己决定。 */
+const bs=$('btn-boot-stamp');
+if(bs) bs.onclick=()=>{ location.href=STAMP_PAGE; };
 
 const inName=$('in-name'), agree=$('agree'), btnMake=$('btn-make');
 function chkReg(){
@@ -2140,6 +2166,7 @@ function renderHome(){
   renderQuizMod();
   renderGatesMod();
   renderExploreMod();
+  renderStampMod();
   renderLevelsMod();
   renderStatsMod();
   renderCardsMod();
@@ -2556,6 +2583,21 @@ function renderExploreMod(){
     cls:'act', act:'go-explore', arrow:'拍一张 ›'
   });
   const b=$('go-explore'); if(b) b.onclick=openExplore;
+}
+
+/* 拓印体验入口（STAMP_PAGE 定义在 boot 之前） */
+function renderStampMod(){
+  const box=$('mod-stamp'); if(!box) return;
+  const n=(S.mcards||[]).filter(c=>c.src==='stamp').length;
+  box.innerHTML=modCard({
+    ic:'印', t:'拓印体验',
+    s:'拍下你看见的那一个，印成一张卡带走。',
+    d:'不用先领护照，写个名字就能玩。桥、闸、水鸟、芦苇——挑你面前那一个。',
+    cls:'act', act:'go-stamp',
+    tag: n?'<span class="pill gold"><span class="dt"></span>'+n+' 张</span>':'',
+    arrow:'去印一张 ›'
+  });
+  const b=$('go-stamp'); if(b) b.onclick=()=>{ location.href=STAMP_PAGE; };
 }
 
 function renderTrailMod(){
