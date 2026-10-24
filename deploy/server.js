@@ -89,57 +89,9 @@ function fetchBinary(url) {
 }
 
 function handleStamp(req, res) {
-  // 诊断：?diag=1 时直接返回环境状态，不走方舟
-  if ((req.url || '').includes('diag=1')) {
-    const probe = {};
-    for (const m of ['https', 'dns', 'net', 'tls', 'fs']) {
-      try { probe[m] = !!require(m); } catch (e) { probe[m] = 'ERR:' + e.code; }
-    }
-    const body = JSON.stringify({
-      ok: true,
-      hasKey: !!ARK_KEY,
-      keyLen: ARK_KEY ? ARK_KEY.length : 0,
-      model: ARK_MODEL,
-      url: ARK_URL,
-      maxBody: MAX_BODY,
-      modules: probe,
-      node: process.version,
-      pid: process.pid,
-    });
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-    return res.end(body);
-  }
   if (!ARK_KEY) {
     res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' });
     return res.end(JSON.stringify({ ok: false, error: '服务端未配置 ARK_API_KEY' }));
-  }
-
-  // 诊断：?net=1 时测外网连通性（DNS + TCP + 一次真实请求）
-  if ((req.url || '').includes('net=1')) {
-    const t0 = Date.now();
-    const out = { ok: true, steps: [] };
-    const finish = () => {
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify(out));
-    };
-    require('dns').lookup('ark.cn-beijing.volces.com', (e, addr) => {
-      out.steps.push({ step: 'dns', ok: !e, addr: addr || null, err: e ? e.code : null, ms: Date.now() - t0 });
-      if (e) return finish();
-      const r = https.request({
-        hostname: 'ark.cn-beijing.volces.com', path: '/api/v3/images/generations',
-        method: 'POST', timeout: 8000,
-        headers: { 'Content-Type': 'application/json', 'Content-Length': 2,
-                   Authorization: 'Bearer ' + ARK_KEY },
-      }, (resp) => {
-        resp.resume();
-        out.steps.push({ step: 'http', status: resp.statusCode, ms: Date.now() - t0 });
-        finish();
-      });
-      r.on('timeout', () => { out.steps.push({ step: 'http', err: 'timeout', ms: Date.now() - t0 }); r.destroy(); finish(); });
-      r.on('error', (err) => { out.steps.push({ step: 'http', err: err.code || err.message, ms: Date.now() - t0 }); finish(); });
-      r.end('{}');
-    });
-    return;
   }
 
   let size = 0;
@@ -243,49 +195,6 @@ function handleStamp(req, res) {
 const server = http.createServer((req, res) => {
   const urlPath0 = decodeURIComponent((req.url || '/').split('?')[0]);
 
-  // 诊断：延迟 N 毫秒后返回，测网关/代理的首字节超时阈值
-  if (urlPath0 === '/api/slow') {
-    const q = new URL(req.url, 'http://x').searchParams;
-    const t = Math.min(Math.max(Number(q.get('t')) || 1000, 1), 30000);
-    const t0 = Date.now();
-    setTimeout(() => {
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ ok: true, slept: t, ms: Date.now() - t0 }));
-    }, t);
-    return;
-  }
-
-  // 诊断：async handler 立即返回，对比回调式
-  if (urlPath0 === '/api/asyncpost') {
-    (async () => {
-      let n = 0;
-      const chunks = [];
-      await new Promise(ok => {
-        req.on('data', c => { n += c.length; chunks.push(c); });
-        req.on('end', ok);
-      });
-      await new Promise(r => setTimeout(r, 5));
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ ok: true, async: true, bytes: n }));
-    })();
-    return;
-  }
-
-  // 诊断：立即返回的 POST，用来判断 POST 本身是否被网关拦
-  if (urlPath0 === '/api/posttest') {
-    if (req.method !== 'POST') {
-      res.writeHead(405, { 'Content-Type': 'application/json; charset=utf-8' });
-      return res.end('{"ok":false,"error":"POST only"}');
-    }
-    let n = 0;
-    req.on('data', c => { n += c.length; });
-    req.on('end', () => {
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ ok: true, bytes: n }));
-    });
-    return;
-  }
-
   // 拓印代理：唯一允许 POST 的路径
   if (urlPath0 === '/api/stamp') {
     if (req.method !== 'POST') {
@@ -302,21 +211,6 @@ const server = http.createServer((req, res) => {
   }
 
   let urlPath = urlPath0;
-
-  // 诊断接口：分别测「同步」「微任务」「宏任务」三种响应方式
-  if (urlPath === '/api/ping') {
-    const mode = (req.url.split('mode=')[1] || 'sync').split('&')[0];
-    const body = JSON.stringify({ ok: true, mode });
-    const send = () => {
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(body);
-    };
-    if (mode === 'sync')   return send();
-    if (mode === 'tick')   return process.nextTick(send);
-    if (mode === 'promise') return Promise.resolve().then(send);
-    if (mode === 'timeout') return setTimeout(send, 0);
-    return send();
-  }
 
   // 健康检查
   if (urlPath === '/health' || urlPath === '/healthz') {
