@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小天鹅寻母记 · 清河十闸 | AI+教育游戏 Demo</title>
+<style>
+  :root{
+    --teal:#0E5C63; --teal-deep:#0A3F45; --teal-dark:#073036;
+    --teal-soft:#E5F0EE; --gold:#C9A24B; --gold-light:#E4C987;
+    --cream:#F6F3EB; --paper:#FBFAF5; --ink:#1C2B2B; --body:#465554;
+    --muted:#839291; --line:#D9E2DF; --red:#D9534F; --green:#3E8E6E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;overflow:hidden;background:#072a2f;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;color:var(--ink);}
+  #stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;
+    transform:translate(-50%,-50%) scale(var(--s,1));transform-origin:center center;
+    background:var(--paper);overflow:hidden;}
+  .screen{position:absolute;inset:0;display:none;}
+  .screen.active{display:block;}
+
+  /* ---------- 通用 ---------- */
+  .btn{display:inline-block;cursor:pointer;border:none;outline:none;
+    font-family:inherit;font-size:24px;font-weight:600;border-radius:40px;
+    padding:16px 46px;letter-spacing:2px;transition:transform .15s,box-shadow .15s;}
+  .btn-gold{background:linear-gradient(135deg,#D8B96A,#C9A24B);color:#3d2f10;
+    box-shadow:0 8px 24px rgba(201,162,75,.35);}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(201,162,75,.5);}
+  .btn-ghost{background:transparent;color:var(--teal);border:2px solid var(--teal);}
+  .btn-ghost:hover{background:var(--teal);color:#fff;}
+  .tag{display:inline-block;font-size:15px;letter-spacing:3px;color:var(--teal);
+    border:1px solid var(--teal);border-radius:20px;padding:5px 16px;}
+
+  /* ---------- 封面 ---------- */
+  #cover{background:linear-gradient(180deg,#F6F3EB 0%,#EDF3EF 55%,#DDECE8 100%);}
+  .cover-hill{position:absolute;left:0;bottom:0;width:100%;}
+  .cover-inner{position:relative;z-index:5;text-align:center;padding-top:96px;}
+  .cover-inner h1{font-size:78px;font-weight:800;color:var(--teal-deep);
+    letter-spacing:8px;margin:28px 0 6px;}
+  .cover-inner .sub{font-size:30px;color:var(--body);letter-spacing:10px;font-weight:500;}
+  .cover-story{width:880px;margin:40px auto 0;background:rgba(255,255,255,.82);
+    border:1px solid rgba(14,92,99,.15);border-radius:18px;padding:34px 48px;
+    font-size:22px;line-height:1.9;color:var(--body);text-align:left;
+    box-shadow:0 14px 40px rgba(10,63,69,.10);}
+  .cover-story b{color:var(--teal-deep);}
+  .cover-actions{margin-top:42px;}
+  .cover-ai{margin-top:18px;font-size:16px;color:var(--muted);letter-spacing:2px;}
+  .cover-swan{position:absolute;left:130px;bottom:170px;z-index:4;}
+  .cover-reeds{position:absolute;right:0;bottom:0;z-index:3;}
+
+  /* ---------- 地图 ---------- */
+  #map{background:linear-gradient(180deg,#F2F6F2 0%,#EAF1EE 100%);}
+  .map-top{position:absolute;left:0;top:0;width:100%;height:104px;z-index:10;
+    background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;padding:0 44px;gap:22px;}
+  .map-top h2{font-size:32px;color:var(--teal-deep);letter-spacing:3px;}
+  .map-top .hint{font-size:17px;color:var(--muted);}
+  .map-top .progress{margin-left:auto;display:flex;align-items:center;gap:16px;}
+  .progress-text{font-size:18px;color:var(--body);}
+  .progress-text b{color:var(--teal);font-size:24px;}
+  .ai-badge{display:flex;align-items:center;gap:8px;background:var(--teal-soft);
+    color:var(--teal-deep);font-size:15px;border-radius:24px;padding:8px 18px;}
+  .map-svg{position:absolute;left:0;top:104px;}
+  .gate-node{cursor:pointer;}
+  .gate-node .gate-dam{transition:all .3s;}
+  .gate-node.locked{cursor:not-allowed;}
+  .gate-node.current .gate-ring{animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  .gate-node.done .gate-dam{stroke:var(--green);}
+  .gate-node.done .gate-circle{fill:var(--green);stroke:var(--green);}
+  .gate-node .gate-circle{transition:fill .3s;}
+  .legend{position:absolute;right:40px;bottom:26px;z-index:10;
+    background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:14px;
+    padding:16px 22px;font-size:15px;color:var(--body);line-height:2;}
+  .legend .dot{display:inline-block;width:14px;height:14px;border-radius:50%;
+    vertical-align:middle;margin-right:8px;}
+
+  /* ---------- 弹窗 ---------- */
+  .mask{position:absolute;inset:0;background:rgba(7,34,38,.55);z-index:40;
+    display:none;align-items:center;justify-content:center;}
+  .mask.show{display:flex;}
+  .panel{width:980px;background:var(--paper);border-radius:22px;overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.35);animation:pop .25s ease forwards;}
+  @keyframes pop{from{transform:scale(.92);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .panel-head{background:linear-gradient(120deg,var(--teal-deep),var(--teal));
+    padding:26px 44px;color:#fff;display:flex;align-items:center;gap:18px;}
+  .panel-head .num{width:56px;height:56px;border-radius:50%;background:var(--gold);
+    color:#3a2c0e;font-size:24px;font-weight:800;display:flex;align-items:center;
+    justify-content:center;flex-shrink:0;}
+  .panel-head h3{font-size:30px;letter-spacing:2px;}
+  .panel-head .gate-status{margin-left:auto;font-size:16px;color:var(--gold-light);
+    border:1px solid var(--gold-light);border-radius:20px;padding:6px 18px;}
+  .panel-body{padding:34px 44px 12px;}
+  .gate-story{font-size:19px;line-height:1.8;color:var(--body);
+    background:var(--teal-soft);border-left:4px solid var(--teal);border-radius:0 12px 12px 0;
+    padding:18px 24px;margin-bottom:26px;}
+  .q{font-size:25px;font-weight:700;color:var(--teal-deep);line-height:1.6;margin-bottom:24px;}
+  .q .qicon{color:var(--gold);margin-right:10px;}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .opt{border:2px solid var(--line);border-radius:14px;padding:20px 26px;
+    font-size:21px;cursor:pointer;transition:all .18s;background:#fff;color:var(--body);
+    display:flex;align-items:center;gap:14px;}
+  .opt .okey{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .opt:hover{border-color:var(--teal);color:var(--teal-deep);}
+  .opt:hover .okey{border-color:var(--teal);}
+  .opt.correct{border-color:var(--green);background:#EDF6F1;color:var(--green);}
+  .opt.correct .okey{border-color:var(--green);background:var(--green);color:#fff;}
+  .opt.wrong{border-color:var(--red);background:#FCEEED;color:var(--red);}
+  .opt.wrong .okey{border-color:var(--red);background:var(--red);color:#fff;}
+  .opt.disabled{pointer-events:none;opacity:.85;}
+  .panel-foot{padding:20px 44px 30px;display:flex;align-items:center;gap:18px;}
+  .aihint-btn{background:none;border:1.5px dashed var(--teal);color:var(--teal);
+    font-size:17px;border-radius:24px;padding:12px 24px;cursor:pointer;
+    font-family:inherit;display:flex;align-items:center;gap:8px;}
+  .aihint-btn:hover{background:var(--teal-soft);}
+  .panel-foot .spacer{flex:1;}
+  .aihint-box{margin:0 44px 22px;background:linear-gradient(135deg,#F0F6F4,#E9F2EF);
+    border:1px solid #BFD7D1;border-radius:14px;padding:18px 24px;font-size:18px;
+    line-height:1.75;color:var(--teal-deep);display:none;}
+  .aihint-box.show{display:block;}
+  .aihint-box b{color:var(--teal);}
+
+  /* 知识卡 */
+  .kcard{padding:10px 44px 30px;display:none;}
+  .kcard.show{display:block;}
+  .kcard-inner{background:linear-gradient(135deg,#fffdf6,#fbf6e6);
+    border:1.5px solid var(--gold-light);border-radius:16px;padding:26px 32px;}
+  .kcard-title{font-size:21px;font-weight:700;color:#8a6a24;
+    display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .kcard-text{font-size:19px;line-height:1.85;color:var(--body);}
+  .kcard-reward{margin-top:14px;font-size:17px;color:var(--teal);font-weight:600;}
+
+  /* ---------- 结局 ---------- */
+  #ending{background:linear-gradient(180deg,#F3EFE4 0%,#E6EFE9 60%,#D5E7E1 100%);}
+  .ending-inner{position:relative;z-index:6;text-align:center;padding-top:70px;}
+  .ending-inner h1{font-size:60px;color:var(--teal-deep);letter-spacing:6px;margin:18px 0;}
+  .ending-story{width:860px;margin:10px auto 0;font-size:21px;line-height:1.9;
+    color:var(--body);background:rgba(255,255,255,.85);border-radius:18px;
+    padding:30px 44px;text-align:left;border:1px solid rgba(14,92,99,.15);}
+  .score-card{width:860px;margin:26px auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:18px;padding:28px 0;display:flex;box-shadow:0 14px 40px rgba(10,63,69,.1);}
+  .score-item{flex:1;border-right:1px solid var(--line);}
+  .score-item:last-child{border-right:none;}
+  .score-item .v{font-size:44px;font-weight:800;color:var(--teal);}
+  .score-item .v.gold{color:var(--gold);}
+  .score-item .k{font-size:17px;color:var(--muted);margin-top:6px;}
+  .medal{display:inline-block;margin-top:24px;background:linear-gradient(135deg,#D8B96A,#B8913C);
+    color:#fff;font-size:22px;font-weight:700;border-radius:30px;padding:14px 40px;
+    box-shadow:0 10px 26px rgba(201,162,75,.4);letter-spacing:2px;}
+  .ending-actions{margin-top:26px;}
+  .ending-svg{position:absolute;left:0;bottom:0;}
+
+  .toast{position:absolute;top:130px;left:50%;transform:translateX(-50%);z-index:60;
+    background:var(--teal-deep);color:#fff;font-size:19px;padding:14px 32px;border-radius:30px;
+    opacity:0;transition:opacity .3s;pointer-events:none;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ============ 封面 ============ -->
+  <div class="screen" id="screen-cover">
+    <div class="cover-inner">
+      <span class="tag">AI + 教育游戏 · 清河之洲</span>
+      <h1>小天鹅寻母记</h1>
+      <div class="sub">清河十闸 · 闯关东游记</div>
+      <div class="cover-story">
+        清河之洲飞来过一对黑天鹅，它们在芦苇荡里孵出了天鹅宝宝。<b>小天鹅</b>原本和妈妈生活在西山碧云寺脚下的水边——可有一天，妈妈不见了。<br>
+        小天鹅想：妈妈一定是<b>一路向东，看大海去了</b>。于是它顺河而下，要穿过 <b>10 座水闸</b>。每座闸都要答对它的名字与故事，闸门才会为小天鹅开启……
+      </div>
+      <div class="cover-actions">
+        <button class="btn btn-gold" onclick="startGame()">开始旅程</button>
+      </div>
+      <div class="cover-ai">AI 天鹅向导全程陪伴 · 出题 · 讲解 · 鼓励 · 个性化难度</div>
+    </div>
+    <svg class="cover-swan" width="240" height="230" viewBox="0 0 240 230">
+      <ellipse cx="118" cy="150" rx="78" ry="62" fill="#D9D2C4"/>
+      <ellipse cx="118" cy="150" rx="78" ry="62" fill="url(#fluff)"/>
+      <path d="M150 120 C196 100 178 46 146 42 C128 40 128 60 143 64 C160 68 168 92 150 108" fill="#C9C1B0"/>
+      <circle cx="146" cy="48" r="22" fill="#C9C1B0"/>
+      <circle cx="140" cy="44" r="4.5" fill="#222"/>
+      <path d="M128 50 l-18 5 l17 8 z" fill="#3a3a3a"/>
+      <path d="M70 200 l-10 22 M104 206 l-4 22 M140 204 l4 22" stroke="#8A7F68" stroke-width="7" stroke-linecap="round"/>
+      <defs><radialGradient id="fluff" cx="40%" cy="35%" r="75%">
+        <stop offset="0%" stop-color="#EFE9DC"/><stop offset="100%" stop-color="#C7BFAE"/>
+      </radialGradient></defs>
+    </svg>
+    <svg class="cover-hill" width="1600" height="340" viewBox="0 0 1600 340" preserveAspectRatio="none">
+      <path d="M0 220 L180 120 L330 210 L520 90 L700 200 L900 110 L1120 210 L1340 130 L1600 220 L1600 340 L0 340 Z" fill="#bcd3cd"/>
+      <path d="M0 260 L240 180 L460 255 L700 170 L960 260 L1200 180 L1420 250 L1600 200 L1600 340 L0 340 Z" fill="#9CBFB6"/>
+      <path d="M0 300 C300 270 600 320 900 295 C1200 270 1400 310 1600 290 L1600 340 L0 340 Z" fill="#7FA99E"/>
+    </svg>
+    <svg class="cover-reeds" width="420" height="300" viewBox="0 0 420 300">
+      <g stroke="#6E8A63" stroke-width="7" fill="none" stroke-linecap="round">
+        <path d="M60 300 C70 220 56 160 80 90"/><path d="M110 300 C104 230 124 170 106 100"/>
+        <path d="M330 300 C342 220 326 150 352 80"/><path d="M380 300 C372 230 392 170 376 110"/>
+      </g>
+      <g fill="#8BA572"><ellipse cx="80" cy="88" rx="9" ry="26"/><ellipse cx="106" cy="98" rx="9" ry="26"/>
+      <ellipse cx="352" cy="78" rx="9" ry="26"/><ellipse cx="376" cy="108" rx="9" ry="26"/></g>
+    </svg>
+  </div>
+
+  <!-- ============ 地图 ============ -->
+  <div class="screen" id="screen-map">
+    <div class="map-top">
+      <h2>清河 · 闯关路线图</h2>
+      <div class="hint">点击当前水闸，答对闸名即可开闸通过</div>
+      <div class="progress">
+        <div class="ai-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="7" width="14" height="12" rx="3" stroke="#0E5C63" stroke-width="2"/><circle cx="9.5" cy="13" r="1.5" fill="#0E5C63"/><circle cx="14.5" cy="13" r="1.5" fill="#0E5C63"/><path d="M12 7V3M9 3h6" stroke="#0E5C63" stroke-width="2" stroke-linecap="round"/></svg>
+          AI 天鹅向导
+        </div>
+        <div class="progress-text">已开闸 <b id="p-done">0</b> / 10</div>
+      </div>
+    </div>
+    <svg class="map-svg" width="1600" height="796" viewBox="0 0 1600 796">
+      <defs>
+        <linearGradient id="river" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#6FA7C4"/><stop offset="55%" stop-color="#5C98B8"/><stop offset="100%" stop-color="#73AEC8"/>
+        </linearGradient>
+      </defs>
+      <!-- 陆地底色纹理 -->
+      <g fill="#E8F0E3" opacity="0.7">
+        <ellipse cx="300" cy="200" rx="150" ry="70"/><ellipse cx="760" cy="180" rx="180" ry="60"/>
+        <ellipse cx="1230" cy="180" rx="170" ry="70"/><ellipse cx="600" cy="680" rx="200" ry="60"/>
+        <ellipse cx="1100" cy="680" rx="210" ry="60"/>
+      </g>
+      <!-- 河流 -->
+      <path d="M70 560 C150 560 150 520 220 510 C330 495 300 420 380 400 C470 378 470 360 540 360 C640 360 600 440 700 450 C800 460 790 480 860 470 C970 455 960 380 1040 370 C1120 360 1120 300 1190 300 C1270 300 1260 380 1340 390 C1420 400 1440 420 1500 420 L1500 480 C1440 480 1420 460 1340 450 C1260 440 1270 360 1190 360 C1120 360 1120 420 1040 430 C960 440 970 515 860 530 C790 540 800 520 700 510 C600 500 640 420 540 420 C470 420 470 438 380 460 C300 480 330 555 220 570 C150 580 150 620 70 620 Z" fill="url(#river)"/>
+      <path d="M70 572 C150 572 150 532 220 522 C330 507 300 432 380 412 C470 390 470 372 540 372 C640 372 600 452 700 462 C800 472 790 492 860 482 C970 467 960 392 1040 382 C1120 372 1120 312 1190 312 C1270 312 1260 392 1340 402 C1420 412 1440 432 1500 432" stroke="#BFE0EA" stroke-width="10" fill="none" opacity="0.6"/>
+      <!-- 西山 -->
+      <path d="M0 470 L120 330 L230 450 L340 300 L470 460 L0 460 Z" fill="#A9C4BD" opacity="0.85"/>
+      <!-- 起点 -->
+      <g>
+        <circle cx="70" cy="590" r="26" fill="#0E5C63"/>
+        <text x="70" y="599" text-anchor="middle" font-size="24" fill="#fff" font-weight="700">起</text>
+        <rect x="20" y="628" width="180" height="52" rx="10" fill="#fff" stroke="#0E5C63" stroke-width="1.5"/>
+        <text x="110" y="650" text-anchor="middle" font-size="16" fill="#0A3F45" font-weight="700">西山碧云寺</text>
+        <text x="110" y="670" text-anchor="middle" font-size="14" fill="#465554">天鹅的家</text>
+      </g>
+      <!-- 终点 -->
+      <g>
+        <circle cx="1520" cy="450" r="26" fill="#C9A24B"/>
+        <text x="1520" y="459" text-anchor="middle" font-size="24" fill="#fff" font-weight="700">终</text>
+        <rect x="1400" y="488" width="190" height="52" rx="10" fill="#fff" stroke="#C9A24B" stroke-width="1.5"/>
+        <text x="1495" y="510" text-anchor="middle" font-size="16" fill="#8a6a24" font-weight="700">温榆河口</text>
+        <text x="1495" y="530" text-anchor="middle" font-size="14" fill="#465554">通向大运河与大海</text>
+      </g>
+      <!-- 小地标：彩虹桥 -->
+      <path d="M300 452 C330 392 372 392 402 452" stroke="#D96B8C" stroke-width="6" fill="none"/>
+      <path d="M306 452 C334 404 368 404 396 452" stroke="#E8B84C" stroke-width="4" fill="none"/>
+      <!-- 汇芳桥 -->
+      <path d="M570 388 C620 348 672 348 716 388" stroke="#9A6B4A" stroke-width="7" fill="none"/>
+      <!-- 奥森仰山 -->
+      <g transform="translate(1010,300)"><rect x="0" y="14" width="26" height="44" fill="#7C9B8E"/><rect x="10" y="-2" width="6" height="20" fill="#7C9B8E"/></g>
+      <!-- 温榆河公园梯田 -->
+      <g fill="#B8CF9F" opacity="0.9">
+        <path d="M1280 250 q60 -22 120 0 l0 18 q-60 -18 -120 0 Z"/>
+        <path d="M1280 276 q60 -22 120 0 l0 18 q-60 -18 -120 0 Z"/>
+        <path d="M1280 302 q60 -22 120 0 l0 18 q-60 -18 -120 0 Z"/>
+      </g>
+      <!-- 水闸（JS 注入） -->
+      <g id="gates"></g>
+      <!-- 小天鹅 -->
+      <g id="swan" transform="translate(36,548)">
+        <ellipse cx="34" cy="40" rx="34" ry="26" fill="#D9D2C4"/>
+        <path d="M56 26 C82 14 74 -14 56 -16 C47 -17 47 -4 56 -2 C64 0 66 14 56 22" fill="#C9C1B0"/>
+        <circle cx="56" cy="-13" r="10" fill="#C9C1B0"/>
+        <circle cx="53" cy="-15" r="2.4" fill="#222"/>
+        <path d="M47 -11 l-10 2.5 l9.5 4.5 Z" fill="#333"/>
+      </g>
+    </svg>
+    <div class="legend">
+      <div><span class="dot" style="background:#C9A24B;"></span>当前关卡（可点击）</div>
+      <div><span class="dot" style="background:#3E8E6E;"></span>已通过</div>
+      <div><span class="dot" style="background:#B6BFBD;"></span>未解锁</div>
+    </div>
+  </div>
+
+  <!-- ============ 答题弹窗 ============ -->
+  <div class="mask" id="quiz-mask">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="num" id="q-num">1</div>
+        <h3 id="q-title">安河闸</h3>
+        <div class="gate-status">第 1 关 · 共 10 关</div>
+      </div>
+      <div class="panel-body">
+        <div class="gate-story" id="q-story"></div>
+        <div class="q"><span class="qicon">Q</span><span id="q-text"></span></div>
+        <div class="options" id="q-options"></div>
+      </div>
+      <div class="aihint-box" id="aihint-box">
+        <b>AI 天鹅向导：</b><span id="aihint-text"></span>
+      </div>
+      <div class="kcard" id="kcard">
+        <div class="kcard-inner">
+          <div class="kcard-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.4L20 9l-4.2 3.8L17 19l-5-2.8L7 19l1.2-6.2L4 9l5.6-.6z" fill="#C9A24B"/></svg>
+            知识卡片已收入图鉴
+          </div>
+          <div class="kcard-text" id="kcard-text"></div>
+          <div class="kcard-reward" id="kcard-reward"></div>
+        </div>
+      </div>
+      <div class="panel-foot">
+        <button class="aihint-btn" onclick="toggleHint()">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="5" y="7" width="14" height="12" rx="3" stroke="#0E5C63" stroke-width="2"/><circle cx="9.5" cy="13" r="1.5" fill="#0E5C63"/><circle cx="14.5" cy="13" r="1.5" fill="#0E5C63"/><path d="M12 7V3" stroke="#0E5C63" stroke-width="2" stroke-linecap="round"/></svg>
+          问问 AI 向导（提示）
+        </button>
+        <div class="spacer"></div>
+        <button class="btn btn-gold" id="next-btn" style="display:none;font-size:21px;padding:13px 38px;" onclick="nextGate()">开闸，继续前进</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 结局 ============ -->
+  <div class="screen" id="screen-ending">
+    <div class="ending-inner">
+      <span class="tag">通关 · 母子重逢</span>
+      <h1>妈妈，我找到你啦！</h1>
+      <div class="ending-story">
+        穿过第十座闸，河面豁然开朗。芦苇荡边，一个熟悉的身影正梳理着羽毛——是妈妈！<br>
+        “傻孩子，妈妈是先顺河<b>探路</b>来了，算着日子，你今天该到啦。”<br>
+        清河全长 <b>23.6 公里</b>，在这里汇入温榆河；再向东，便是温榆河、京杭大运河，一直通向<b>大海</b>。这一路，小天鹅记住了十座水闸的名字，也听懂了这条河的故事。
+      </div>
+      <div class="score-card">
+        <div class="score-item"><div class="v">10 / 10</div><div class="k">水闸通关</div></div>
+        <div class="score-item"><div class="v gold">10 张</div><div class="k">知识图鉴</div></div>
+        <div class="score-item"><div class="v" id="end-correct">10 题</div><div class="k">答对题数</div></div>
+        <div class="score-item"><div class="v">8'26"</div><div class="k">闯关用时</div></div>
+      </div>
+      <div class="medal">称号：清河小卫士 · 天鹅寻亲勋章</div>
+      <div class="ending-actions">
+        <button class="btn btn-gold" onclick="restart()">再游一次</button>
+        <button class="btn btn-ghost" style="margin-left:18px;" onclick="share()">生成研学证书</button>
+      </div>
+    </div>
+    <svg class="ending-svg" width="1600" height="260" viewBox="0 0 1600 260" preserveAspectRatio="none">
+      <path d="M0 180 C300 150 600 200 900 175 C1200 150 1400 190 1600 170 L1600 260 L0 260 Z" fill="#9CBFB6"/>
+      <path d="M0 220 C400 195 800 235 1200 215 C1400 205 1500 225 1600 215 L1600 260 L0 260 Z" fill="#7FA99E"/>
+    </svg>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ---------- 自适应缩放 ---------- */
+function fit(){
+  const s=Math.min(window.innerWidth/1600,window.innerHeight/900);
+  document.getElementById('stage').style.setProperty('--s',s);
+}
+window.addEventListener('resize',fit);fit();
+
+/* ---------- 水闸数据 ---------- */
+const GATES=[
+ {name:'安河闸',x:200,y:540,
+  story:'1966 年京密引水渠建成，清河的起点就改到了引水渠东岸。我南距颐和园北如意门约 1 公里，闸的南北两端还立着“清0”石碑。',
+  q:'我是清河的第一座水闸，始建于 1965 年，也是清河的“零公里”处，我是谁？',
+  opts:['安河闸','肖家河闸','沙子营闸','树村闸'],ans:0,
+  hint:'我的名字里有一个“安”字，旁边的京密引水渠带来了安宁的水源，人们还叫我“清0”的起点。',
+  k:'安河闸始建于 1965 年，2008 年、2014 年两次改建，为双孔平板钢闸门、卷扬式启闭，主要功能是泄洪。',
+  reward:'奖励：天鹅羽毛 ×1'},
+ {name:'肖家河闸',x:350,y:430,
+  story:'我在肖家河桥西，上距安河闸约 1.6 公里。我身边有一座漂亮的彩虹桥，东边还有大环型立交桥。',
+  q:'我西侧有一座七彩的“彩虹桥”，上距安河闸约 1.6 公里，我是哪座水闸？',
+  opts:['肖家河闸','树村闸','羊坊闸','沈家闸'],ans:0,
+  hint:'我紧邻“肖家河桥”，名字与这条河、这座桥相同。',
+  k:'安河闸到肖家河闸之间河道曲折、姿态优美；肖家河闸是清河由西向东的第二道关卡。',
+  reward:'奖励：彩虹桥明信片 ×1'},
+ {name:'树村闸',x:510,y:390,
+  story:'我在圆明园正北方向，闸上带楼、闸桥一体，是清河十闸中最有观赏价值的一座。',
+  q:'我“闸上带楼、闸桥一体”，被誉为清河十闸中最美的闸门，我是？',
+  opts:['树村闸','清河闸','京包闸','外环跌水闸'],ans:0,
+  hint:'我在“树村”地界，圆明园正北，登楼能看见西山。',
+  k:'树村闸上距肖家河闸约 1.9 公里，闸桥供步行与骑行通过，登闸可远眺百望山、寿安山与香山。',
+  reward:'奖励：树村闸影贴纸 ×1'},
+ {name:'京包闸',x:670,y:480,
+  story:'我守在京包铁路西侧，旁边是箭亭立交桥——京新高速、京张高铁、京包铁路、地铁 13 号线都在这里交汇。万泉河就在我附近汇入清河。',
+  q:'我以身边的铁路得名，位于京包铁路西侧，我是？',
+  opts:['京包闸','沈家闸','羊坊闸','下清河闸'],ans:0,
+  hint:'我的名字取自“京包铁路”的前两个字。',
+  k:'京包闸上距树村闸约 1.7 公里；附近汇芳桥桥头题有乾隆《断桥残雪》诗，景点名为“汇芳残雪”。',
+  reward:'奖励：乾隆诗签 ×1'},
+ {name:'清河闸',x:830,y:500,
+  story:'我在清河大桥（京藏高速跨河大桥）西侧，小月河在我身边汇入清河。河边有明代古桥广济桥，还有古清真寺。',
+  q:'我旁边的小月河上有一座明代古桥“广济桥”，始建于明永乐七年，我是哪座闸？',
+  opts:['清河闸','安河闸','沙子营闸','树村闸'],ans:0,
+  hint:'我就以这条河的名字命名——“清河”的闸。',
+  k:'清河沿岸有六处古迹：广济桥、清河古城遗址、清河火车站（詹天佑主持修建）、本裕仓、清河制呢厂办公楼、清河清真寺。',
+  reward:'奖励：古迹图鉴 ×1'},
+ {name:'下清河闸',x:1000,y:400,
+  story:'我在奥林匹克森林公园北围墙外，闸桥一体，只供步行和骑行的人通过。过了我，河道岸坡开始变得更自然。',
+  q:'我紧挨奥林匹克森林公园北墙，只允许步行和骑行通过，我是？',
+  opts:['下清河闸','外环跌水闸','京包闸','肖家河闸'],ans:0,
+  hint:'我在“清河闸”的下游（东边），所以名字里有个“下”字。',
+  k:'自清河闸起，南岸改为土坡、林草茂密；下清河闸上距清河闸约 2.6 公里。',
+  reward:'奖励：奥森观鸟卡 ×1'},
+ {name:'羊坊闸',x:1160,y:330,
+  story:'我在立水桥西南约 600 米处。从我这里开始，清河两岸都变成了土坡，自然的气息越来越浓。',
+  q:'我位于立水桥西南约 600 米，过了我河道两岸都是自然土坡，我是？',
+  opts:['羊坊闸','沈家闸','树村闸','安河闸'],ans:0,
+  hint:'我地处“羊坊”，立水桥在我的东北方向不远。',
+  k:'羊坊闸上距下清河闸约 2.9 公里；清洋河（奥林匹克公园龙形水系退水河）在其上游不远处汇入清河。',
+  reward:'奖励：芦苇书签 ×1'},
+ {name:'外环跌水闸',x:1230,y:330,
+  story:'我在地铁 13 号线环线外约 150 米，是十闸中唯一的拦水坝，却也叫“闸”。立水桥就在我西边。',
+  q:'我是清河十闸中唯一的拦水坝（跌水坝），在地铁环线外，我是？',
+  opts:['外环跌水闸','沙子营闸','清河闸','京包闸'],ans:0,
+  hint:'“跌水”就是水流从坝上跌落的意思，我又在地铁“外环”线外。',
+  k:'外环跌水闸上距羊坊闸约 1.4 公里；立水桥是京北跨清河六大交通枢纽之一，旁有地铁斜拉桥。',
+  reward:'奖励：跌水坝徽章 ×1'},
+ {name:'沈家闸',x:1330,y:420,
+  story:'我在北京温榆河公园的西部，上距外环跌水闸约 4.3 公里，这是十闸之间相隔最远的一段。',
+  q:'我坐落于温榆河公园西部，是进入温榆河公园的第一座水闸，我是？',
+  opts:['沈家闸','下清河闸','肖家河闸','羊坊闸'],ans:0,
+  hint:'我姓“沈”，在温榆河公园的西边守着河面。',
+  k:'立水桥以东进入“滨水慢行系统”，两岸约 17 公里只供步行和骑行，是骑行者的乐园。',
+  reward:'奖励：温榆河公园地图 ×1'},
+ {name:'沙子营闸',x:1420,y:420,
+  story:'我在清河的尾端，距清河入温榆河口只有约 300 米。我是十闸中唯一的翻板式平板钢闸门，全开时翻起平卧，还能当桥用。',
+  q:'我是清河最后一座闸，唯一的翻板式平板钢闸门，开启时可平卧当桥，我是？',
+  opts:['沙子营闸','安河闸','沈家闸','外环跌水闸'],ans:0,
+  hint:'我在“沙子营”，过了我再游 300 米，清河就到尽头啦。',
+  k:'沙子营闸为 3 孔翻板式平板钢闸门、液压启闭；过闸 300 米即清河入温榆河口，23.6 公里的旅程到此结束。',
+  reward:'奖励：通关金钥匙 ×1'}
+];
+
+/* 水闸在地图上的视觉位置（贴近河面） */
+const POS=[{x:200,y:540},{x:350,y:430},{x:510,y:390},{x:670,y:480},{x:830,y:500},
+           {x:1000,y:400},{x:1115,y:330,up:true},{x:1225,y:310,down:true},
+           {x:1330,y:420},{x:1430,y:420}];
+
+let current=0, correctCount=0, answered=false;
+
+/* ---------- 渲染水闸 ---------- */
+function renderGates(){
+  const g=document.getElementById('gates');
+  g.innerHTML='';
+  GATES.forEach((gate,i)=>{
+    const p=POS[i];
+    const node=document.createElementNS('http://www.w3.org/2000/svg','g');
+    node.setAttribute('class','gate-node locked');
+    node.setAttribute('id','gate-'+i);
+    node.setAttribute('transform',`translate(${p.x},${p.y})`);
+    node.setAttribute('onclick',`clickGate(${i})`);
+    const labelY=(p.up)?-70:(p.down)?66:(i%2===0)?66:-70;
+    node.innerHTML=`
+      <g class="gate-ring" style="display:none">
+        <circle r="40" fill="none" stroke="#C9A24B" stroke-width="3"/>
+      </g>
+      <g class="gate-dam" transform="translate(-24,-18)">
+        <rect x="0" y="0" width="48" height="10" rx="2" fill="#8B7A5E"/>
+        <rect x="6" y="10" width="10" height="26" fill="#B6BFBD"/>
+        <rect x="19" y="10" width="10" height="26" fill="#B6BFBD"/>
+        <rect x="32" y="10" width="10" height="26" fill="#B6BFBD"/>
+        <rect x="0" y="36" width="48" height="8" rx="2" fill="#8B7A5E"/>
+      </g>
+      <circle class="gate-circle" cy="52" r="20" fill="#9AA7A5" stroke="#9AA7A5"/>
+      <text y="59" text-anchor="middle" font-size="18" fill="#fff" font-weight="700">${i+1}</text>
+      <g transform="translate(0,${labelY})">
+        <rect x="-52" y="0" width="104" height="36" rx="8" fill="#fff" stroke="#C9D4D1"/>
+        <text y="24" text-anchor="middle" font-size="18" fill="#465554" font-weight="600">${gate.name}</text>
+      </g>`;
+    g.appendChild(node);
+  });
+  updateGateStates();
+}
+function updateGateStates(){
+  GATES.forEach((g,i)=>{
+    const node=document.getElementById('gate-'+i);
+    const ring=node.querySelector('.gate-ring');
+    const circle=node.querySelector('.gate-circle');
+    node.classList.remove('locked','current','done');
+    ring.style.display='none';
+    if(i<current){
+      node.classList.add('done');
+      circle.setAttribute('fill','#3E8E6E');circle.setAttribute('stroke','#3E8E6E');
+      node.querySelector('.gate-dam').setAttribute('opacity','0.55');
+    }else if(i===current){
+      node.classList.add('current');
+      circle.setAttribute('fill','#C9A24B');circle.setAttribute('stroke','#C9A24B');
+      ring.style.display='block';
+    }else{
+      node.classList.add('locked');
+      circle.setAttribute('fill','#9AA7A5');circle.setAttribute('stroke','#9AA7A5');
+    }
+  });
+  document.getElementById('p-done').textContent=current;
+}
+function clickGate(i){
+  if(i!==current){showToast(i<current?'这座闸已经通过啦':'先通过前面的水闸，才能到这里哦');return;}
+  openQuiz(i);
+}
+
+/* ---------- 小天鹅移动 ---------- */
+function moveSwan(i){
+  const p=POS[Math.max(0,i)];
+  const swan=document.getElementById('swan');
+  swan.setAttribute('transform',`translate(${p.x-34},${p.y-42})`);
+}
+
+/* ---------- 答题 ---------- */
+function openQuiz(i){
+  const gate=GATES[i];answered=false;
+  document.getElementById('q-num').textContent=i+1;
+  document.getElementById('q-title').textContent=gate.name;
+  document.querySelector('.gate-status').textContent=`第 ${i+1} 关 · 共 10 关`;
+  document.getElementById('q-story').textContent=gate.story;
+  document.getElementById('q-text').textContent=gate.q;
+  const box=document.getElementById('q-options');box.innerHTML='';
+  const keys=['A','B','C','D'];
+  gate.opts.forEach((op,k)=>{
+    const d=document.createElement('div');
+    d.className='opt';d.innerHTML=`<span class="okey">${keys[k]}</span>${op}`;
+    d.onclick=()=>answer(k,d);
+    box.appendChild(d);
+  });
+  document.getElementById('aihint-box').classList.remove('show');
+  document.getElementById('kcard').classList.remove('show');
+  document.getElementById('next-btn').style.display='none';
+  document.getElementById('quiz-mask').classList.add('show');
+}
+function answer(k,el){
+  if(answered)return;
+  const gate=GATES[current];
+  const opts=[...document.querySelectorAll('.opt')];
+  if(k===gate.ans){
+    answered=true;el.classList.add('correct');
+    opts.forEach(o=>o.classList.add('disabled'));
+    current++;correctCount++;
+    document.getElementById('kcard-text').textContent=gate.k;
+    document.getElementById('kcard-reward').textContent=gate.reward;
+    document.getElementById('kcard').classList.add('show');
+    document.getElementById('next-btn').style.display='inline-block';
+    showToast('答对啦！闸门正在开启……');
+  }else{
+    el.classList.add('wrong');el.classList.add('disabled');
+    document.getElementById('aihint-text').textContent=gate.hint;
+    document.getElementById('aihint-box').classList.add('show');
+    showToast('再想想，可以听听 AI 向导的提示');
+  }
+}
+function toggleHint(){
+  const box=document.getElementById('aihint-box');
+  document.getElementById('aihint-text').textContent=GATES[current].hint;
+  box.classList.toggle('show');
+}
+function nextGate(){
+  document.getElementById('quiz-mask').classList.remove('show');
+  updateGateStates();
+  if(current>=GATES.length){ending();return;}
+  moveSwan(current);
+}
+
+/* ---------- 流程控制 ---------- */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function startGame(){
+  current=0;correctCount=0;renderGates();updateGateStates();
+  moveSwan(0);
+  show('screen-map');
+}
+function ending(){
+  document.getElementById('end-correct').textContent=correctCount+' 题';
+  show('screen-ending');
+}
+function restart(){startGame();}
+function share(){showToast('研学证书已生成（Demo 演示）');}
+
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ---------- 初始画面：封面 ---------- */
+renderGates();
+show('screen-cover');
+
+/* ---------- 截图用路由：#map / #quiz?n=1 / #ending ---------- */
+(function route(){
+  const h=location.hash;
+  if(h==='#map'){startGame();}
+  else if(h.startsWith('#quiz')){
+    const n=parseInt(h.split('=')[1]||'1',10)-1;
+    startGame();
+    for(let i=0;i<n;i++){current++;}
+    updateGateStates();moveSwan(n);
+    openQuiz(n);
+  }
+  else if(h==='#ending'){
+    startGame();current=10;correctCount=9;ending();
+  }
+})();
+</script>
+</body>
+</html>
