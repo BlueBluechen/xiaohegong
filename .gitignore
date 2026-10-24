@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 preview-*/
 *.pdf
+*.bak
+
+# 飞书授权二维码（含临时凭证，勿提交）
+lark-auth-qr*.png
