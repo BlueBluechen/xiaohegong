@@ -65,7 +65,14 @@ body{
 .bt-top{padding:50px 26px 0;position:relative;z-index:2;}
 .bt-mark{font-size:10px;letter-spacing:3.5px;color:var(--gold-l);}
 .bt-rule{width:32px;height:1px;background:var(--gold);margin:18px 0 24px;}
-.bt-h1{font-family:"Songti SC",serif;font-size:52px;font-weight:400;color:#F3F0E7;letter-spacing:7px;line-height:1.2;}
+/* 五个字排一行，不折行。
+   字号 + 字距要卡在 430px 宽度内：5 字 × 字距 + 字号 ≈ 满行。
+   white-space:nowrap 兜住极端窄屏，宁可缩字号也不换行。 */
+.bt-h1{
+  font-family:"Songti SC",serif;font-size:46px;font-weight:400;
+  color:#F3F0E7;letter-spacing:9px;line-height:1.15;
+  white-space:nowrap;text-indent:9px;
+}
 .bt-sub{font-family:"Songti SC",serif;font-size:16px;letter-spacing:3px;color:var(--gold-l);margin-top:12px;}
 .bt-quote{font-size:15px;line-height:1.95;color:#A9C3C1;letter-spacing:1.2px;
   padding:0 26px;margin:0 0 6px;}
@@ -74,7 +81,7 @@ body{
 /* 封面主视觉：一条河。flex:1 让它吃掉中间所有空白，
    河占满还是缩小都由屏幕高度决定，不用写死高度。 */
 .bt-river{flex:1 1 auto;min-height:0;display:flex;align-items:center;
-  padding:6px 0 0;overflow:hidden;}
+  padding:6px 10px 0;overflow:hidden;}
 .bt-river svg{width:100%;height:100%;display:block;}
 
 /* ============================================================
@@ -125,18 +132,40 @@ body{
 .pp-vl{font-family:"Songti SC",serif;font-size:17px;letter-spacing:2px;color:#2F3330;}
 .pp-mono{font-family:ui-monospace,Menlo,monospace;font-size:14px;letter-spacing:1.6px;}
 
-.pp-river{margin:10px 0 0;flex:1 1 auto;min-height:0;display:flex;
-  flex-direction:column;justify-content:center;opacity:.92;}
-.pp-river svg{width:118%;margin-left:-9%;}
-.pp-river svg{width:100%;height:auto;display:block;}
-.pp-river-lb{display:flex;justify-content:space-between;
-  font-size:8px;letter-spacing:1.4px;color:#A89870;margin-top:2px;}
+/* 十闸竖排：一条水脉从上往下流，十站依序挂在上面。
+   和足迹图同一套视觉逻辑，但尺寸更小（这里是设计稿，不是操作界面）。 */
+.pp-trail{position:relative;margin:14px 0 0;flex:1 1 auto;min-height:0;
+  display:flex;padding-left:26px;}
+.pp-line{position:absolute;left:9px;top:4px;bottom:4px;width:2px;
+  background:linear-gradient(180deg,
+    rgba(127,174,196,.22) 0%, rgba(127,174,196,.55) 45%, rgba(127,174,196,.22) 100%);
+  border-radius:2px;}
+.pp-line::before{
+  content:'';position:absolute;left:-9px;top:0;bottom:0;width:20px;
+  background:linear-gradient(180deg,
+    rgba(191,217,228,.10), rgba(191,217,228,.26), rgba(191,217,228,.10));
+  border-radius:10px;
+}
+.pp-sts{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between;
+  padding:2px 0;}
+.pp-st{position:relative;display:flex;align-items:baseline;gap:7px;}
+.pp-st::before{
+  content:'';position:absolute;left:-20px;top:5px;width:6px;height:6px;
+  border-radius:50%;background:#F7F4EC;border:1.5px solid rgba(127,174,196,.62);
+  box-sizing:border-box;
+}
+.pp-st.up::before{background:#7FAEC4;border-color:#7FAEC4;}
+.pp-st .no{font-size:7.5px;letter-spacing:.6px;color:#B3A489;
+  font-family:ui-monospace,Menlo,monospace;flex:0 0 auto;}
+.pp-st .nm{font-family:"Songti SC",serif;font-size:10.5px;letter-spacing:.6px;
+  color:#4A4E48;line-height:1.2;}
+.pp-st .nk{font-size:7.5px;color:#B3A489;letter-spacing:.3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
 .pp-foot{display:flex;justify-content:space-between;
-  font-size:8px;letter-spacing:1.2px;color:#A89870;margin-top:10px;}
+  font-size:8px;letter-spacing:1.2px;color:#A89870;margin-top:10px;
+  border-top:1px solid rgba(58,58,58,.1);padding-top:8px;}
 
-.pp-tip{padding:14px 26px 0;flex:0 0 auto;text-align:center;
-  font-size:10px;line-height:1.9;color:#5C8388;}
 .pp-bot{padding:16px 26px 34px;flex:0 0 auto;}
 
 /* ============================================================
@@ -178,7 +207,7 @@ body{
 .bt-bot{padding:18px 26px 34px;}
 
 /* ================= 建档 ================= */
-.gd-head{padding:42px 26px 0;}
+.gd-head{padding:56px 26px 0;}
 .gd-h1{font-family:"Songti SC",serif;font-size:27px;letter-spacing:1.5px;line-height:1.45;margin:8px 0 12px;}
 .gd-h1 em{font-style:normal;color:var(--teal);}
 .gd-desc{font-size:13px;line-height:1.95;color:var(--body);}
@@ -857,7 +886,7 @@ body{
 .up-box .d{font-size:11.5px;line-height:1.8;color:var(--body);margin-bottom:18px;}
 
 @media(max-height:720px){
-  .bt-h1{font-size:42px;}
+  .bt-h1{font-size:38px;letter-spacing:7px;text-indent:7px;}
   .qz-q{font-size:19px;margin-bottom:14px;}
   .pp-name{font-size:22px;}
   .ck-t{font-size:24px;}
@@ -1020,9 +1049,9 @@ body{
     <circle cx="372" cy="116" r="94" fill="none" stroke="#C9A24B" stroke-opacity=".06"/>
   </svg>
   <div class="bt-top">
-    <div class="bt-mark">站　点　北　京　清　河</div>
+    <div class="bt-mark">北　京　清　河</div>
     <div class="bt-rule"></div>
-    <div class="bt-h1">小小<br>河工</div>
+    <div class="bt-h1">小小河工</div>
     <div class="bt-sub">AI+ 公民河流教育计划</div>
   </div>
 
@@ -1042,24 +1071,25 @@ body{
           <stop offset="1" stop-color="#C9A24B" stop-opacity=".05"/>
         </linearGradient>
       </defs>
-      <path d="M-30 300 C 60 286, 96 236, 150 214 S 250 196, 286 150 S 350 96, 460 74"
-            fill="none" stroke="url(#btr1)" stroke-width="54" stroke-linecap="round"/>
-      <path d="M-30 300 C 60 286, 96 236, 150 214 S 250 196, 286 150 S 350 96, 460 74"
-            fill="none" stroke="url(#btr2)" stroke-width="15" stroke-linecap="round"/>
+      <path d="M24 296 C 92 288, 118 244, 166 226 S 252 208, 288 164 S 348 106, 418 88"
+            fill="none" stroke="url(#btr1)" stroke-width="52" stroke-linecap="round"/>
+      <path d="M24 296 C 92 288, 118 244, 166 226 S 252 208, 288 164 S 348 106, 418 88"
+            fill="none" stroke="url(#btr2)" stroke-width="14" stroke-linecap="round"/>
       <g fill="#0A444B" stroke="#BFD9E4" stroke-width="3">
-        <circle cx="52"  cy="288" r="7"/>
-        <circle cx="96"  cy="252" r="7"/>
-        <circle cx="132" cy="222" r="7"/>
-        <circle cx="170" cy="212" r="7"/>
-        <circle cx="212" cy="200" r="7"/>
-        <circle cx="248" cy="178" r="7"/>
-        <circle cx="282" cy="146" r="7"/>
-        <circle cx="316" cy="120" r="7"/>
-        <circle cx="352" cy="98"  r="7"/>
-        <circle cx="392" cy="80"  r="7"/>
+        <circle cx="86"  cy="286" r="7"/>
+        <circle cx="122" cy="256" r="7"/>
+        <circle cx="152" cy="232" r="7"/>
+        <circle cx="188" cy="220" r="7"/>
+        <circle cx="226" cy="208" r="7"/>
+        <circle cx="258" cy="188" r="7"/>
+        <circle cx="288" cy="162" r="7"/>
+        <circle cx="318" cy="132" r="7"/>
+        <circle cx="352" cy="108" r="7"/>
+        <circle cx="388" cy="94"  r="7"/>
       </g>
-      <circle cx="24" cy="300" r="13" fill="#B5432F" opacity=".95"/>
-      <circle cx="24" cy="300" r="22" fill="#B5432F" opacity=".16"/>
+      <!-- 起点：红点留出内边距，不贴边 -->
+      <circle cx="40" cy="296" r="12" fill="#B5432F"/>
+      <circle cx="40" cy="296" r="21" fill="#B5432F" opacity=".18"/>
     </svg>
   </div>
 
@@ -1077,8 +1107,7 @@ body{
 <!-- 建档 -->
 <div class="screen" id="s-register">
   <div class="gd-head">
-    <div class="eyebrow">第　一　步</div>
-    <h1 class="gd-h1">你怎么称呼？</h1>
+    <h1 class="gd-h1">小河工，你怎么称呼？</h1>
   </div>
   <div class="gd-body">
     <div class="field">
@@ -1095,7 +1124,7 @@ body{
     </div>
   </div>
   <div class="gd-bot">
-    <button class="btn btn-teal" id="btn-make" disabled>生成护照</button>
+    <button class="btn btn-teal" id="btn-make" disabled>获得护照</button>
   </div>
 </div>
 
@@ -1112,8 +1141,7 @@ body{
    ============================================================ -->
 <div class="screen" id="s-passport">
   <div class="pp-top">
-    <div class="pp-k">中 华 人 民 共 和 国 · 公 民 河 流 记 录</div>
-    <div class="pp-h1">小小河工<br>护　照</div>
+    <div class="pp-h1">小河工，<br>这是你的护照</div>
   </div>
 
   <div class="pp-card" id="pp-card">
@@ -1130,32 +1158,13 @@ body{
       <div class="pp-lb">站　点</div>
       <div class="pp-vl">北京清河</div>
     </div>
-    <div class="pp-row">
-      <div class="pp-lb">职　级</div>
-      <div class="pp-vl" id="pp-rank">见习河工</div>
-    </div>
 
-    <!-- 十闸水脉：与足迹图同一套点阵 -->
-    <div class="pp-river">
-      <svg viewBox="0 0 300 92" preserveAspectRatio="xMidYMid meet">
-        <path d="M-14 82 C 34 74, 60 54, 96 44 S 176 34, 206 20 S 258 8, 316 4"
-              fill="none" stroke="#BFD9E4" stroke-opacity=".34" stroke-width="15" stroke-linecap="round"/>
-        <path d="M-14 82 C 34 74, 60 54, 96 44 S 176 34, 206 20 S 258 8, 316 4"
-              fill="none" stroke="#7FAEC4" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/>
-        <g fill="#0A444B" stroke="#BFD9E4" stroke-opacity=".72" stroke-width="2">
-          <circle cx="16"  cy="79" r="3.6"/>
-          <circle cx="44"  cy="66" r="3.6"/>
-          <circle cx="72"  cy="52" r="3.6"/>
-          <circle cx="100" cy="43" r="3.6"/>
-          <circle cx="130" cy="38" r="3.6"/>
-          <circle cx="160" cy="31" r="3.6"/>
-          <circle cx="192" cy="23" r="3.6"/>
-          <circle cx="222" cy="16" r="3.6"/>
-          <circle cx="252" cy="10" r="3.6"/>
-          <circle cx="282" cy="6"  r="3.6"/>
-        </g>
-      </svg>
-      <div class="pp-river-lb"><span>安河闸</span><span>沙子营闸</span></div>
+    <!-- 十闸竖排：和足迹图同一个排版逻辑（一站一行、沿左侧水脉下行）。
+         为什么不用横排：十座闸横着摆在 302px 宽的卡里，
+         名字全挤在一起，站位也分不清谁在上游。竖排才看得出「一条河」。 -->
+    <div class="pp-trail" id="pp-trail">
+      <div class="pp-line"></div>
+      <div class="pp-sts" id="pp-sts"></div>
     </div>
 
     <div class="pp-foot">
@@ -1163,8 +1172,6 @@ body{
       <span>23.6 km · 十座闸</span>
     </div>
   </div>
-
-  <div class="pp-tip">这本护照存在这台手机上。<br>换手机不会自动带走。</div>
 
   <div class="pp-bot">
     <button class="btn btn-gold" id="btn-pp-go">收好了，往下走</button>
@@ -1183,8 +1190,7 @@ body{
 <div class="screen" id="s-fork">
   <div class="fk-top">
     <div class="fk-k" id="fk-k">护 照 已 签 发</div>
-    <div class="fk-h1" id="fk-h1">接下来想做什么？</div>
-    <div class="fk-d" id="fk-d">两条路都能走，先走哪条都行。</div>
+    <div class="fk-h1" id="fk-h1">小河工，接下来想做什么？</div>
   </div>
 
   <div class="fk-list">
@@ -2124,6 +2130,20 @@ btnMake.onclick=()=>{
      看到护照之后再选要不要考核，是把选择权交给孩子，
      而不是默认推他进答题。
    ============================================================ */
+/* 护照里的十闸竖排
+   和图迹图同源（GATES 顺序 = 上游到下游），但这里只是「这条河长什么样」，
+   不是进度表 —— 所以全部用同一种淡色点，不区分去过没去过。
+   去过没去过是足迹图的事，护照只负责证明「你领的是这条河的护照」。 */
+function renderPassportTrail(){
+  const box=$('pp-sts'); if(!box) return;
+  box.innerHTML = GATES.map(g=>`
+    <div class="pp-st">
+      <span class="no">${String(g.id).padStart(2,'0')}</span>
+      <span class="nm">${g.name}</span>
+      <span class="nk">${g.seg}</span>
+    </div>`).join('');
+}
+
 /* 护照上的日期：2026.10.24 这种写法，比 toLocaleDateString 稳
    （后者在不同系统语言下格式不一样，护照上不能出现各国格式） */
 function fmtDate(d){
@@ -2134,8 +2154,8 @@ function fmtDate(d){
 function openPassport(){
   $('pp-name').textContent = S.name || '—';
   $('pp-no').textContent   = S.no || 'NO.0000';
-  $('pp-rank').textContent = rankName();
   $('pp-date').textContent = fmtDate(new Date());
+  renderPassportTrail();
   show('s-passport');
   // 卡片每进一次重播入场动画，让「签发」这个动作有存在感
   const c=$('pp-card');
@@ -2151,15 +2171,13 @@ function renderFork(){
   const done = S.quiz.done;
   if(done){
     $('fk-k').textContent='护 照 已 转 正';
-    $('fk-h1').textContent='继续往哪走？';
-    $('fk-d').textContent='考核已经过了，河边随时可以去。';
+    $('fk-h1').textContent='小河工，继续往哪走？';
     $('fk-quiz').querySelector('.fk-t').textContent='再认认这条河';
     $('fk-quiz').querySelector('.fk-s').textContent='换了新题，还能拿「十闸通」。';
     $('fk-quiz').querySelector('.fk-m').textContent='已通过 · 可继续挑战';
   }else{
     $('fk-k').textContent='护 照 已 签 发';
-    $('fk-h1').textContent='接下来想做什么？';
-    $('fk-d').textContent='两条路都能走，先走哪条都行。';
+    $('fk-h1').textContent='小河工，接下来想做什么？';
   }
 }
 
