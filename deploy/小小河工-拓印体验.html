@@ -109,25 +109,29 @@ body{
 .res-h{font-family:"Songti SC",serif;font-size:19px;letter-spacing:1.5px;text-align:center;margin-top:10px;}
 .res-h em{font-style:normal;color:var(--gold-l);}
 
+/* 竖版对半卡：上半原片（2:1）+ 下半完整拓印图（1:1）+ 文字带。
+   为什么不再是 1:1：
+     卡片原先是正方形，为了把 1:1 的拓印图塞进下半，只能把图裁成 2:1，
+     结果主体被切成中间一段。正确做法是让卡片适配图 ——
+     上 2:1（原片，相机本来就宽）、下 1:1（拓印图，完整不裁），
+     整体成为一张竖卡，接近实体的明信片比例。 */
 .poster{
-  width:100%;max-width:302px;aspect-ratio:1/1;margin:20px auto 0;
+  width:100%;max-width:302px;margin:20px auto 0;
   position:relative;overflow:hidden;background:#FCF9F4;
   box-shadow:0 12px 30px rgba(0,0,0,.36);
   animation:pop .5s cubic-bezier(.34,1.4,.64,1) both;
   display:flex;flex-direction:column;
 }
 @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.95);}to{opacity:1;transform:none;}}
-.poster .top{height:50%;overflow:hidden;background:#E8E2D5;flex:0 0 auto;}
+/* 上半：原片，固定 2:1（宽度决定高度，不靠百分比拉伸） */
+.poster .top{aspect-ratio:2/1;overflow:hidden;background:#E8E2D5;flex:0 0 auto;}
 .poster .top img{width:100%;height:100%;object-fit:cover;display:block;}
-.poster .bot{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;background:#FCF9F4;}
-/* 方形插画区 + 固定高度文字带：AI 图是 1:1，必须给它一个 1:1 的容器，
-   否则 contain 会缩小留白、cover 会裁掉主体 */
-.poster .art{flex:1 1 auto;min-height:0;overflow:hidden;background:#FCF9F4;}
-/* 把纸底透下去：mix-blend-mode:multiply 让插画的白纸与卡片纸底完全融合，
-   不会有「贴了一张方图」的接缝。这是把纸质素材放到纸上的标准做法。 */
+.poster .bot{flex:0 0 auto;display:flex;flex-direction:column;background:#FCF9F4;}
+/* 下半：拓印图，正方形。图本身就是居中处理过的 1:1，cover 不会再切主体 */
+.poster .art{aspect-ratio:1/1;overflow:hidden;background:#FCF9F4;flex:0 0 auto;}
 .poster .art img{width:100%;height:100%;object-fit:cover;object-position:center;
   display:block;}
-.poster .wd{flex:0 0 auto;text-align:center;padding:2% 0 5%;}
+.poster .wd{flex:0 0 auto;text-align:center;padding:3% 0 5%;}
 .poster .cn{
   font-family:"Songti SC",serif;font-weight:600;font-size:16px;
   letter-spacing:5px;color:#3A3A3A;line-height:1;text-indent:5px;
@@ -142,10 +146,11 @@ body{
 /* 无照片：整张是拓印图。原片区块收起，插画占满，文字落在纸底留白上 */
 .poster.solo{display:flex;flex-direction:column;}
 .poster.solo .top{display:none;}
-.poster.solo .bot{flex:1 1 auto;height:auto;}
-.poster.solo .art{flex:1 1 auto;padding:7% 12% 0;}
+.poster.solo .bot{flex:0 0 auto;}
+/* 纯拓印图也走 1:1：内置图素材本身就是 1:1，不需要额外的内边距去凑比例 */
+.poster.solo .art{aspect-ratio:1/1;flex:0 0 auto;}
 .poster.solo .art img{object-fit:contain;}
-.poster.solo .wd{padding:0 0 9%;}
+.poster.solo .wd{padding:3% 0 6%;}
 
 /* 选中题材的角标 */
 .poster .tag{
@@ -173,6 +178,21 @@ body{
 .subj{margin:16px auto 0;width:100%;max-width:302px;}
 .subj-h{font-size:10px;letter-spacing:2px;color:#8FB0B1;margin-bottom:8px;}
 .subj-g{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.subj-own{display:flex;gap:7px;margin-top:11px;align-items:stretch;}
+.subj-own input{
+  flex:1 1 auto;min-width:0;background:#0B474E;
+  border:1px solid rgba(201,162,75,.34);border-radius:1px;
+  color:#F3F0E7;font-size:12px;letter-spacing:1px;
+  padding:9px 11px;font-family:inherit;
+}
+.subj-own input::placeholder{color:#5C8388;letter-spacing:.5px;}
+.subj-own input:focus{outline:none;border-color:rgba(201,162,75,.7);}
+/* .btn 全局是 display:block;width:100%，放在 flex 行里会把输入框挤没。
+   这里必须显式覆盖 width，否则 input 只剩几个像素。 */
+.subj-own .btn{
+  display:inline-block;width:auto;flex:0 0 auto;white-space:nowrap;
+  padding:0 14px;font-size:12px;letter-spacing:1.5px;
+}
 .sj{
   aspect-ratio:1/1;overflow:hidden;border:1px solid rgba(201,162,75,.22);
   cursor:pointer;transition:.15s;position:relative;
@@ -283,6 +303,13 @@ body{
     <div class="subj" id="subj-box" style="display:none">
       <div class="subj-h" id="subj-h">印哪一样？</div>
       <div class="subj-g" id="subj-g"></div>
+      <!-- 自定义名字：内置那几样之外的东西怎么办？
+           清河里不止桥闸鸟苇 —— 荷花、野鸭、一只蝉、一块石头。
+           不让孩子写，就等于告诉他「你看见的不算」。 -->
+      <div class="subj-own">
+        <input id="in-own" type="text" maxlength="8" placeholder="自己写一个名字">
+        <button class="btn btn-line btn-sm" id="btn-own">就用它</button>
+      </div>
     </div>
 
     <div class="res-bot">
@@ -351,6 +378,7 @@ const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
 
 let ME='', S0=readS(), PHOTO=null, RENDERED=null, SUBJ=0, USED_PHOTO=false;
+let OWN='';   // 自定义名字（为空则用内置题材的 cn）
 
 function toast(m){
   const t=$('toast'); t.textContent=m; t.classList.add('on');
@@ -432,7 +460,8 @@ fileIn.onchange=ev=>{
 /* 不拍照，用内置图 */
 $('btn-noimg').onclick=()=>{
   PHOTO=null; USED_PHOTO=false;
-  SUBJ=0;
+  SUBJ=0; OWN='';
+  const ow=$('in-own'); if(ow) ow.value='';
   doRender();
 };
 
@@ -567,22 +596,28 @@ function normalizeAI(dataURL){
       }
       if(!found) return {url:dataURL};
 
+      /* 保留完整的 1:1，只把主体「居中」，不裁成 2:1。
+         之前这里把 1:1 硬裁成 2:1 去凑卡片下半，结果主体被切掉一半，
+         拓印图只剩中间一段 —— 错在让图适配卡片，应该让卡片适配图。
+         现在：以主体中心为原点，取一个能装下主体的正方形，
+         边距按周边留白给足，主体完整。 */
       const bw=x1-x0, bh=y1-y0;
-      const cy=(y0+y1)/2;
+      const cx=(x0+x1)/2, cy=(y0+y1)/2;
 
-      // 目标 2:1：宽度撑满主体，高度 = 宽/2
-      let outW=Math.min(W, Math.round(bw*1.5));
-      let outH=Math.round(outW/2);
-      if(outH>H){ outH=H; outW=Math.round(outH*2); }
+      // 正方形边长：主体较长边 / 0.58（主体占 58%，其余留白）
+      let side=Math.round(Math.max(bw,bh)/0.58);
+      side=Math.min(side, W, H, Math.round(Math.min(W,H)));
+      // 不够大就退回整图（宁可留白多，也不切主体）
+      if(side < Math.max(bw,bh)) side=Math.round(Math.min(W,H));
 
-      let top=Math.round(cy-outH/2);
-      top=Math.max(0, Math.min(H-outH, top));
-      let left=Math.round((x0+x1)/2-outW/2);
-      left=Math.max(0, Math.min(W-outW, left));
+      let left=Math.round(cx-side/2);
+      let top=Math.round(cy-side/2);
+      left=Math.max(0, Math.min(W-side, left));
+      top=Math.max(0, Math.min(H-side, top));
 
       const o=document.createElement('canvas');
-      o.width=outW; o.height=outH;
-      o.getContext('2d').drawImage(img,left,top,outW,outH,0,0,outW,outH);
+      o.width=side; o.height=side;      // 严格 1:1，卡片下半就是方图
+      o.getContext('2d').drawImage(img,left,top,side,side,0,0,side,side);
       return {url:o.toDataURL('image/jpeg',0.92)};
     })
     .then(r=>r.url);
@@ -674,19 +709,36 @@ function posterize(img, ink){
 function renderSubjects(){
   const g=$('subj-g');
   g.innerHTML=SUBJECTS.map((s,i)=>`
-    <div class="sj${i===SUBJ?' on':''}" data-i="${i}">
+    <div class="sj${(i===SUBJ && !OWN)?' on':''}" data-i="${i}">
       <img src="${ART[s.key]}" alt="${s.cn}">
       <div class="n">${s.cn.replace(/\s/g,'')}</div>
     </div>`).join('');
   g.querySelectorAll('.sj').forEach(el=>{
     el.onclick=()=>{
       SUBJ=+el.dataset.i;
+      OWN='';                        // 选内置的就清掉自定义名
+      const ow2=$('in-own'); if(ow2) ow2.value='';
       g.querySelectorAll('.sj').forEach(x=>x.classList.remove('on'));
       el.classList.add('on');
-      paintCard();
-      toast((USED_PHOTO?'下半换成 ':'换成 ')+SUBJECTS[SUBJ].cn.replace(/\s/g,''));
+      paintCard();   // 有照片时只改名字，RENDERED 已存在不会被覆盖
+      toast((USED_PHOTO?'名字改成 ':'换成 ')+SUBJECTS[SUBJ].cn.replace(/\s/g,''));
     };
   });
+
+  /* 自定义名字：清河里不止桥闸鸟苇。
+     孩子看见荷花、蝉、一块好看的石头，也该能印下来。
+     上限 8 字——卡上那行最多放得下这些，再多会挤成两行。 */
+  const own=$('in-own'), bo=$('btn-own');
+  if(bo) bo.onclick=()=>{
+    const v=(own.value||'').trim().replace(/\s+/g,'');
+    if(!v){ toast('先写一个名字'); return; }
+    OWN=v.slice(0,8);
+    g.querySelectorAll('.sj').forEach(x=>x.classList.remove('on'));  // 自定义时内置不选中
+    own.blur();                     // 收起键盘，让人看见卡变了
+    paintCard();
+    toast('名字写成 '+OWN);
+  };
+  if(own) own.onkeydown=e=>{ if(e.key==='Enter'){ e.preventDefault(); bo.click(); } };
 }
 
 function paintCard(){
@@ -711,7 +763,8 @@ function paintCard(){
     $('btn-another').style.display='none';   // 没照片，没什么可换
   }
 
-  $('p-cn').textContent=s.cn;
+  // 自定义名字优先；没有就用内置题材的中文名
+  $('p-cn').textContent = OWN || s.cn;
   $('p-who').textContent=ME;
   $('p-date').textContent=fmtDate(new Date());
   $('p-gate').textContent=USED_PHOTO?'你拍的那一张':s.gate;
@@ -723,10 +776,20 @@ function paintCard(){
 
   // 有照片时题材选择是隐藏的（下半就是照片的拓印）；
   // 无照片时才让孩子挑一张内置图
-  $('subj-box').style.display = USED_PHOTO?'none':'';
+  /* 题材选择两种模式都要显示：
+       无照片 —— 决定印哪一张内置图
+       有照片 —— 照片的拓印已经生成，这时题材只决定卡上写什么名字。
+                 之前这里对有照片的情况直接隐藏，SUBJ 永远是 0，
+                 结果所有照片都印成「黑天鹅」—— 图是鸳鸯，字写黑天鹅。 */
+  $('subj-box').style.display='';
   const sh=$('subj-h');
-  if(sh) sh.textContent='印哪一样？';
-  if(!USED_PHOTO) renderSubjects();
+  if(sh) sh.textContent = USED_PHOTO ? '这一张是什么？' : '印哪一样？';
+  /* 两种模式都要渲染题材区：
+       无照片 —— 用来挑内置图
+       有照片 —— 用来定卡上的名字，也支持自己写一个
+     之前这里是 if(!USED_PHOTO)，有照片时整个区不渲染，
+     连自定义名字的按钮都没绑上事件，点了没反应。 */
+  renderSubjects();
 }
 
 function fmtDate(d){ return d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate()); }
@@ -741,7 +804,8 @@ $('btn-keep').onclick=()=>{
     gateId:0,                       // 0 = 未绑定点位（拓印体验页印的）
     gateName:USED_PHOTO?'我的照片':s.gate,
     ts:Date.now(),
-    cn:s.cn, art:s.key,
+    cn: OWN || s.cn,           // 存实际印出来的名字，不是题材默认名
+    art:s.key,
     hasPhoto:USED_PHOTO,
     label:USED_PHOTO?'拓印体验':'内置题材',
     pts:0,
