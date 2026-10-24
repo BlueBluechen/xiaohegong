@@ -1,0 +1,256 @@
+=== boot pid=18032 ts=2026-10-24 20:54:16.703 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js create 小小河工-产品介绍.pptx ===
+[2026-10-24 20:54:16.699] [INFO ] [pid=18032] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+=== boot pid=18543 ts=2026-10-24 20:56:24.584 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/01.slide ===
+[2026-10-24 20:56:24.581] [INFO ] [pid=18543] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 20:56:24.604] [INFO ] [pid=18543] [slide-version] fileId=3E122ADF version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=18689 ts=2026-10-24 20:56:54.596 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/01.slide --page-index 0 ===
+[2026-10-24 20:56:54.593] [INFO ] [pid=18689] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 20:56:54.614] [INFO ] [pid=18689] [slide-version] fileId=3E122ADF version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=18940 ts=2026-10-24 20:57:54.842 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02.slide ===
+[2026-10-24 20:57:54.840] [INFO ] [pid=18940] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 20:57:54.871] [INFO ] [pid=18940] [slide-version] fileId=3E122ADF version=2 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=19222 ts=2026-10-24 20:59:02.192 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03.slide ===
+[2026-10-24 20:59:02.189] [INFO ] [pid=19222] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 20:59:02.209] [INFO ] [pid=19222] [slide-version] fileId=3E122ADF version=3 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=19357 ts=2026-10-24 20:59:30.107 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03.slide --page-index 2 ===
+[2026-10-24 20:59:30.104] [INFO ] [pid=19357] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 20:59:30.125] [INFO ] [pid=19357] [slide-version] fileId=3E122ADF version=4 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=19597 ts=2026-10-24 21:00:27.549 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/04.slide ===
+[2026-10-24 21:00:27.546] [INFO ] [pid=19597] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:00:27.567] [INFO ] [pid=19597] [slide-version] fileId=3E122ADF version=5 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=19860 ts=2026-10-24 21:01:26.990 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/05.slide ===
+[2026-10-24 21:01:26.987] [INFO ] [pid=19860] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:01:27.008] [INFO ] [pid=19860] [slide-version] fileId=3E122ADF version=6 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=20103 ts=2026-10-24 21:02:24.557 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/06.slide ===
+[2026-10-24 21:02:24.554] [INFO ] [pid=20103] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:02:24.575] [INFO ] [pid=20103] [slide-version] fileId=3E122ADF version=7 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=20463 ts=2026-10-24 21:03:43.947 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 0 --out /tmp/pg0.png ===
+[2026-10-24 21:03:43.941] [INFO ] [pid=20463] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:03:43.973] [INFO ] [pid=20463] [slide-version] fileId=3E122ADF version=8 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=20490 ts=2026-10-24 21:03:46.245 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/pg1.png ===
+[2026-10-24 21:03:46.241] [INFO ] [pid=20490] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:03:46.268] [INFO ] [pid=20490] [slide-version] fileId=3E122ADF version=8 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=20529 ts=2026-10-24 21:03:48.126 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 2 --out /tmp/pg2.png ===
+[2026-10-24 21:03:48.122] [INFO ] [pid=20529] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:03:48.149] [INFO ] [pid=20529] [slide-version] fileId=3E122ADF version=8 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=20555 ts=2026-10-24 21:03:50.085 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 3 --out /tmp/pg3.png ===
+[2026-10-24 21:03:50.081] [INFO ] [pid=20555] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:03:50.108] [INFO ] [pid=20555] [slide-version] fileId=3E122ADF version=8 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=20580 ts=2026-10-24 21:03:52.018 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 4 --out /tmp/pg4.png ===
+[2026-10-24 21:03:52.014] [INFO ] [pid=20580] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:03:52.041] [INFO ] [pid=20580] [slide-version] fileId=3E122ADF version=8 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=20605 ts=2026-10-24 21:03:53.900 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 5 --out /tmp/pg5.png ===
+[2026-10-24 21:03:53.896] [INFO ] [pid=20605] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:03:53.923] [INFO ] [pid=20605] [slide-version] fileId=3E122ADF version=8 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=20934 ts=2026-10-24 21:05:11.714 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03.slide --page-index 2 ===
+[2026-10-24 21:05:11.712] [INFO ] [pid=20934] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:05:11.734] [INFO ] [pid=20934] [slide-version] fileId=3E122ADF version=8 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=20953 ts=2026-10-24 21:05:12.777 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 2 --out /tmp/pg2.png ===
+[2026-10-24 21:05:12.773] [INFO ] [pid=20953] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:05:12.801] [INFO ] [pid=20953] [slide-version] fileId=3E122ADF version=9 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=21520 ts=2026-10-24 21:07:35.923 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/04.slide --page-index 3 ===
+[2026-10-24 21:07:35.920] [INFO ] [pid=21520] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:07:35.943] [INFO ] [pid=21520] [slide-version] fileId=3E122ADF version=9 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=21681 ts=2026-10-24 21:08:07.822 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 2 --out /tmp/pg2.png ===
+[2026-10-24 21:08:07.816] [INFO ] [pid=21681] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:08:07.846] [INFO ] [pid=21681] [slide-version] fileId=3E122ADF version=10 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=21699 ts=2026-10-24 21:08:09.837 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 3 --out /tmp/pg3.png ===
+[2026-10-24 21:08:09.833] [INFO ] [pid=21699] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:08:09.860] [INFO ] [pid=21699] [slide-version] fileId=3E122ADF version=10 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=22160 ts=2026-10-24 21:10:08.655 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/04.slide --page-index 3 ===
+[2026-10-24 21:10:08.652] [INFO ] [pid=22160] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:10:08.675] [INFO ] [pid=22160] [slide-version] fileId=3E122ADF version=10 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=22179 ts=2026-10-24 21:10:10.060 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 3 --out /tmp/pg3.png ===
+[2026-10-24 21:10:10.056] [INFO ] [pid=22179] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:10:10.084] [INFO ] [pid=22179] [slide-version] fileId=3E122ADF version=11 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=22431 ts=2026-10-24 21:11:15.068 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/04.slide --page-index 3 ===
+[2026-10-24 21:11:15.065] [INFO ] [pid=22431] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:11:15.087] [INFO ] [pid=22431] [slide-version] fileId=3E122ADF version=11 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=22596 ts=2026-10-24 21:11:49.678 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 3 --out /tmp/pg3.png ===
+[2026-10-24 21:11:49.674] [INFO ] [pid=22596] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:11:49.703] [INFO ] [pid=22596] [slide-version] fileId=3E122ADF version=12 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=23267 ts=2026-10-24 21:14:44.243 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/05.slide --page-index 4 ===
+[2026-10-24 21:14:44.238] [INFO ] [pid=23267] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:14:44.269] [INFO ] [pid=23267] [slide-version] fileId=3E122ADF version=12 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=23459 ts=2026-10-24 21:15:23.897 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 4 --out /tmp/pg4.png ===
+[2026-10-24 21:15:23.892] [INFO ] [pid=23459] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:15:23.923] [INFO ] [pid=23459] [slide-version] fileId=3E122ADF version=13 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=23477 ts=2026-10-24 21:15:25.922 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 5 --out /tmp/pg5.png ===
+[2026-10-24 21:15:25.918] [INFO ] [pid=23477] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:15:25.946] [INFO ] [pid=23477] [slide-version] fileId=3E122ADF version=13 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=23952 ts=2026-10-24 21:17:18.850 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/06.slide --page-index 5 ===
+[2026-10-24 21:17:18.843] [INFO ] [pid=23952] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:17:18.870] [INFO ] [pid=23952] [slide-version] fileId=3E122ADF version=13 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=24142 ts=2026-10-24 21:17:57.856 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 5 --out /tmp/pg5.png ===
+[2026-10-24 21:17:57.851] [INFO ] [pid=24142] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:17:57.881] [INFO ] [pid=24142] [slide-version] fileId=3E122ADF version=14 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=24653 ts=2026-10-24 21:19:58.663 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/01.slide --page-index 0 ===
+[2026-10-24 21:19:58.660] [INFO ] [pid=24653] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:19:58.685] [INFO ] [pid=24653] [slide-version] fileId=3E122ADF version=14 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=24669 ts=2026-10-24 21:19:59.512 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 0 --out /tmp/pg0.png ===
+[2026-10-24 21:19:59.509] [INFO ] [pid=24669] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:19:59.535] [INFO ] [pid=24669] [slide-version] fileId=3E122ADF version=15 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=25150 ts=2026-10-24 21:21:27.630 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js inspect 小小河工-产品介绍.pptx --out /tmp/fin.KHKkZJ ===
+[2026-10-24 21:21:27.627] [INFO ] [pid=25150] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+=== boot pid=28391 ts=2026-10-24 21:35:10.113 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02.slide --page-index 1 ===
+[2026-10-24 21:35:10.110] [INFO ] [pid=28391] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:35:10.136] [INFO ] [pid=28391] [slide-version] fileId=sid_mvmf version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=28561 ts=2026-10-24 21:35:46.211 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/pg1.png ===
+[2026-10-24 21:35:46.202] [INFO ] [pid=28561] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:35:46.237] [INFO ] [pid=28561] [slide-version] fileId=sid_mvmf version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=28930 ts=2026-10-24 21:37:04.098 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02.slide --page-index 1 ===
+[2026-10-24 21:37:04.094] [INFO ] [pid=28930] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:37:04.117] [INFO ] [pid=28930] [slide-version] fileId=sid_mvmf version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=28963 ts=2026-10-24 21:37:06.519 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/pg1.png ===
+[2026-10-24 21:37:06.515] [INFO ] [pid=28963] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:37:06.543] [INFO ] [pid=28963] [slide-version] fileId=sid_mvmf version=2 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=31558 ts=2026-10-24 21:47:41.234 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/n1.png ===
+[2026-10-24 21:47:41.229] [INFO ] [pid=31558] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:47:41.261] [INFO ] [pid=31558] [slide-version] fileId=9D6BA9F5 version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=31578 ts=2026-10-24 21:47:43.300 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 2 --out /tmp/n2.png ===
+[2026-10-24 21:47:43.296] [INFO ] [pid=31578] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:47:43.332] [INFO ] [pid=31578] [slide-version] fileId=9D6BA9F5 version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33072 ts=2026-10-24 21:53:19.054 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js create 小小河工-产品介绍.pptx ===
+[2026-10-24 21:53:19.046] [INFO ] [pid=33072] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+=== boot pid=33097 ts=2026-10-24 21:53:20.297 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/01.slide ===
+[2026-10-24 21:53:20.294] [INFO ] [pid=33097] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:53:20.315] [INFO ] [pid=33097] [slide-version] fileId=2B6540E8 version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33117 ts=2026-10-24 21:53:21.810 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02-river.slide ===
+[2026-10-24 21:53:21.807] [INFO ] [pid=33117] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:53:21.828] [INFO ] [pid=33117] [slide-version] fileId=2B6540E8 version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33138 ts=2026-10-24 21:53:23.444 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03-now.slide ===
+[2026-10-24 21:53:23.441] [INFO ] [pid=33138] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:53:23.463] [INFO ] [pid=33138] [slide-version] fileId=2B6540E8 version=2 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33157 ts=2026-10-24 21:53:24.990 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03.slide ===
+[2026-10-24 21:53:24.987] [INFO ] [pid=33157] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:53:25.009] [INFO ] [pid=33157] [slide-version] fileId=2B6540E8 version=3 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33178 ts=2026-10-24 21:53:26.716 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/04.slide ===
+[2026-10-24 21:53:26.711] [INFO ] [pid=33178] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:53:26.734] [ERROR] [pid=33178] [http] editorStatus http 404 url=http://127.0.0.1:39099/localapi/editor/status req={"file_path":"/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx"} resp={"code":-1,"message":"no editor open for file_path=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx"} ms=12
+[2026-10-24 21:53:26.738] [WARN ] [pid=33178] [slide-version] no editor for filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx, trigger reopen
+[2026-10-24 21:53:26.742] [ERROR] [pid=33178] [http] editorStatus http 404 url=http://127.0.0.1:39099/localapi/editor/status req={"file_path":"/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx"} resp={"code":-1,"message":"no editor open for file_path=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx"} ms=1
+[2026-10-24 21:53:26.745] [INFO ] [pid=33178] [open-file] open send url=http://127.0.0.1:39099/localapi/open filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+[2026-10-24 21:53:26.748] [INFO ] [pid=33178] [open-file] open ok fileId=D867074D fileType=slide filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx ms=1
+[2026-10-24 21:53:26.752] [INFO ] [pid=33178] [slide-version] fileId=D867074D version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33196 ts=2026-10-24 21:53:27.873 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/05.slide ===
+[2026-10-24 21:53:27.870] [INFO ] [pid=33196] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:53:27.891] [INFO ] [pid=33196] [slide-version] fileId=D867074D version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33215 ts=2026-10-24 21:53:29.405 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/06.slide ===
+[2026-10-24 21:53:29.402] [INFO ] [pid=33215] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:53:29.423] [INFO ] [pid=33215] [slide-version] fileId=D867074D version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33299 ts=2026-10-24 21:53:47.472 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/04.slide --page-index 4 ===
+[2026-10-24 21:53:47.469] [INFO ] [pid=33299] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:53:47.490] [INFO ] [pid=33299] [slide-version] fileId=D867074D version=2 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33384 ts=2026-10-24 21:54:05.009 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js inspect 小小河工-产品介绍.pptx --out /tmp/chk.nw1bNn ===
+[2026-10-24 21:54:05.005] [INFO ] [pid=33384] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+=== boot pid=33537 ts=2026-10-24 21:54:24.365 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js create 小小河工-产品介绍.pptx ===
+[2026-10-24 21:54:24.361] [INFO ] [pid=33537] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+=== boot pid=33542 ts=2026-10-24 21:54:25.566 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/01.slide ===
+[2026-10-24 21:54:25.562] [INFO ] [pid=33542] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:54:25.583] [INFO ] [pid=33542] [slide-version] fileId=F3F8CD2A version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33571 ts=2026-10-24 21:54:27.379 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02-river.slide ===
+[2026-10-24 21:54:27.376] [INFO ] [pid=33571] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:54:27.396] [INFO ] [pid=33571] [slide-version] fileId=F3F8CD2A version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33604 ts=2026-10-24 21:54:29.343 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03-now.slide ===
+[2026-10-24 21:54:29.340] [INFO ] [pid=33604] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:54:29.362] [INFO ] [pid=33604] [slide-version] fileId=F3F8CD2A version=2 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33641 ts=2026-10-24 21:54:31.176 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03.slide ===
+[2026-10-24 21:54:31.172] [INFO ] [pid=33641] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:54:31.194] [INFO ] [pid=33641] [slide-version] fileId=F3F8CD2A version=3 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33670 ts=2026-10-24 21:54:33.208 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/04.slide ===
+[2026-10-24 21:54:33.205] [INFO ] [pid=33670] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:54:33.226] [INFO ] [pid=33670] [slide-version] fileId=F3F8CD2A version=4 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33701 ts=2026-10-24 21:54:35.613 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/05.slide ===
+[2026-10-24 21:54:35.609] [INFO ] [pid=33701] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:54:35.631] [INFO ] [pid=33701] [slide-version] fileId=F3F8CD2A version=5 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33730 ts=2026-10-24 21:54:37.529 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/06.slide ===
+[2026-10-24 21:54:37.526] [INFO ] [pid=33730] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:54:37.548] [INFO ] [pid=33730] [slide-version] fileId=F3F8CD2A version=6 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=33760 ts=2026-10-24 21:54:38.882 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js inspect 小小河工-产品介绍.pptx --out /tmp/c2.OYCLJh ===
+[2026-10-24 21:54:38.879] [INFO ] [pid=33760] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+=== boot pid=34228 ts=2026-10-24 21:55:41.625 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/v1.png ===
+[2026-10-24 21:55:41.621] [INFO ] [pid=34228] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:55:41.649] [INFO ] [pid=34228] [slide-version] fileId=645FF1DC version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=34247 ts=2026-10-24 21:55:43.619 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 2 --out /tmp/v2.png ===
+[2026-10-24 21:55:43.614] [INFO ] [pid=34247] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:55:43.642] [INFO ] [pid=34247] [slide-version] fileId=645FF1DC version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=34400 ts=2026-10-24 21:56:21.381 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02-river.slide --page-index 1 ===
+[2026-10-24 21:56:21.378] [INFO ] [pid=34400] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:56:21.401] [INFO ] [pid=34400] [slide-version] fileId=645FF1DC version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=34418 ts=2026-10-24 21:56:22.343 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/v1.png ===
+[2026-10-24 21:56:22.338] [INFO ] [pid=34418] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:56:22.367] [INFO ] [pid=34418] [slide-version] fileId=645FF1DC version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=34639 ts=2026-10-24 21:57:16.751 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02-river.slide --page-index 1 ===
+[2026-10-24 21:57:16.748] [INFO ] [pid=34639] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:57:16.769] [INFO ] [pid=34639] [slide-version] fileId=645FF1DC version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=34657 ts=2026-10-24 21:57:17.708 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/v1.png ===
+[2026-10-24 21:57:17.704] [INFO ] [pid=34657] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:57:17.731] [INFO ] [pid=34657] [slide-version] fileId=645FF1DC version=2 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=34916 ts=2026-10-24 21:58:18.118 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02-river.slide --page-index 1 ===
+[2026-10-24 21:58:18.116] [INFO ] [pid=34916] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:58:18.144] [INFO ] [pid=34916] [slide-version] fileId=645FF1DC version=2 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=34934 ts=2026-10-24 21:58:19.081 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/v1.png ===
+[2026-10-24 21:58:19.078] [INFO ] [pid=34934] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:58:19.103] [INFO ] [pid=34934] [slide-version] fileId=645FF1DC version=3 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=35187 ts=2026-10-24 21:59:19.760 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02-river.slide --page-index 1 ===
+[2026-10-24 21:59:19.757] [INFO ] [pid=35187] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:59:19.778] [INFO ] [pid=35187] [slide-version] fileId=645FF1DC version=3 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=35212 ts=2026-10-24 21:59:20.712 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/v1.png ===
+[2026-10-24 21:59:20.709] [INFO ] [pid=35212] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 21:59:20.735] [INFO ] [pid=35212] [slide-version] fileId=645FF1DC version=4 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=35639 ts=2026-10-24 22:00:41.889 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02-river.slide --page-index 1 ===
+[2026-10-24 22:00:41.886] [INFO ] [pid=35639] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:00:41.907] [INFO ] [pid=35639] [slide-version] fileId=645FF1DC version=4 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=35657 ts=2026-10-24 22:00:42.864 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/v1.png ===
+[2026-10-24 22:00:42.860] [INFO ] [pid=35657] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:00:42.887] [INFO ] [pid=35657] [slide-version] fileId=645FF1DC version=5 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=35857 ts=2026-10-24 22:01:30.150 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/02-river.slide --page-index 1 ===
+[2026-10-24 22:01:30.147] [INFO ] [pid=35857] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:01:30.168] [INFO ] [pid=35857] [slide-version] fileId=645FF1DC version=5 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=35879 ts=2026-10-24 22:01:31.089 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 1 --out /tmp/v1.png ===
+[2026-10-24 22:01:31.086] [INFO ] [pid=35879] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:01:31.113] [INFO ] [pid=35879] [slide-version] fileId=645FF1DC version=6 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=36056 ts=2026-10-24 22:02:14.620 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 2 --out /tmp/v2.png ===
+[2026-10-24 22:02:14.616] [INFO ] [pid=36056] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:02:14.644] [INFO ] [pid=36056] [slide-version] fileId=645FF1DC version=6 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=36254 ts=2026-10-24 22:03:01.844 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03-now.slide --page-index 2 ===
+[2026-10-24 22:03:01.841] [INFO ] [pid=36254] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:03:01.863] [INFO ] [pid=36254] [slide-version] fileId=645FF1DC version=6 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=36289 ts=2026-10-24 22:03:04.104 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 2 --out /tmp/v2.png ===
+[2026-10-24 22:03:04.099] [INFO ] [pid=36289] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:03:04.127] [INFO ] [pid=36289] [slide-version] fileId=645FF1DC version=7 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=36483 ts=2026-10-24 22:03:50.819 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js inspect 小小河工-产品介绍.pptx --out /tmp/fp.aqOAs0 ===
+[2026-10-24 22:03:50.814] [INFO ] [pid=36483] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+=== boot pid=36587 ts=2026-10-24 22:04:12.986 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 3 --out /tmp/w3.png ===
+[2026-10-24 22:04:12.982] [INFO ] [pid=36587] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:04:13.013] [INFO ] [pid=36587] [slide-version] fileId=CC22248F version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=36605 ts=2026-10-24 22:04:15.032 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 4 --out /tmp/w4.png ===
+[2026-10-24 22:04:15.028] [INFO ] [pid=36605] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:04:15.058] [INFO ] [pid=36605] [slide-version] fileId=CC22248F version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=36624 ts=2026-10-24 22:04:17.048 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 5 --out /tmp/w5.png ===
+[2026-10-24 22:04:17.037] [INFO ] [pid=36624] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:04:17.073] [INFO ] [pid=36624] [slide-version] fileId=CC22248F version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=36642 ts=2026-10-24 22:04:19.019 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 6 --out /tmp/w6.png ===
+[2026-10-24 22:04:19.016] [INFO ] [pid=36642] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:04:19.043] [INFO ] [pid=36642] [slide-version] fileId=CC22248F version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=36853 ts=2026-10-24 22:05:06.905 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03.slide --page-index 3 ===
+[2026-10-24 22:05:06.902] [INFO ] [pid=36853] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:05:06.923] [INFO ] [pid=36853] [slide-version] fileId=CC22248F version=0 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=36871 ts=2026-10-24 22:05:07.932 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 3 --out /tmp/w3.png ===
+[2026-10-24 22:05:07.928] [INFO ] [pid=36871] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:05:07.956] [INFO ] [pid=36871] [slide-version] fileId=CC22248F version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=37103 ts=2026-10-24 22:05:54.320 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 3 --out /tmp/w3b.png ===
+[2026-10-24 22:05:54.316] [INFO ] [pid=37103] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:05:54.345] [INFO ] [pid=37103] [slide-version] fileId=CC22248F version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=37406 ts=2026-10-24 22:07:08.833 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03.slide --page-index 3 ===
+[2026-10-24 22:07:08.830] [INFO ] [pid=37406] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:07:08.851] [INFO ] [pid=37406] [slide-version] fileId=CC22248F version=1 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=37460 ts=2026-10-24 22:07:09.946 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 3 --out /tmp/w3c.png ===
+[2026-10-24 22:07:09.943] [INFO ] [pid=37460] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:07:09.970] [INFO ] [pid=37460] [slide-version] fileId=CC22248F version=2 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=37782 ts=2026-10-24 22:08:26.337 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js upsert-dsl 小小河工-产品介绍.pptx --dsl-file slides/03.slide --page-index 3 ===
+[2026-10-24 22:08:26.334] [INFO ] [pid=37782] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:08:26.357] [INFO ] [pid=37782] [slide-version] fileId=CC22248F version=2 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx
+=== boot pid=37837 ts=2026-10-24 22:08:27.461 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js screenshot 小小河工-产品介绍.pptx --page-index 3 --out /tmp/w3d.png ===
+[2026-10-24 22:08:27.457] [INFO ] [pid=37837] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-10-24 22:08:27.483] [INFO ] [pid=37837] [slide-version] fileId=CC22248F version=3 filePath=/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx

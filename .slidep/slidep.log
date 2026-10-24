@@ -1,0 +1,4 @@
+=== boot pid=9526 ts=2026-10-24 20:22:09.908 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js inspect /Users/carachen/Documents/QH/六点半/ACC清河文旅-归档/方案材料/小小河工-产品介绍6页.pptx --out /tmp/slidep-inspect.lfVGb0 ===
+[2026-10-24 20:22:09.902] [INFO ] [pid=9526] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+=== boot pid=31163 ts=2026-10-24 21:46:21.493 cwd=/Users/carachen/Documents/QH/六点半/ACC 清河文旅 argv=/Users/carachen/.workbuddy/binaries/node/versions/22.22.2-6/lib/node_modules/@tencent/slidep/dist/index.js inspect "/Users/carachen/Documents/QH/六点半/ACC 清河文旅/PPT-产品介绍/小小河工-产品介绍.pptx" --out /tmp/re.l7W8ER ===
+[2026-10-24 21:46:21.488] [INFO ] [pid=31163] [server-url] baseUrl=http://127.0.0.1:39099 source=env

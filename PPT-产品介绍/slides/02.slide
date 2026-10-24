@@ -1,0 +1,79 @@
+<Slide style={{ width: 1280, height: 720, backgroundColor: '#F7F4EC', position: 'relative', overflow: 'hidden' }}>
+  <Text style={{ position: 'absolute', left: 76, top: 42, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 4, color: '#C9A24B' }}>
+    01
+  </Text>
+  <Text style={{ position: 'absolute', left: 118, top: 38, fontFamily: 'Songti SC', fontSize: 34, letterSpacing: 3, color: '#072F35' }}>
+    这条河
+  </Text>
+  <Box style={{ position: 'absolute', left: 76, top: 92, width: 54, height: 1, backgroundColor: 'rgba(201,162,75,0.55)' }} />
+
+  <Text style={{ position: 'absolute', left: 76, top: 104, fontFamily: 'Songti SC', fontSize: 38, letterSpacing: 2, color: '#072F35' }}>
+    治理的终点，是公共教育的起点
+  </Text>
+
+  <Text style={{ position: 'absolute', left: 76, top: 160, width: 1128, fontFamily: 'PingFang SC', fontSize: 13.5, lineHeight: 1.75, color: '#5C6B6B' }}>
+    2023 年 10 月清河之洲开园。海淀用一段 1.17 公里的河道交出六十年治水的答卷，也把这条河推到了人前——它成了「金腰带」上人流最密的公园之一。
+  </Text>
+
+  {/* 关键数字：不是河有多长，而是有多少人来了 */}
+  <Box style={{ position: 'absolute', left: 76, top: 224, width: 1128, display: 'flex', alignItems: 'flex-end' }}>
+    <Box style={{ width: 336 }}>
+      <Text style={{ fontFamily: 'Helvetica Neue', fontSize: 66, fontWeight: 500, lineHeight: 1, letterSpacing: -1.5, color: '#072F35' }}>3000–5000</Text>
+      <Text style={{ marginTop: 8, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 1.5, color: '#5C6B6B' }}>公园日均客流（人次）</Text>
+    </Box>
+    <Box style={{ width: 250, marginLeft: 54 }}>
+      <Text style={{ fontFamily: 'Helvetica Neue', fontSize: 62, fontWeight: 500, lineHeight: 1, letterSpacing: -1, color: '#C9A24B' }}>4 万+</Text>
+      <Text style={{ marginTop: 8, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 1.5, color: '#5C6B6B' }}>节假日单日峰值</Text>
+    </Box>
+    <Box style={{ marginLeft: 'auto', paddingBottom: 3 }}>
+      <Text style={{ fontFamily: 'PingFang SC', fontSize: 12.5, lineHeight: 2, color: '#5C6B6B', textAlign: 'right' }}>
+        水质稳定 III 类　·　鸟类 90 余种　·　鱼类 30 余种{'\n'}
+        国家一、二级保护动物 7–8 种　·　18 处景观节点
+      </Text>
+    </Box>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 76, top: 342, width: 1128, height: 1, backgroundColor: 'rgba(201,162,75,0.3)' }} />
+
+  {/* 转折：从「被治理」到「公共教育的舞台」，中间是那个载体 */}
+  <Box style={{ position: 'absolute', left: 76, top: 368, width: 396, height: 148, backgroundColor: 'rgba(7,47,53,0.055)', padding: '16px 20px' }}>
+    <Text style={{ fontFamily: 'PingFang SC', fontSize: 11, letterSpacing: 2.2, color: '#8A7A52' }}>现 在</Text>
+    <Text style={{ marginTop: 8, fontFamily: 'Songti SC', fontSize: 24, letterSpacing: 1.5, color: '#072F35' }}>被治理的河</Text>
+    <Text style={{ marginTop: 8, fontFamily: 'PingFang SC', fontSize: 12, lineHeight: 1.7, color: '#5C6B6B' }}>
+      一条修好的河，和一年上百万来看它的人。{'\n'}可游客多「看过即走」——风景留在原地。
+    </Text>
+  </Box>
+
+  {/* 箭头 + 载体说明 */}
+  <SVG viewBox="0 0 170 150" style={{ position: 'absolute', left: 486, top: 368, width: 170, height: 148 }}>
+    <line x1="8" y1="52" x2="122" y2="52" stroke="rgba(201,162,75,0.7)" strokeWidth="1.6" />
+    <path d="M116 44 L130 52 L116 60" fill="none" stroke="#C9A24B" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </SVG>
+  <Text style={{ position: 'absolute', left: 486, top: 424, width: 170, fontFamily: 'PingFang SC', fontSize: 11, lineHeight: 1.65, letterSpacing: 0.6, color: '#B5432F', textAlign: 'center' }}>
+    一台手机　一本护照{'\n'}一条河的档案
+  </Text>
+
+  <Box style={{ position: 'absolute', left: 668, top: 368, width: 536, height: 148, backgroundColor: '#072F35', padding: '16px 24px' }}>
+    <Text style={{ fontFamily: 'PingFang SC', fontSize: 11, letterSpacing: 2.2, color: '#C9A24B' }}>有 了 载 体 之 后</Text>
+    <Text style={{ marginTop: 8, fontFamily: 'Songti SC', fontSize: 24, letterSpacing: 1.5, color: '#F7F4EC' }}>公共教育的舞台</Text>
+    <Text style={{ marginTop: 8, fontFamily: 'PingFang SC', fontSize: 12, lineHeight: 1.7, color: '#8FB0AE' }}>
+      孩子与居民从「生态保护的享受者」，变成「回馈者」——{'\n'}每一次到访，都留下一条可用的记录。
+    </Text>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 76, top: 542, width: 1128, paddingLeft: 14, borderLeft: '2px solid #B5432F' }}>
+    <Text style={{ fontFamily: 'Songti SC', fontSize: 20, lineHeight: 1.55, letterSpacing: 0.8, color: '#072F35' }}>
+      我们不缺人流，缺的是把「看客」变成「参与者」的那一件东西。
+    </Text>
+    <Text style={{ marginTop: 6, fontFamily: 'PingFang SC', fontSize: 12.5, lineHeight: 1.75, color: '#5C6B6B' }}>
+      清河已经走完景观化这一步。下一步是公共化——把一条被观赏的河，变成一条被记录、被谈论、被带走的河。
+    </Text>
+  </Box>
+
+  <Text style={{ position: 'absolute', left: 76, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    小小河工 · AI+ 公民河流教育计划
+  </Text>
+  <Text style={{ position: 'absolute', left: 1120, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    02 / 06
+  </Text>
+</Slide>

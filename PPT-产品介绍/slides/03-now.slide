@@ -1,0 +1,69 @@
+<Slide style={{ width: 1280, height: 720, backgroundColor: '#F7F4EC', position: 'relative', overflow: 'hidden' }}>
+  <Text style={{ position: 'absolute', left: 76, top: 42, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 4, color: '#C9A24B' }}>
+    02
+  </Text>
+  <Text style={{ position: 'absolute', left: 118, top: 38, fontFamily: 'Songti SC', fontSize: 34, letterSpacing: 3, color: '#072F35' }}>
+    这条河今天
+  </Text>
+  <Box style={{ position: 'absolute', left: 76, top: 92, width: 54, height: 1, backgroundColor: 'rgba(201,162,75,0.55)' }} />
+
+  <Text style={{ position: 'absolute', left: 76, top: 104, fontFamily: 'Songti SC', fontSize: 38, letterSpacing: 2, color: '#072F35' }}>
+    治理的终点，是公共教育的起点
+  </Text>
+
+  <Text style={{ position: 'absolute', left: 76, top: 164, width: 1128, fontFamily: 'PingFang SC', fontSize: 14, lineHeight: 1.75, color: '#5C6B6B' }}>
+    2023 年 10 月清河之洲开园，这条河被推到了人前——它成了海淀「金腰带」上人流最密的公园之一。
+  </Text>
+
+  {/* 唯一的锚点：两个客流数字。其余生态数据已上移前一页，此处不再重复 */}
+  <Box style={{ position: 'absolute', left: 76, top: 232, width: 1128, display: 'flex', alignItems: 'flex-end' }}>
+    <Box style={{ width: 340 }}>
+      <Text style={{ fontFamily: 'Helvetica Neue', fontSize: 72, fontWeight: 500, lineHeight: 1, letterSpacing: -2, color: '#072F35' }}>3000–5000</Text>
+      <Text style={{ marginTop: 10, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 1.5, color: '#5C6B6B' }}>公园日均客流（人次）</Text>
+    </Box>
+    <Box style={{ width: 250, marginLeft: 60 }}>
+      <Text style={{ fontFamily: 'Helvetica Neue', fontSize: 68, fontWeight: 500, lineHeight: 1, letterSpacing: -1, color: '#C9A24B' }}>4 万+</Text>
+      <Text style={{ marginTop: 10, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 1.5, color: '#5C6B6B' }}>节假日单日峰值</Text>
+    </Box>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 76, top: 376, width: 1128, height: 1, backgroundColor: 'rgba(201,162,75,0.3)' }} />
+
+  {/* 只有一次转折：现在 → 载体 → 之后。删掉了原页的多余铺陈 */}
+  <Box style={{ position: 'absolute', left: 76, top: 404, width: 380, height: 132, backgroundColor: 'rgba(7,47,53,0.055)', padding: '18px 20px' }}>
+    <Text style={{ fontFamily: 'PingFang SC', fontSize: 11, letterSpacing: 2.2, color: '#8A7A52' }}>现 在</Text>
+    <Text style={{ marginTop: 9, fontFamily: 'Songti SC', fontSize: 24, letterSpacing: 1.5, color: '#072F35' }}>被观赏的河</Text>
+    <Text style={{ marginTop: 8, fontFamily: 'PingFang SC', fontSize: 12, lineHeight: 1.7, color: '#5C6B6B' }}>
+      游客多「看过即走」，风景留在原地。
+    </Text>
+  </Box>
+
+  <SVG viewBox="0 0 150 132" style={{ position: 'absolute', left: 478, top: 404, width: 150, height: 132 }}>
+    <line x1="6" y1="46" x2="104" y2="46" stroke="rgba(201,162,75,0.7)" strokeWidth="1.6" />
+    <path d="M98 38 L112 46 L98 54" fill="none" stroke="#C9A24B" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </SVG>
+  <Text style={{ position: 'absolute', left: 478, top: 458, width: 150, fontFamily: 'PingFang SC', fontSize: 11, lineHeight: 1.7, letterSpacing: 0.4, color: '#B5432F', textAlign: 'center' }}>
+    一台手机　一本护照{'\n'}一条河的档案
+  </Text>
+
+  <Box style={{ position: 'absolute', left: 658, top: 404, width: 546, height: 132, backgroundColor: '#072F35', padding: '18px 24px' }}>
+    <Text style={{ fontFamily: 'PingFang SC', fontSize: 11, letterSpacing: 2.2, color: '#C9A24B' }}>有 了 载 体 之 后</Text>
+    <Text style={{ marginTop: 9, fontFamily: 'Songti SC', fontSize: 24, letterSpacing: 1.5, color: '#F7F4EC' }}>公共教育的舞台</Text>
+    <Text style={{ marginTop: 8, fontFamily: 'PingFang SC', fontSize: 12, lineHeight: 1.7, color: '#8FB0AE' }}>
+      孩子与居民从「享受者」变成「回馈者」，每次到访都留下一条记录。
+    </Text>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 76, top: 566, width: 1128, paddingLeft: 14, borderLeft: '2px solid #B5432F' }}>
+    <Text style={{ fontFamily: 'Songti SC', fontSize: 20, lineHeight: 1.55, letterSpacing: 0.8, color: '#072F35' }}>
+      我们不缺人流，缺的是把「看客」变成「参与者」的那一件东西。
+    </Text>
+  </Box>
+
+  <Text style={{ position: 'absolute', left: 76, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    小小河工 · AI+ 公民河流教育计划
+  </Text>
+  <Text style={{ position: 'absolute', left: 1120, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    03 / 07
+  </Text>
+</Slide>

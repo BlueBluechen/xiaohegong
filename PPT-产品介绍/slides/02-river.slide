@@ -1,0 +1,69 @@
+<Slide style={{ width: 1280, height: 720, backgroundColor: '#F7F4EC', position: 'relative', overflow: 'hidden' }}>
+  {/* A 标题块 —— 与其它页统一：76 / 42，序号 13px 金 */ }
+  <Text style={{ position: 'absolute', left: 76, top: 42, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 4, color: '#C9A24B' }}>
+    01
+  </Text>
+  <Text style={{ position: 'absolute', left: 118, top: 38, fontFamily: 'Songti SC', fontSize: 34, letterSpacing: 3, color: '#072F35' }}>
+    这条河
+  </Text>
+  <Box style={{ position: 'absolute', left: 76, top: 92, width: 54, height: 1, backgroundColor: 'rgba(201,162,75,0.55)' }} />
+
+  <Text style={{ position: 'absolute', left: 76, top: 104, fontFamily: 'Songti SC', fontSize: 36, letterSpacing: 1.5, color: '#072F35' }}>
+    一条河的六十年，和它的 23.6 公里
+  </Text>
+
+  {/* B 左：历史与地理 —— 这一页负责「这条河是什么」，不负责提问 */}
+  <Box style={{ position: 'absolute', left: 76, top: 168, width: 512 }}>
+    <Text style={{ fontFamily: 'PingFang SC', fontSize: 14, lineHeight: 1.95, color: '#5C6B6B' }}>
+      1965 年，安河闸建成，清河的起点从西山脚下挪到京密引水渠东岸。六十年后，水回到 III 类，鸟回来九十余种，沿岸长出十座公园。
+    </Text>
+    <Text style={{ marginTop: 14, fontFamily: 'PingFang SC', fontSize: 13, lineHeight: 1.85, color: '#8A7A52' }}>
+      西起西山碧云寺，东至温榆河口。十座闸把它分成十段，四条支流在路上汇进来。
+    </Text>
+
+    <Box style={{ marginTop: 26, height: 1, width: 512, backgroundColor: 'rgba(201,162,75,0.3)' }} />
+
+    {/* 四个数字：这一页的锚点之二，但让位给地图 */}
+    <Box style={{ marginTop: 26, display: 'flex' }}>
+      <Box style={{ width: 128 }}>
+        <Text style={{ fontFamily: 'Helvetica Neue', fontSize: 40, fontWeight: 500, lineHeight: 1.1, color: '#072F35' }}>23.6</Text>
+        <Text style={{ marginTop: 4, fontFamily: 'PingFang SC', fontSize: 11.5, letterSpacing: 1, color: '#5C6B6B' }}>干流公里</Text>
+      </Box>
+      <Box style={{ width: 128 }}>
+        <Text style={{ fontFamily: 'Helvetica Neue', fontSize: 40, fontWeight: 500, lineHeight: 1.1, color: '#072F35' }}>10</Text>
+        <Text style={{ marginTop: 4, fontFamily: 'PingFang SC', fontSize: 11.5, letterSpacing: 1, color: '#5C6B6B' }}>座水闸</Text>
+      </Box>
+      <Box style={{ width: 128 }}>
+        <Text style={{ fontFamily: 'Helvetica Neue', fontSize: 40, fontWeight: 500, lineHeight: 1.1, color: '#072F35' }}>6</Text>
+        <Text style={{ marginTop: 4, fontFamily: 'PingFang SC', fontSize: 11.5, letterSpacing: 1, color: '#5C6B6B' }}>处沿岸古迹</Text>
+      </Box>
+      <Box style={{ width: 128 }}>
+        <Text style={{ fontFamily: 'Helvetica Neue', fontSize: 40, fontWeight: 500, lineHeight: 1.1, color: '#C9A24B' }}>90+</Text>
+        <Text style={{ marginTop: 4, fontFamily: 'PingFang SC', fontSize: 11.5, letterSpacing: 1, color: '#5C6B6B' }}>种鸟</Text>
+      </Box>
+    </Box>
+  </Box>
+
+  {/* C 右：河道走向图 —— 这一页的主视觉 */}
+  {/* 河道图：底色已调成页面米白并做边缘羽化，看不出是贴了一张图 */}
+  <Box style={{ position: 'absolute', left: 640, top: 150, width: 700, height: 420, overflow: 'hidden' }}>
+    <Image src="assets/river-map.png" style={{ width: 700, height: 420, objectFit: 'contain' }} />
+  </Box>
+
+  {/* 交接句：把问题交给下一页，不在本页展开 */}
+  <Box style={{ position: 'absolute', left: 76, top: 566, width: 1128, paddingLeft: 14, borderLeft: '2px solid #B5432F' }}>
+    <Text style={{ fontFamily: 'Songti SC', fontSize: 19, lineHeight: 1.6, letterSpacing: 0.8, color: '#072F35' }}>
+      可关于它的记录，仍只来自少数几次取样。
+    </Text>
+    <Text style={{ marginTop: 5, fontFamily: 'PingFang SC', fontSize: 12.5, lineHeight: 1.7, color: '#5C6B6B' }}>
+      两次取样之间的汛期、藻华、鸟群过境，大多没有留下痕迹。
+    </Text>
+  </Box>
+
+  <Text style={{ position: 'absolute', left: 76, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    小小河工 · AI+ 公民河流教育计划
+  </Text>
+  <Text style={{ position: 'absolute', left: 1120, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    02 / 07
+  </Text>
+</Slide>

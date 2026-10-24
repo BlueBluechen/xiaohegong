@@ -85,6 +85,58 @@ body{
 .bt-river svg{width:100%;height:100%;display:block;}
 
 /* ============================================================
+   认河页
+   ------------------------------------------------------------
+   水墨长卷是位图（真实笔触），所以点位坐标要按图量。
+   下面 STOPS 的百分比就是照着 cover_ink 里十颗点的位置定的。
+   ============================================================ */
+#s-river{background:#072F35;}
+/* 图只有 285px 高，页面还有富余 —— 上下各分一点，
+   让长卷落在视觉重心，而不是贴顶留一大片空 */
+.rv-top{padding:40px 26px 0;flex:0 0 auto;}
+.rv-h1{font-family:"Songti SC",serif;font-size:26px;letter-spacing:3px;
+  color:#F3F0E7;line-height:1.5;margin-top:14px;}
+.rv-d{font-size:11.5px;line-height:1.9;color:#7E9B9B;
+  padding:16px 26px 0;text-align:center;}
+/* 标题+长卷+图注作为一组垂直居中；按钮贴底。
+   横构图放在竖屏里必然上下有余白，让它分布在两端，
+   比全堆在中间好看得多。 */
+.rv-mid{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;
+  min-height:0;padding-bottom:96px;}
+.rv-bot{flex:0 0 auto;}
+
+/* 舞台：纸色底 + 长卷图，水痕自然接在深色页面上 */
+/* 舞台必须让图片保持自身宽高比 ——
+   之前 .rv-stage 是 flex 容器且 overflow 裁切，图片被纵向压扁，
+   而点位是按原图百分比算的，于是金点全跑偏。
+   改成 inline-block 包裹：图按宽度撑开，高度自动，容器跟着图走。 */
+.rv-stage{
+  position:relative;flex:0 0 auto;
+  margin:20px 0 0;display:block;
+  background:#F7F4EC;overflow:hidden;
+  line-height:0;                    /* 去掉 inline 元素的基线空隙 */
+}
+.rv-ink{width:100%;height:auto;display:block;}
+/* 走过留下的点：亮起来 */
+.rv-dot{
+  position:absolute;width:9px;height:9px;border-radius:50%;
+  background:var(--gold);opacity:0;transform:translate(-50%,-50%) scale(.4);
+  transition:opacity .45s ease, transform .45s cubic-bezier(.34,1.5,.64,1);
+  box-shadow:0 0 0 4px rgba(201,162,75,.18);z-index:2;
+}
+.rv-dot.on{opacity:1;transform:translate(-50%,-50%) scale(1);}
+
+.rv-count{
+  position:absolute;left:0;right:0;bottom:12px;text-align:center;
+  font-size:10px;letter-spacing:2px;color:#8A7A52;
+}
+.rv-count b{color:#B5432F;font-weight:600;}
+
+.rv-bot{padding:26px 26px 0;flex:0 0 auto;}
+/* 不要用固定高度硬撑 —— 屏高不同会留出难看的大块空白。
+   让上下的 auto 边距自己均分剩余空间。 */
+
+/* ============================================================
    答题提示标签
    ------------------------------------------------------------
    题目偏难，需要台阶。但不能把提示摊在题干下面 ——
@@ -92,20 +144,15 @@ body{
    做成一个小标签，点开才给一句方向性的提示（不是答案）。
    ============================================================ */
 .q-hint-btn{
-  display:inline-flex;align-items:center;gap:6px;
-  margin:2px 0 14px;padding:6px 12px;
-  background:transparent;border:1px dashed rgba(201,162,75,.5);
-  border-radius:20px;cursor:pointer;transition:.16s;
-  font-family:inherit;font-size:11px;letter-spacing:1.2px;color:var(--gold-d);
-}
-.q-hint-btn:active{transform:scale(.97);}
-.q-hint-btn .ic{
   display:inline-flex;align-items:center;justify-content:center;
-  width:14px;height:14px;border-radius:50%;
-  border:1px solid rgba(201,162,75,.6);
-  font-size:9px;line-height:1;
+  width:22px;height:22px;margin:0 0 12px;padding:0;
+  background:transparent;border:1px solid rgba(201,162,75,.42);
+  border-radius:50%;cursor:pointer;transition:.16s;
+  font-family:"Songti SC",serif;font-size:12px;line-height:1;
+  color:#A89870;
 }
-.q-hint-btn.seen{border-style:solid;border-color:rgba(201,162,75,.28);color:#A89870;opacity:.75;}
+.q-hint-btn:active{transform:scale(.94);}
+.q-hint-btn.seen{border-color:rgba(201,162,75,.22);color:#C0B49A;}
 .q-hint{
   display:none;margin:0 0 14px;padding:12px 14px;
   background:rgba(201,162,75,.09);border-left:2px solid var(--gold);
@@ -145,16 +192,18 @@ body{
   background:repeating-linear-gradient(135deg,
     rgba(150,130,90,.045) 0 1px, transparent 1px 7px);
 }
-/* 印章位置：原来在右上角，正好压住「姓名」那行的名字末尾。
-   挪到水脉右下的空白处 —— 那里本来就没内容，盖上去反而像真的盖了章。 */
+/* 印章：放大到 96px，压在水脉右下。
+   这是一枚真的盖上去的章，压住底下的站名是对的 —— 印章本来就该盖在字上。
+   所以它必须有 z-index，而且不做半透明。 */
 .pp-seal{
-  position:absolute;right:20px;bottom:56px;
-  width:46px;height:46px;border-radius:50%;
-  border:1.5px solid rgba(181,67,47,.48);color:rgba(181,67,47,.62);
-  font-family:"Songti SC",serif;font-size:11px;line-height:1.15;
+  position:absolute;right:16px;bottom:44px;
+  width:96px;height:96px;border-radius:50%;
+  border:2px solid rgba(181,67,47,.62);color:rgba(181,67,47,.82);
+  font-family:"Songti SC",serif;font-size:14px;line-height:1.35;
   display:flex;align-items:center;justify-content:center;text-align:center;
-  letter-spacing:1px;transform:rotate(-8deg);
-  pointer-events:none;
+  letter-spacing:1px;transform:rotate(-9deg);
+  pointer-events:none;z-index:5;
+  background:rgba(247,244,236,.55);
 }
 .pp-row{display:flex;align-items:baseline;gap:12px;padding:9px 0;
   border-bottom:1px solid rgba(58,58,58,.1);}
@@ -1134,6 +1183,36 @@ body{
   </div>
 </div>
 
+<!-- ============================================================
+     认河（领护照之前的一屏）
+     ------------------------------------------------------------
+     为什么加这一屏：
+       建档之后直接发护照，孩子其实还不知道这条河是什么样子。
+       这一屏让他先「看见一条河」—— 十座闸依次亮起，
+       小天鹅从起点游到终点，然后才发护照。
+       顺序是：知道这是哪条河 → 领一本它的护照 → 再决定去哪。
+     水墨长卷是旧版留下的素材（cover_ink），笔触是真的水墨笔触，
+     比用 SVG 手画的曲线好得多。小天鹅也是旧版那个向导角色。
+   ============================================================ -->
+<div class="screen" id="s-river">
+  <div class="rv-mid">
+    <div class="rv-top">
+      <div class="rv-h1">护照制作中，<br>先认一认这条河</div>
+    </div>
+
+    <div class="rv-stage">
+      <img class="rv-ink" src="data:image/jpeg;base64,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" alt="清河十闸水墨长卷">
+      <div class="rv-count" id="rv-count">第 <b>1</b> / 10 站　·　安河闸</div>
+    </div>
+
+    <div class="rv-d">23.6 公里　·　十座水闸</div>
+  </div>
+
+  <div class="rv-bot">
+    <button class="btn btn-gold" id="btn-rv-go">制作完成，领取护照</button>
+  </div>
+</div>
+
 <!-- 建档 -->
 <div class="screen" id="s-register">
   <div class="gd-head">
@@ -1154,7 +1233,7 @@ body{
     </div>
   </div>
   <div class="gd-bot">
-    <button class="btn btn-teal" id="btn-make" disabled>获得护照</button>
+    <button class="btn btn-teal" id="btn-make" disabled>去领取护照</button>
   </div>
 </div>
 
@@ -1175,7 +1254,7 @@ body{
   </div>
 
   <div class="pp-card" id="pp-card">
-    <div class="pp-seal">清<br>河</div>
+    <div class="pp-seal">小河工<br>·清河</div>
     <div class="pp-row">
       <div class="pp-lb">姓　名</div>
       <div class="pp-vl" id="pp-name">—</div>
@@ -1183,10 +1262,6 @@ body{
     <div class="pp-row">
       <div class="pp-lb">编　号</div>
       <div class="pp-vl pp-mono" id="pp-no">NO.0000</div>
-    </div>
-    <div class="pp-row">
-      <div class="pp-lb">站　点</div>
-      <div class="pp-vl">北京清河</div>
     </div>
 
     <!-- 十闸竖排：和足迹图同一个排版逻辑（一站一行、沿左侧水脉下行）。
@@ -1291,9 +1366,7 @@ body{
     <!-- 提示：题目确实偏难，但不能白给。
          做成默认收起的标签，点开才看 —— 主动求提示和被动看答案，
          对孩子的意义不一样。看过提示这题不加连击，也不影响过关。 -->
-    <button class="q-hint-btn" id="q-hint-btn">
-      <span class="ic">?</span><span>给点提示</span>
-    </button>
+    <button class="q-hint-btn" id="q-hint-btn" aria-label="提示">?</button>
     <div class="q-hint" id="q-hint"></div>
 
     <div id="q-opts"></div>
@@ -1409,7 +1482,7 @@ body{
            做成同一页里的一个浮层，反而会把那三个前置流程捆进去。 -->
       <div class="hm-sec">
         <div class="hm-sec-h"><span class="no">04</span><span class="t">拓印体验</span></div>
-        <div class="hm-sec-d">拍下你看见的那一个，印成一张卡带走。不用先领护照。</div>
+        <div class="hm-sec-d">拍下你看见的那一个，印成一张卡带走。</div>
         <div id="mod-stamp"></div>
       </div>
 
@@ -1431,7 +1504,7 @@ body{
       </div>
 
       <div class="hm-sec">
-        <div class="hm-sec-h"><span class="no">02</span><span class="t">四宫格</span></div>
+        <div class="hm-sec-h"><span class="no">02</span><span class="t">四宫格寻宝</span></div>
         <div class="hm-sec-d">抽一张和这个点位匹配的图，拍齐四样。</div>
         <div id="mod-hunt"></div>
       </div>
@@ -1567,7 +1640,7 @@ body{
       <div class="back" id="ht-back">‹ 回护照</div>
       <div class="ht-prog">进度 <b id="ht-n">0</b> / 4</div>
     </div>
-    <div class="ht-h" id="ht-h">四宫格</div>
+    <div class="ht-h" id="ht-h">四宫格寻宝</div>
     <div class="ht-sub" id="ht-sub"></div>
   </div>
   <div class="ht-body">
@@ -1584,7 +1657,7 @@ body{
 
 <!-- 拍照 -->
 <div class="screen" id="s-shot">
-  <div class="sh-top"><div class="back" id="sh-back">‹ 回到四宫格</div></div>
+  <div class="sh-top"><div class="back" id="sh-back">‹ 回到四宫格寻宝</div></div>
   <div class="sh-body">
     <div class="sh-step" id="sh-step">第 一 步　·　拍 一 张</div>
     <div class="sh-h" id="sh-h">你在河边，<br>看见什么就拍什么。</div>
@@ -1768,7 +1841,7 @@ body{
 /* 内容源：飞书 Base CACyb67OaaFXZPskQQtc6IDTnDc
    改内容 → 改飞书表格 → 跑 build_from_feishu.py --inline
    本文件的三块常量（GATES/HUNTS/KB）由脚本生成，勿手改 */
-const GATES=[{"id": 1, "name": "安河闸", "lat": 40.0068, "lng": 116.247, "seg": "西段 · 起点", "type": "水文观测", "src": "河长办", "km": 0, "story": "1966 年京密引水渠建成，清河的起点就改到了引水渠东岸。我南距颐和园北如意门约 1 公里，闸的南北两端还立着「清0」石碑。", "q": "我是清河的第一座水闸，始建于 1965 年，也是清河的「零公里」处。我是谁？", "opts": ["安河闸", "肖家河闸", "沙子营闸", "树村闸"], "ans": 0, "hint": "我的名字里有一个「安」字，就在京密引水渠边。人们还叫我「清0」的起点。", "k": "安河闸始建于 1965 年，2008、2014 两次改建，双孔平板钢闸门、卷扬式启闭，主要功能是泄洪。", "reward": "羽毛 ×1", "task": {"q": "走到水边，低头看看：能看见水底吗？", "sub": "从这一步开始，你不只是在答题", "opts": [{"t": "能看见水底的石头", "r": "看得见石头，说明这一段水流清、含沙少。这条记录很珍贵。", "obs": [{"key": "透明度", "num": 3, "unit": "级", "txt": "高（看得见水底）"}]}, {"t": "看不见，水有点浑", "r": "记下来了。水浑不一定是坏消息——夏天藻类多，也会这样。", "obs": [{"key": "透明度", "num": 1, "unit": "级", "txt": "低（水浑）"}]}, {"t": "水面漂着东西", "r": "记下来了。这类记录会直接进入河道巡护的关注清单。", "obs": [{"key": "漂浮物", "num": 1, "unit": "级", "txt": "有"}, {"key": "透明度", "num": 1, "unit": "级", "txt": "低"}]}]}}, {"id": 2, "name": "肖家河闸", "lat": 40.0085, "lng": 116.264, "seg": "西段", "type": "岸线观察", "src": "志愿队", "km": 1.6, "story": "我在肖家河桥西，上距安河闸约 1.6 公里。我身边有一座漂亮的彩虹桥，东边还有大环型立交桥。", "q": "我西侧有一座七彩的「彩虹桥」，上距安河闸约 1.6 公里。我是哪座水闸？", "opts": ["肖家河闸", "树村闸", "羊坊闸", "沈家闸"], "ans": 0, "hint": "我紧邻「肖家河桥」，名字与这条河、这座桥相同。", "k": "安河闸到肖家河闸之间河道曲折、姿态优美；肖家河闸是清河由西向东的第二道关卡。", "reward": "彩虹桥明信片 ×1", "task": {"q": "看看脚下的河岸：是自然的土坡，还是砌好的水泥？", "sub": "河岸的样子，决定了谁能在这里住下来", "opts": [{"t": "土坡，长着草和芦苇", "r": "自然岸坡能给水鸟和昆虫留出藏身的地方。这是好迹象。", "obs": [{"key": "岸线硬化度", "num": 0, "unit": "级", "txt": "自然土坡"}]}, {"t": "水泥或石砌的硬岸", "r": "硬岸挡水更稳，但生物少。北京这几年正在把这类岸线一点点「软化」。", "obs": [{"key": "岸线硬化度", "num": 2, "unit": "级", "txt": "硬质护岸"}]}, {"t": "一半一半，还在改", "r": "过渡段最有意思——过几年再来，你会看见它的变化。", "obs": [{"key": "岸线硬化度", "num": 1, "unit": "级", "txt": "过渡段"}]}]}}, {"id": 3, "name": "树村闸", "lat": 40.0136, "lng": 116.2895, "seg": "清河之洲", "type": "异常通报", "src": "河长办", "km": 3.5, "story": "我在圆明园正北方向，闸上带楼、闸桥一体，是清河十闸中最有观赏价值的一座。", "q": "我「闸上带楼、闸桥一体」，被誉为清河十闸中最美的闸门。我是？", "opts": ["树村闸", "清河闸", "京包闸", "外环跌水闸"], "ans": 0, "hint": "我在「树村」地界，圆明园正北，登楼能看见西山。", "k": "树村闸上距肖家河闸约 1.9 公里，闸桥供步行与骑行通过，登闸可远眺百望山、寿安山与香山。", "reward": "树村闸影贴纸 ×1", "task": {"q": "站在闸口看看附近：地上有垃圾吗？", "sub": "这不是考题，是巡查", "opts": [{"t": "很干净", "r": "干净不是天生的，是有人每天在管。你的记录会证明这一点。", "obs": [{"key": "垃圾密度", "num": 0, "unit": "级", "txt": "无"}]}, {"t": "有一些，不多的几处", "r": "少量垃圾多数是游客留下的。记录比指责有用。", "obs": [{"key": "垃圾密度", "num": 1, "unit": "级", "txt": "少量"}]}, {"t": "能看到明显的堆积", "r": "记下来了。这类点位会被标成「需要关注」——先记下来，比先下结论重要。", "obs": [{"key": "垃圾密度", "num": 2, "unit": "级", "txt": "多处"}]}]}}, {"id": 4, "name": "京包闸", "lat": 40.016, "lng": 116.309, "seg": "中段", "type": "物种观察", "src": "闸管员", "km": 5.2, "story": "我守在京包铁路西侧，旁边是箭亭立交桥——京新高速、京张高铁、京包铁路、地铁 13 号线都在这里交汇。万泉河就在我附近汇入清河。", "q": "我以身边的铁路得名，位于京包铁路西侧。我是？", "opts": ["京包闸", "沈家闸", "羊坊闸", "下清河闸"], "ans": 0, "hint": "我的名字取自「京包铁路」的前两个字。", "k": "京包闸上距树村闸约 1.7 公里；附近汇芳桥桥头题有乾隆《断桥残雪》诗，景点名为「汇芳残雪」。", "reward": "乾隆诗签 ×1", "task": {"q": "抬头看看水面和天空：有水鸟吗？", "sub": "这条河现在是九十多种鸟的家", "opts": [{"t": "有，正在水面上", "r": "水面的多是野鸭、鸊鷉。别靠近，远远记一笔就好。", "obs": [{"key": "水鸟活动", "num": 2, "unit": "级", "txt": "水面活动"}]}, {"t": "有，站在岸边或树上", "r": "岸边停歇的多是鹭类。它们对水质和鱼量很敏感。", "obs": [{"key": "水鸟活动", "num": 1, "unit": "级", "txt": "岸边停歇"}]}, {"t": "暂时没看到", "r": "「没看到」也是一条有效记录——它说明这个时段、这个点位没有鸟。", "obs": [{"key": "水鸟活动", "num": null, "unit": "级", "txt": "未观测"}]}]}}, {"id": 5, "name": "清河闸", "lat": 40.0203, "lng": 116.335, "seg": "中段 · 小月河口", "type": "水文观测", "src": "河长办", "km": 7.6, "story": "我在清河大桥（京藏高速跨河大桥）西侧，小月河在我身边汇入清河。河边有明代古桥广济桥，还有古清真寺。", "q": "我旁边的小月河上有一座明代古桥「广济桥」，始建于明永乐七年。我是哪座闸？", "opts": ["清河闸", "安河闸", "沙子营闸", "树村闸"], "ans": 0, "hint": "我就以这条河的名字命名——「清河」的闸。", "k": "清河沿岸有六处古迹：广济桥、清河古城遗址、清河火车站（詹天佑主持修建）、本裕仓、清河制呢厂办公楼、清河清真寺。", "reward": "古迹图鉴 ×1", "task": {"q": "再看一眼水色：它更接近哪种颜色？", "sub": "颜色是水最直接的表情", "opts": [{"t": "偏蓝，比较清", "r": "偏蓝通常意味着藻类少、悬浮物少。这是好水色的常见样子。", "obs": [{"key": "水色浊度", "num": 1, "unit": "级", "txt": "偏蓝（清）"}]}, {"t": "偏绿", "r": "偏绿多半是藻类在长。夏天下午尤其明显——和时间有关。", "obs": [{"key": "水色浊度", "num": 2, "unit": "级", "txt": "偏绿"}]}, {"t": "偏黄褐，有点浊", "r": "黄褐常和降雨、泥沙有关。如果你刚下过雨，这就很正常。", "obs": [{"key": "水色浊度", "num": 3, "unit": "级", "txt": "黄褐（浊）"}]}]}}, {"id": 6, "name": "下清河闸", "lat": 40.0235, "lng": 116.36, "seg": "中段 · 奥森北", "type": "岸线观察", "src": "志愿队", "km": 10.2, "story": "我在奥林匹克森林公园北围墙外，闸桥一体，只供步行和骑行的人通过。过了我，河道岸坡开始变得更自然。", "q": "我紧挨奥林匹克森林公园北墙，只允许步行和骑行通过。我是？", "opts": ["下清河闸", "外环跌水闸", "京包闸", "肖家河闸"], "ans": 0, "hint": "我在「清河闸」的下游，所以名字里有个「下」字。", "k": "自清河闸起，南岸改为土坡、林草茂密；下清河闸上距清河闸约 2.6 公里。", "reward": "奥森观鸟卡 ×1", "task": {"q": "看看岸边的植物：是成片的，还是零散的？", "sub": "植被的连续性，是生态恢复的指标之一", "opts": [{"t": "成片，连成一条绿带", "r": "连续的绿带能形成「生态廊道」，小动物才敢沿着河走。", "obs": [{"key": "植被连续性", "num": 3, "unit": "级", "txt": "连续成带"}]}, {"t": "零散几丛", "r": "零散的植被往往是新种的，还没长开。三年后再来看。", "obs": [{"key": "植被连续性", "num": 2, "unit": "级", "txt": "零散"}]}, {"t": "几乎没有，多是裸露地面", "r": "记下来了。这类岸段通常会被优先安排补植。", "obs": [{"key": "植被连续性", "num": 1, "unit": "级", "txt": "稀疏"}]}]}}, {"id": 7, "name": "羊坊闸", "lat": 40.029, "lng": 116.385, "seg": "东段", "type": "物种观察", "src": "闸管员", "km": 13.1, "story": "我在立水桥西南约 600 米处。从我这里开始，清河两岸都变成了土坡，自然的气息越来越浓。", "q": "我位于立水桥西南约 600 米，过了我河道两岸都是自然土坡。我是？", "opts": ["羊坊闸", "沈家闸", "树村闸", "安河闸"], "ans": 0, "hint": "我地处「羊坊」，立水桥在我的东北方向不远。", "k": "羊坊闸上距下清河闸约 2.9 公里；清洋河（奥林匹克公园龙形水系退水河）在其上游不远处汇入清河。", "reward": "芦苇书签 ×1", "task": {"q": "闭上眼睛听十秒：你能分辨出几种声音？", "sub": "河流不只有样子，还有声音", "opts": [{"t": "只有风声和水声", "r": "安静本身就是一种稀缺资源。城市里越来越少了。", "obs": [{"key": "声环境自然度", "num": 3, "unit": "级", "txt": "只有风声水声"}]}, {"t": "有鸟叫，还有水声", "r": "有鸟鸣，说明这里的植被和昆虫足够养活它们。", "obs": [{"key": "声环境自然度", "num": 2, "unit": "级", "txt": "有鸟鸣"}]}, {"t": "主要是车流和人声", "r": "清河有一段紧邻快速路。声音也是一种「栖息地质量」。", "obs": [{"key": "声环境自然度", "num": 1, "unit": "级", "txt": "以车流人声为主"}]}]}}, {"id": 8, "name": "外环跌水闸", "lat": 40.031, "lng": 116.405, "seg": "东段", "type": "水文观测", "src": "闸管员", "km": 14.5, "story": "我在地铁 13 号线环线外约 150 米，是十闸中唯一的拦水坝，却也叫「闸」。立水桥就在我西边。", "q": "我是清河十闸中唯一的拦水坝（跌水坝），在地铁环线外。我是？", "opts": ["外环跌水闸", "沙子营闸", "清河闸", "京包闸"], "ans": 0, "hint": "「跌水」就是水流从坝上跌落的意思，我又在地铁「外环」线外。", "k": "外环跌水闸上距羊坊闸约 1.4 公里；立水桥是京北跨清河六大交通枢纽之一，旁有地铁斜拉桥。", "reward": "跌水坝徽章 ×1", "task": {"q": "看着水流：它是急的，还是缓的？", "sub": "流速决定了什么样的生物能在这里生活", "opts": [{"t": "很急，能听到水声", "r": "急流会带来更多溶解氧，喜欢清水的鱼才活得下去。", "obs": [{"key": "流速", "num": 3, "unit": "级", "txt": "急"}]}, {"t": "慢，几乎看不出在动", "r": "缓流容易积存养分。闸坝上游往往是这种状态。", "obs": [{"key": "流速", "num": 1, "unit": "级", "txt": "缓"}]}, {"t": "中间，慢慢在淌", "r": "中速是大多数河段的常态，也是生物多样性最稳的状态。", "obs": [{"key": "流速", "num": 2, "unit": "级", "txt": "中"}]}]}}, {"id": 9, "name": "沈家闸", "lat": 40.033, "lng": 116.425, "seg": "东段 · 温榆河公园", "type": "异常通报", "src": "河长办", "km": 18.8, "story": "我在北京温榆河公园的西部，上距外环跌水闸约 4.3 公里，这是十闸之间相隔最远的一段。", "q": "我坐落于温榆河公园西部，是进入温榆河公园的第一座水闸。我是？", "opts": ["沈家闸", "下清河闸", "肖家河闸", "羊坊闸"], "ans": 0, "hint": "我姓「沈」，在温榆河公园的西边守着河面。", "k": "立水桥以东进入「滨水慢行系统」，两岸约 17 公里只供步行和骑行，是骑行者的乐园。", "reward": "温榆河公园地图 ×1", "task": {"q": "找找岸边：有被人踩出来的小路吗？", "sub": "人的痕迹，也是一种数据", "opts": [{"t": "有，很明显的土路", "r": "这些小路会告诉我们，大家真正想去哪里看河。", "obs": [{"key": "岸线野化度", "num": 3, "unit": "级", "txt": "明显土路"}]}, {"t": "没有，都是修好的步道", "r": "规范步道对河岸更友好，但也会把人和水隔开一点。", "obs": [{"key": "岸线野化度", "num": 1, "unit": "级", "txt": "规范步道"}]}, {"t": "有零星的脚印", "r": "零星脚印说明还在「试探」阶段。可以观察它会不会变宽。", "obs": [{"key": "岸线野化度", "num": 2, "unit": "级", "txt": "零星脚印"}]}]}}, {"id": 10, "name": "沙子营闸", "lat": 40.0345, "lng": 116.438, "seg": "尾闾 · 温榆河口", "type": "物种观察", "src": "志愿队", "km": 19.1, "story": "我在清河的尾端，距清河入温榆河口只有约 300 米。我是十闸中唯一的翻板式平板钢闸门，全开时翻起平卧，还能当桥用。", "q": "我是清河最后一座闸，唯一的翻板式平板钢闸门，开启时可平卧当桥。我是？", "opts": ["沙子营闸", "安河闸", "沈家闸", "外环跌水闸"], "ans": 0, "hint": "我在「沙子营」，过了我再游 300 米，清河就到尽头啦。", "k": "沙子营闸为 3 孔翻板式平板钢闸门、液压启闭；过闸 300 米即清河入温榆河口，23.6 公里的旅程到此结束。", "reward": "通关金钥匙 ×1", "task": {"q": "最后一眼：水面和岸边，哪边更热闹？", "sub": "这是你的第十条记录", "opts": [{"t": "水面更热闹", "r": "水鸟多的地方，通常鱼也多。这条河的食物链是完整的。", "obs": [{"key": "河岸活力", "num": 1, "unit": "级", "txt": "以水为主"}]}, {"t": "岸边更热闹", "r": "岸边的昆虫和植物养活了更多生命。两条线索都值得记下。", "obs": [{"key": "河岸活力", "num": 2, "unit": "级", "txt": "以岸为主"}]}, {"t": "两边都很安静", "r": "安静不一定是坏事——傍晚和清晨，本来就是两种不同的河。", "obs": [{"key": "河岸活力", "num": 0, "unit": "级", "txt": "都安静"}]}]}}];
+const GATES=[{"id":1,"name":"安河闸","lat":40.0068,"lng":116.247,"seg":"西段 · 起点","type":"水文观测","src":"河长办","km":0,"story":"1966 年京密引水渠建成，清河的起点就改到了引水渠东岸。我南距颐和园北如意门约 1 公里，闸的南北两端还立着「清0」石碑。","q":"我是清河的第一座水闸，始建于 1965 年，也是清河的「零公里」处。我是谁？","opts":["肖家河闸","安河闸","沙子营闸","树村闸"],"ans":1,"hint":"我的名字里有一个「安」字，就在京密引水渠边。人们还叫我「清0」的起点。","k":"安河闸始建于 1965 年，2008、2014 两次改建，双孔平板钢闸门、卷扬式启闭，主要功能是泄洪。","reward":"羽毛 ×1","task":{"q":"走到水边，低头看看：能看见水底吗？","sub":"从这一步开始，你不只是在答题","opts":[{"t":"能看见水底的石头","r":"看得见石头，说明这一段水流清、含沙少。这条记录很珍贵。","obs":[{"key":"透明度","num":3,"unit":"级","txt":"高（看得见水底）"}]},{"t":"看不见，水有点浑","r":"记下来了。水浑不一定是坏消息——夏天藻类多，也会这样。","obs":[{"key":"透明度","num":1,"unit":"级","txt":"低（水浑）"}]},{"t":"水面漂着东西","r":"记下来了。这类记录会直接进入河道巡护的关注清单。","obs":[{"key":"漂浮物","num":1,"unit":"级","txt":"有"},{"key":"透明度","num":1,"unit":"级","txt":"低"}]}]}},{"id":2,"name":"肖家河闸","lat":40.0085,"lng":116.264,"seg":"西段","type":"岸线观察","src":"志愿队","km":1.6,"story":"我在肖家河桥西，上距安河闸约 1.6 公里。我身边有一座漂亮的彩虹桥，东边还有大环型立交桥。","q":"我西侧有一座七彩的「彩虹桥」，上距安河闸约 1.6 公里。我是哪座水闸？","opts":["树村闸","羊坊闸","肖家河闸","沈家闸"],"ans":2,"hint":"我紧邻「肖家河桥」，名字与这条河、这座桥相同。","k":"安河闸到肖家河闸之间河道曲折、姿态优美；肖家河闸是清河由西向东的第二道关卡。","reward":"彩虹桥明信片 ×1","task":{"q":"看看脚下的河岸：是自然的土坡，还是砌好的水泥？","sub":"河岸的样子，决定了谁能在这里住下来","opts":[{"t":"土坡，长着草和芦苇","r":"自然岸坡能给水鸟和昆虫留出藏身的地方。这是好迹象。","obs":[{"key":"岸线硬化度","num":0,"unit":"级","txt":"自然土坡"}]},{"t":"水泥或石砌的硬岸","r":"硬岸挡水更稳，但生物少。北京这几年正在把这类岸线一点点「软化」。","obs":[{"key":"岸线硬化度","num":2,"unit":"级","txt":"硬质护岸"}]},{"t":"一半一半，还在改","r":"过渡段最有意思——过几年再来，你会看见它的变化。","obs":[{"key":"岸线硬化度","num":1,"unit":"级","txt":"过渡段"}]}]}},{"id":3,"name":"树村闸","lat":40.0136,"lng":116.2895,"seg":"清河之洲","type":"异常通报","src":"河长办","km":3.5,"story":"我在圆明园正北方向，闸上带楼、闸桥一体，是清河十闸中最有观赏价值的一座。","q":"我「闸上带楼、闸桥一体」，被誉为清河十闸中最美的闸门。我是？","opts":["清河闸","京包闸","外环跌水闸","树村闸"],"ans":3,"hint":"我在「树村」地界，圆明园正北，登楼能看见西山。","k":"树村闸上距肖家河闸约 1.9 公里，闸桥供步行与骑行通过，登闸可远眺百望山、寿安山与香山。","reward":"树村闸影贴纸 ×1","task":{"q":"站在闸口看看附近：地上有垃圾吗？","sub":"这不是考题，是巡查","opts":[{"t":"很干净","r":"干净不是天生的，是有人每天在管。你的记录会证明这一点。","obs":[{"key":"垃圾密度","num":0,"unit":"级","txt":"无"}]},{"t":"有一些，不多的几处","r":"少量垃圾多数是游客留下的。记录比指责有用。","obs":[{"key":"垃圾密度","num":1,"unit":"级","txt":"少量"}]},{"t":"能看到明显的堆积","r":"记下来了。这类点位会被标成「需要关注」——先记下来，比先下结论重要。","obs":[{"key":"垃圾密度","num":2,"unit":"级","txt":"多处"}]}]}},{"id":4,"name":"京包闸","lat":40.016,"lng":116.309,"seg":"中段","type":"物种观察","src":"闸管员","km":5.2,"story":"我守在京包铁路西侧，旁边是箭亭立交桥——京新高速、京张高铁、京包铁路、地铁 13 号线都在这里交汇。万泉河就在我附近汇入清河。","q":"我以身边的铁路得名，位于京包铁路西侧。我是？","opts":["京包闸","沈家闸","羊坊闸","下清河闸"],"ans":0,"hint":"我的名字取自「京包铁路」的前两个字。","k":"京包闸上距树村闸约 1.7 公里；附近汇芳桥桥头题有乾隆《断桥残雪》诗，景点名为「汇芳残雪」。","reward":"乾隆诗签 ×1","task":{"q":"抬头看看水面和天空：有水鸟吗？","sub":"这条河现在是九十多种鸟的家","opts":[{"t":"有，正在水面上","r":"水面的多是野鸭、鸊鷉。别靠近，远远记一笔就好。","obs":[{"key":"水鸟活动","num":2,"unit":"级","txt":"水面活动"}]},{"t":"有，站在岸边或树上","r":"岸边停歇的多是鹭类。它们对水质和鱼量很敏感。","obs":[{"key":"水鸟活动","num":1,"unit":"级","txt":"岸边停歇"}]},{"t":"暂时没看到","r":"「没看到」也是一条有效记录——它说明这个时段、这个点位没有鸟。","obs":[{"key":"水鸟活动","num":null,"unit":"级","txt":"未观测"}]}]}},{"id":5,"name":"清河闸","lat":40.0203,"lng":116.335,"seg":"中段 · 小月河口","type":"水文观测","src":"河长办","km":7.6,"story":"我在清河大桥（京藏高速跨河大桥）西侧，小月河在我身边汇入清河。河边有明代古桥广济桥，还有古清真寺。","q":"我旁边的小月河上有一座明代古桥「广济桥」，始建于明永乐七年。我是哪座闸？","opts":["安河闸","沙子营闸","清河闸","树村闸"],"ans":2,"hint":"我就以这条河的名字命名——「清河」的闸。","k":"清河沿岸有六处古迹：广济桥、清河古城遗址、清河火车站（詹天佑主持修建）、本裕仓、清河制呢厂办公楼、清河清真寺。","reward":"古迹图鉴 ×1","task":{"q":"再看一眼水色：它更接近哪种颜色？","sub":"颜色是水最直接的表情","opts":[{"t":"偏蓝，比较清","r":"偏蓝通常意味着藻类少、悬浮物少。这是好水色的常见样子。","obs":[{"key":"水色浊度","num":1,"unit":"级","txt":"偏蓝（清）"}]},{"t":"偏绿","r":"偏绿多半是藻类在长。夏天下午尤其明显——和时间有关。","obs":[{"key":"水色浊度","num":2,"unit":"级","txt":"偏绿"}]},{"t":"偏黄褐，有点浊","r":"黄褐常和降雨、泥沙有关。如果你刚下过雨，这就很正常。","obs":[{"key":"水色浊度","num":3,"unit":"级","txt":"黄褐（浊）"}]}]}},{"id":6,"name":"下清河闸","lat":40.0235,"lng":116.36,"seg":"中段 · 奥森北","type":"岸线观察","src":"志愿队","km":10.2,"story":"我在奥林匹克森林公园北围墙外，闸桥一体，只供步行和骑行的人通过。过了我，河道岸坡开始变得更自然。","q":"我紧挨奥林匹克森林公园北墙，只允许步行和骑行通过。我是？","opts":["外环跌水闸","下清河闸","京包闸","肖家河闸"],"ans":1,"hint":"我在「清河闸」的下游，所以名字里有个「下」字。","k":"自清河闸起，南岸改为土坡、林草茂密；下清河闸上距清河闸约 2.6 公里。","reward":"奥森观鸟卡 ×1","task":{"q":"看看岸边的植物：是成片的，还是零散的？","sub":"植被的连续性，是生态恢复的指标之一","opts":[{"t":"成片，连成一条绿带","r":"连续的绿带能形成「生态廊道」，小动物才敢沿着河走。","obs":[{"key":"植被连续性","num":3,"unit":"级","txt":"连续成带"}]},{"t":"零散几丛","r":"零散的植被往往是新种的，还没长开。三年后再来看。","obs":[{"key":"植被连续性","num":2,"unit":"级","txt":"零散"}]},{"t":"几乎没有，多是裸露地面","r":"记下来了。这类岸段通常会被优先安排补植。","obs":[{"key":"植被连续性","num":1,"unit":"级","txt":"稀疏"}]}]}},{"id":7,"name":"羊坊闸","lat":40.029,"lng":116.385,"seg":"东段","type":"物种观察","src":"闸管员","km":13.1,"story":"我在立水桥西南约 600 米处。从我这里开始，清河两岸都变成了土坡，自然的气息越来越浓。","q":"我位于立水桥西南约 600 米，过了我河道两岸都是自然土坡。我是？","opts":["沈家闸","树村闸","安河闸","羊坊闸"],"ans":3,"hint":"我地处「羊坊」，立水桥在我的东北方向不远。","k":"羊坊闸上距下清河闸约 2.9 公里；清洋河（奥林匹克公园龙形水系退水河）在其上游不远处汇入清河。","reward":"芦苇书签 ×1","task":{"q":"闭上眼睛听十秒：你能分辨出几种声音？","sub":"河流不只有样子，还有声音","opts":[{"t":"只有风声和水声","r":"安静本身就是一种稀缺资源。城市里越来越少了。","obs":[{"key":"声环境自然度","num":3,"unit":"级","txt":"只有风声水声"}]},{"t":"有鸟叫，还有水声","r":"有鸟鸣，说明这里的植被和昆虫足够养活它们。","obs":[{"key":"声环境自然度","num":2,"unit":"级","txt":"有鸟鸣"}]},{"t":"主要是车流和人声","r":"清河有一段紧邻快速路。声音也是一种「栖息地质量」。","obs":[{"key":"声环境自然度","num":1,"unit":"级","txt":"以车流人声为主"}]}]}},{"id":8,"name":"外环跌水闸","lat":40.031,"lng":116.405,"seg":"东段","type":"水文观测","src":"闸管员","km":14.5,"story":"我在地铁 13 号线环线外约 150 米，是十闸中唯一的拦水坝，却也叫「闸」。立水桥就在我西边。","q":"我是清河十闸中唯一的拦水坝（跌水坝），在地铁环线外。我是？","opts":["沙子营闸","清河闸","外环跌水闸","京包闸"],"ans":2,"hint":"「跌水」就是水流从坝上跌落的意思，我又在地铁「外环」线外。","k":"外环跌水闸上距羊坊闸约 1.4 公里；立水桥是京北跨清河六大交通枢纽之一，旁有地铁斜拉桥。","reward":"跌水坝徽章 ×1","task":{"q":"看着水流：它是急的，还是缓的？","sub":"流速决定了什么样的生物能在这里生活","opts":[{"t":"很急，能听到水声","r":"急流会带来更多溶解氧，喜欢清水的鱼才活得下去。","obs":[{"key":"流速","num":3,"unit":"级","txt":"急"}]},{"t":"慢，几乎看不出在动","r":"缓流容易积存养分。闸坝上游往往是这种状态。","obs":[{"key":"流速","num":1,"unit":"级","txt":"缓"}]},{"t":"中间，慢慢在淌","r":"中速是大多数河段的常态，也是生物多样性最稳的状态。","obs":[{"key":"流速","num":2,"unit":"级","txt":"中"}]}]}},{"id":9,"name":"沈家闸","lat":40.033,"lng":116.425,"seg":"东段 · 温榆河公园","type":"异常通报","src":"河长办","km":18.8,"story":"我在北京温榆河公园的西部，上距外环跌水闸约 4.3 公里，这是十闸之间相隔最远的一段。","q":"我坐落于温榆河公园西部，是进入温榆河公园的第一座水闸。我是？","opts":["沈家闸","下清河闸","肖家河闸","羊坊闸"],"ans":0,"hint":"我姓「沈」，在温榆河公园的西边守着河面。","k":"立水桥以东进入「滨水慢行系统」，两岸约 17 公里只供步行和骑行，是骑行者的乐园。","reward":"温榆河公园地图 ×1","task":{"q":"找找岸边：有被人踩出来的小路吗？","sub":"人的痕迹，也是一种数据","opts":[{"t":"有，很明显的土路","r":"这些小路会告诉我们，大家真正想去哪里看河。","obs":[{"key":"岸线野化度","num":3,"unit":"级","txt":"明显土路"}]},{"t":"没有，都是修好的步道","r":"规范步道对河岸更友好，但也会把人和水隔开一点。","obs":[{"key":"岸线野化度","num":1,"unit":"级","txt":"规范步道"}]},{"t":"有零星的脚印","r":"零星脚印说明还在「试探」阶段。可以观察它会不会变宽。","obs":[{"key":"岸线野化度","num":2,"unit":"级","txt":"零星脚印"}]}]}},{"id":10,"name":"沙子营闸","lat":40.0345,"lng":116.438,"seg":"尾闾 · 温榆河口","type":"物种观察","src":"志愿队","km":19.1,"story":"我在清河的尾端，距清河入温榆河口只有约 300 米。我是十闸中唯一的翻板式平板钢闸门，全开时翻起平卧，还能当桥用。","q":"我是清河最后一座闸，唯一的翻板式平板钢闸门，开启时可平卧当桥。我是？","opts":["安河闸","沈家闸","外环跌水闸","沙子营闸"],"ans":3,"hint":"我在「沙子营」，过了我再游 300 米，清河就到尽头啦。","k":"沙子营闸为 3 孔翻板式平板钢闸门、液压启闭；过闸 300 米即清河入温榆河口，23.6 公里的旅程到此结束。","reward":"通关金钥匙 ×1","task":{"q":"最后一眼：水面和岸边，哪边更热闹？","sub":"这是你的第十条记录","opts":[{"t":"水面更热闹","r":"水鸟多的地方，通常鱼也多。这条河的食物链是完整的。","obs":[{"key":"河岸活力","num":1,"unit":"级","txt":"以水为主"}]},{"t":"岸边更热闹","r":"岸边的昆虫和植物养活了更多生命。两条线索都值得记下。","obs":[{"key":"河岸活力","num":2,"unit":"级","txt":"以岸为主"}]},{"t":"两边都很安静","r":"安静不一定是坏事——傍晚和清晨，本来就是两种不同的河。","obs":[{"key":"河岸活力","num":0,"unit":"级","txt":"都安静"}]}]}}];
 
 const KB=[{"n": "芦苇", "tag": "生态护岸", "f1": "细高、穗状花序，成片长在浅水边", "f2": "它是生态护岸的主力。用植物代替水泥，岸线才「软」得下来。", "f3": "这片芦苇同时也是水鸟的隐蔽所——人靠得太近，它们就不来了。"}, {"n": "香蒲", "tag": "水质过滤", "f1": "叶片细长直立，顶端有香肠状的穗", "f2": "挺水植物的根区能吸收氮磷，人工湿地常拿它做「过滤层」。", "f3": "它长得越旺，说明这一段水里的养分越多。"}, {"n": "垂柳", "tag": "遮阴固岸", "f1": "枝条下垂，贴着水边生长", "f2": "耐水湿、根系能固岸，是老河道的标配，也是遮阴与停留点。", "f3": "柳树下的水面通常更凉，夏天鱼爱待在这儿。"}, {"n": "白鹭", "tag": "指示物种", "f1": "白色、长腿长颈，常在浅水里静立", "f2": "它是这条河的指示物种。慢行系统要求「保持距离」，就是为它留的。", "f3": "它出现的地方，通常鱼也够多——这是条完整食物链的证据。"}, {"n": "岸边石", "tag": "硬质护岸", "f1": "整齐砌筑或裸露的卵石带", "f2": "硬质护岸防冲刷，但生物少。北京这几年正在把它逐步「软化」成土坡。", "f3": "如果你脚下这段还是硬的，说明它还没轮到改造。"}, {"n": "木栈道", "tag": "慢行系统", "f1": "架空在水面或岸边", "f2": "它是滨水慢行系统的一部分：让人靠近，又不踩坏岸边的植物。", "f3": "立水桥以东约 17 公里，只走人、不走车。"}, {"n": "浮萍", "tag": "富营养信号", "f1": "水面一层均匀的绿膜", "f2": "设计上要保证水体流动，否则养分容易积住——浮萍就是信号。", "f3": "看到这个，记一条「水色偏绿」很有价值。"}, {"n": "野草", "tag": "低维护", "f1": "低矮、成片、不修剪", "f2": "这类「不整齐」的草是有意留的：省水、招虫、喂鸟。", "f3": "看起来乱，其实比草坪有用得多。"}];
 
@@ -2140,6 +2213,8 @@ function boot(){
 $('btn-boot').onclick=()=>{
   if(S.no){ locate(); show('s-home'); renderHome(); }
   else if(S.name){ show('s-home'); switchTab('explore'); renderHome(); }
+  /* 全新访客先命名（建档），确认后进「认河」动画，看完再发护照。
+     顺序：取名字 → 认这条河 → 领护照。 */
   else show('s-register');
 };
 
@@ -2160,7 +2235,9 @@ btnMake.onclick=()=>{
   S.name=n;
   S.no='NO.'+String(Math.floor(Math.random()*9000)+1000);
   save();
-  openPassport();
+  // 名字定了，先带他认这条河，看完动画再签发护照
+  show('s-river');
+  startRiverTour();
 };
 
 /* ============================================================
@@ -2181,7 +2258,6 @@ function renderPassportTrail(){
     <div class="pp-st">
       <span class="no">${String(g.id).padStart(2,'0')}</span>
       <span class="nm">${g.name}</span>
-      <span class="nk">${g.seg}</span>
     </div>`).join('');
 }
 
@@ -2247,6 +2323,66 @@ function pickQuiz(){
   return arr.slice(0,6);
 }
 
+/* ============================================================
+   认河动画
+   ------------------------------------------------------------
+   水墨长卷是位图，所以十站坐标是照着 cover_ink 逐点量的（百分比，跟着图缩放）。
+   顺序按 x 递增 —— 图上的河从左上流到右下，正好就是从安河闸到沙子营闸。
+   小天鹅是旧版那个向导角色，沿着河一个个游过去，游过的点亮起来。
+   ============================================================ */
+const RIVER_STOPS = [
+  [17.4, 41.6], [24.9, 26.8], [34.4, 14.8], [46.4, 12.0],
+  [56.5, 22.6], [63.4, 38.0], [69.4, 54.5], [75.8, 70.4],
+  [84.4, 83.6], [92.0, 87.0]
+];
+let rvTimer=null, rvIdx=0;
+
+function startRiverTour(){
+  const stage=document.querySelector('.rv-stage');
+  if(!stage) return;
+  // 清掉上一轮的点和定时器（退出再进不能叠加）
+  stage.querySelectorAll('.rv-dot').forEach(e=>e.remove());
+  if(rvTimer){ clearTimeout(rvTimer); rvTimer=null; }
+
+  RIVER_STOPS.forEach(([x,y])=>{
+    const d=document.createElement('i');
+    d.className='rv-dot';
+    d.style.left=x+'%'; d.style.top=y+'%';
+    stage.appendChild(d);
+  });
+
+  rvIdx=0;
+  moveSwanTo(0);
+
+  const step=()=>{
+    rvIdx++;
+    if(rvIdx>=RIVER_STOPS.length){
+      $('rv-count').innerHTML='十座闸，都认过了';
+      return;
+    }
+    moveSwanTo(rvIdx);
+    rvTimer=setTimeout(step, 1050);
+  };
+  rvTimer=setTimeout(step, 900);
+}
+
+function moveSwanTo(i){
+  const [x,y]=RIVER_STOPS[i];
+  // 不再有小天鹅，改由金点自己依次亮起，标出走到哪一站
+  const dots=document.querySelectorAll('.rv-dot');
+  if(dots[i]) dots[i].classList.add('on');
+  const g=GATES[i];
+  if(g){
+    $('rv-count').innerHTML='第 <b>'+(i+1)+'</b> / 10 站　·　'+g.name;
+  }
+}
+
+function stopRiverTour(){
+  if(rvTimer){ clearTimeout(rvTimer); rvTimer=null; }
+}
+
+$('btn-rv-go').onclick=()=>{ stopRiverTour(); openPassport(); };
+
 bindHint();
 
 $('btn-intro-go').onclick=()=>{
@@ -2269,7 +2405,6 @@ function resetHintBtn(){
   const b=$('q-hint-btn'), box=$('q-hint');
   if(!b||!box) return;
   b.classList.remove('seen');
-  b.querySelector('span:last-child').textContent='给点提示';
   box.classList.remove('on');
   box.textContent='';
 }
@@ -2288,7 +2423,6 @@ function bindHint(){
     box.innerHTML='<b>老周小声说：</b>'+h;
     box.classList.add('on');
     b.classList.add('seen');
-    b.querySelector('span:last-child').textContent='收起提示';
     hintUsed=true;                          // 这题不给连击
     updCombo();
   };
@@ -2990,7 +3124,7 @@ function renderStampMod(){
   box.innerHTML=modCard({
     ic:'印', t:'拓印体验',
     s:'拍下你看见的那一个，印成一张卡带走。',
-    d:'不用先领护照，写个名字就能玩。桥、闸、水鸟、芦苇——挑你面前那一个。',
+    d:'桥、闸、水鸟、芦苇——挑你面前那一个，印成一张卡带走。',
     cls:'act', act:'go-stamp',
     tag: n?'<span class="pill gold"><span class="dt"></span>'+n+' 张</span>':'',
     arrow:'去印一张 ›'

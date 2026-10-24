@@ -1,0 +1,81 @@
+<Slide style={{ width: 1280, height: 720, backgroundColor: '#F7F4EC', position: 'relative', overflow: 'hidden' }}>
+  <Text style={{ position: 'absolute', left: 76, top: 46, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 4, color: '#C9A24B' }}>
+    05
+  </Text>
+  <Text style={{ position: 'absolute', left: 118, top: 42, fontFamily: 'Songti SC', fontSize: 34, letterSpacing: 3, color: '#072F35' }}>
+    一条记录，长什么样
+  </Text>
+  <Box style={{ position: 'absolute', left: 76, top: 96, width: 54, height: 1, backgroundColor: 'rgba(201,162,75,0.55)' }} />
+
+  <Text style={{ position: 'absolute', left: 76, top: 108, width: 900, fontFamily: 'PingFang SC', fontSize: 15, lineHeight: 1.8, color: '#5C6B6B' }}>
+    孩子以为在盖章，其实在给这条河建档。下面这些字段，是按研究机构能直接用的格式设计的。
+  </Text>
+
+  {/* 左：七个字段，三列（字段 / 取值 / 为什么这么设计） */}
+  <Box style={{ position: 'absolute', left: 76, top: 168, width: 700 }}>
+    <Box style={{ display: 'flex', paddingBottom: 8, borderBottom: '1px solid rgba(201,162,75,0.4)' }}>
+      <Text style={{ width: 96, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>字段</Text>
+      <Text style={{ width: 246, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>示例</Text>
+      <Text style={{ flex: 1, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>为什么这么设计</Text>
+    </Box>
+    {[
+      ['点位', '清河闸 · 点位 05', '空间可比：同一处才谈得上变化'],
+      ['时间', '10-22 14:32', '时间序列：单次记录没有意义'],
+      ['类型', '水文 / 物种 / 岸线 / 异常', '决定这条记录该给谁看'],
+      ['观测', '透明度：低；白鹭 ×2', '有数值才能统计、作图'],
+      ['证据', '照片 1 张', '可复核：能回看当时的样子'],
+      ['观察者', 'NO.057 · 巡河员', '可信度加权：级别即数据权重'],
+      ['环境', '天气 / 水位 / 时段', '排除干扰：阴天的水色不算异常'],
+      ['许可', 'CC BY-NC 4.0 · 匿名', '机构敢用：授权先写清楚'],
+    ].map(([f, v, w], i) => (
+      <Box key={i} style={{ display: 'flex', alignItems: 'center', height: 40, borderBottom: '1px solid rgba(7,47,53,0.08)' }}>
+        <Text style={{ width: 96, fontFamily: 'Songti SC', fontSize: 16, letterSpacing: 1, color: '#072F35' }}>{f}</Text>
+        <Text style={{ width: 246, fontFamily: 'PingFang SC', fontSize: 13.5, color: '#5C6B6B' }}>{v}</Text>
+        <Text style={{ flex: 1, fontFamily: 'PingFang SC', fontSize: 12.5, color: '#8A7A52' }}>{w}</Text>
+      </Box>
+    ))}
+  </Box>
+
+  {/* 右：四类使用方 */}
+  <Box style={{ position: 'absolute', left: 820, top: 168, width: 386 }}>
+    <Text style={{ fontFamily: 'Songti SC', fontSize: 20, letterSpacing: 1.5, color: '#072F35' }}>四种人，各取所需</Text>
+    <Box style={{ marginTop: 12, width: 46, height: 1, backgroundColor: 'rgba(201,162,75,0.55)' }} />
+
+    {[
+      ['孩子与家庭', '一个身份、一本护照、一条写进成长档案的巡河线'],
+      ['公园与文旅', '一套四季更新的内容资产，和十个到访理由'],
+      ['河长办 / 研究机构', '高密度、低成本、可比对的观察网络，补专业巡测的空档'],
+      ['资助方 / 品牌', '可追溯、可引用的公益成果，而不是一张活动照片'],
+    ].map(([t, d], i) => (
+      <Box key={i} style={{ marginTop: i === 0 ? 16 : 15 }}>
+        <Text style={{ fontFamily: 'PingFang SC', fontSize: 14.5, letterSpacing: 0.8, color: '#072F35' }}>{t}</Text>
+        <Text style={{ marginTop: 3, fontFamily: 'PingFang SC', fontSize: 12.5, lineHeight: 1.65, color: '#5C6B6B' }}>{d}</Text>
+      </Box>
+    ))}
+
+    {/* 一条真实记录的样子：用排版呈现，截图说明不了问题就不放截图 */}
+    <Box style={{ marginTop: 22, padding: '14px 16px', borderLeft: '2px solid #C9A24B', backgroundColor: 'rgba(7,47,53,0.045)' }}>
+      <Box style={{ display: 'flex', alignItems: 'baseline' }}>
+        <Text style={{ fontFamily: 'Songti SC', fontSize: 15, letterSpacing: 1, color: '#072F35' }}>树村闸</Text>
+        <Text style={{ marginLeft: 10, fontFamily: 'PingFang SC', fontSize: 11, letterSpacing: 1.2, color: '#8A7A52' }}>点位 03 · 物种观察</Text>
+        <Text style={{ marginLeft: 'auto', fontFamily: 'PingFang SC', fontSize: 10.5, letterSpacing: 1, color: '#B5432F' }}>实测</Text>
+      </Box>
+      <Text style={{ marginTop: 7, fontFamily: 'PingFang SC', fontSize: 12, lineHeight: 1.7, color: '#072F35' }}>
+        水很清，能看见底下的石头。一只鸳鸯在水面游，头顶红褐色。
+      </Text>
+      <Text style={{ marginTop: 6, fontFamily: 'PingFang SC', fontSize: 11, lineHeight: 1.6, color: '#5C6B6B' }}>
+        水鸟 = 1 只　·　有照片　·　10-24 14:48
+      </Text>
+    </Box>
+    <Text style={{ marginTop: 8, fontFamily: 'PingFang SC', fontSize: 11.5, lineHeight: 1.6, color: '#8A7A52' }}>
+      产品里与演示数据分开标注，来源可追溯
+    </Text>
+  </Box>
+
+  <Text style={{ position: 'absolute', left: 76, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    小小河工 · AI+ 公民河流教育计划
+  </Text>
+  <Text style={{ position: 'absolute', left: 1120, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    06 / 07
+  </Text>
+</Slide>

@@ -1,0 +1,67 @@
+<Slide style={{ width: 1280, height: 720, backgroundColor: '#072F35', position: 'relative', overflow: 'hidden' }}>
+  <Text style={{ position: 'absolute', left: 76, top: 46, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 4, color: '#C9A24B' }}>
+    06
+  </Text>
+  <Text style={{ position: 'absolute', left: 118, top: 42, fontFamily: 'Songti SC', fontSize: 34, letterSpacing: 3, color: '#F7F4EC' }}>
+    现在
+  </Text>
+  <Box style={{ position: 'absolute', left: 76, top: 96, width: 54, height: 1, backgroundColor: 'rgba(201,162,75,0.55)' }} />
+
+  <Text style={{ position: 'absolute', left: 76, top: 118, fontFamily: 'Songti SC', fontSize: 46, lineHeight: 1.35, letterSpacing: 2, color: '#F7F4EC' }}>
+    不是规划，<Text style={{ fontFamily: 'Songti SC', fontSize: 46, letterSpacing: 2, color: '#C9A24B' }}>是已经能打开的东西。</Text>
+  </Text>
+
+  {/* 左：已完成清单 */}
+  <Box style={{ position: 'absolute', left: 76, top: 218, width: 596 }}>
+    <Text style={{ fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 2.5, color: '#7E9B9B' }}>已 上 线</Text>
+
+    {[
+      ['01', '四步旅程已跑通', '封面 → 认河 → 建档 → 护照 → 岔路，全链路线上可走，无需下载'],
+      ['02', '上岗培训已成型', '十座闸的题库，6 题答对 4 题过关；卡住时可点「给点提示」，看过提示不计连击'],
+      ['03', '拓印卡已可用', '拍照 → 服务端转绘 → 印成一张卡。每张 50 积分，生成成功才扣'],
+      ['04', '数据链路已打通', '飞书表 → 构建脚本 → 产品前台，实测与演示数据分开标注'],
+    ].map(([no, t, d], i) => (
+      <Box key={i} style={{ marginTop: i === 0 ? 14 : 14, display: 'flex' }}>
+        <Text style={{ width: 28, fontFamily: 'Helvetica Neue', fontSize: 11.5, color: '#C9A24B', paddingTop: 3 }}>{no}</Text>
+        <Box style={{ flex: 1 }}>
+          <Text style={{ fontFamily: 'PingFang SC', fontSize: 14.5, letterSpacing: 0.5, color: '#F7F4EC' }}>{t}</Text>
+          <Text style={{ marginTop: 3, fontFamily: 'PingFang SC', fontSize: 11.5, lineHeight: 1.55, color: '#8FB0AE' }}>{d}</Text>
+        </Box>
+      </Box>
+    ))}
+  </Box>
+
+  {/* 右：真机小图 + 接下来 90 天 */}
+  <Box style={{ position: 'absolute', left: 730, top: 214, width: 240, height: 232, overflow: 'hidden', border: '1px solid rgba(201,162,75,0.28)' }}>
+    <Image src="assets/02-river.png" style={{ width: 240, height: 232, objectFit: 'cover', objectPosition: 'top center' }} />
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 1000, top: 214, width: 206 }}>
+    <Text style={{ fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 2.5, color: '#7E9B9B' }}>接 下 来 9 0 天</Text>
+    <Box style={{ marginTop: 14, width: 34, height: 1, backgroundColor: 'rgba(201,162,75,0.5)' }} />
+    {['一段河（1 公里）', '一所学校', '一份开放的季节数据集'].map((t, i) => (
+      <Box key={i} style={{ marginTop: 13, display: 'flex' }}>
+        <Box style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#C9A24B', marginTop: 8, marginRight: 9 }} />
+        <Text style={{ flex: 1, fontFamily: 'PingFang SC', fontSize: 13, lineHeight: 1.65, color: '#DCE7E4' }}>{t}</Text>
+      </Box>
+    ))}
+  </Box>
+
+  {/* 底部：诚实备注 + 金句 */}
+  <Box style={{ position: 'absolute', left: 76, top: 470, width: 1128, height: 1, backgroundColor: 'rgba(201,162,75,0.24)' }} />
+
+  <Text style={{ position: 'absolute', left: 76, top: 484, width: 760, fontFamily: 'PingFang SC', fontSize: 11.5, lineHeight: 1.7, color: '#6E8B8B' }}>
+    ※ 表内 6 条记录的照片为素材占位，用于跑通链路，不作实测证据；真实实测待 P0 阶段带孩子到河岸后替换。
+  </Text>
+
+  <Text style={{ position: 'absolute', left: 76, top: 552, fontFamily: 'Songti SC', fontSize: 30, letterSpacing: 2, lineHeight: 1.5, color: '#F7F4EC' }}>
+    一条河不需要更多赞美。它需要更多记录。
+  </Text>
+
+  <Text style={{ position: 'absolute', left: 76, top: 692, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#4E7476' }}>
+    小小河工 · AI+ 公民河流教育计划　·　首站 北京清河
+  </Text>
+  <Text style={{ position: 'absolute', left: 1120, top: 692, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#4E7476' }}>
+    07 / 07
+  </Text>
+</Slide>

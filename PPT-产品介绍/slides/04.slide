@@ -1,0 +1,49 @@
+<Slide style={{ width: 1280, height: 720, backgroundColor: '#072F35', position: 'relative', overflow: 'hidden' }}>
+  <Text style={{ position: 'absolute', left: 76, top: 42, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 4, color: '#C9A24B' }}>
+    04
+  </Text>
+  <Text style={{ position: 'absolute', left: 118, top: 38, fontFamily: 'Songti SC', fontSize: 34, letterSpacing: 3, color: '#F7F4EC' }}>
+    一个孩子走一趟，是这样的
+  </Text>
+  <Box style={{ position: 'absolute', left: 76, top: 92, width: 54, height: 1, backgroundColor: 'rgba(201,162,75,0.55)' }} />
+
+  <Text style={{ position: 'absolute', left: 76, top: 106, width: 780, fontFamily: 'PingFang SC', fontSize: 15, lineHeight: 1.8, color: '#8FB0AE' }}>
+    不是「一个 App 三种用法」，而是一段有顺序的路：先看见河，再领护照，然后自己选去哪。下面四张都是真机界面。
+  </Text>
+
+  {/* 四步：四张真机截图，等高档位排列 */}
+  {[
+    ['01', '看见一条河', '封面之后先进「认河」：水墨长卷铺开，小天鹅从安河闸游到温榆河口，十座闸依次亮起。', '02-river-crop.png'],
+    ['02', '领一本护照', '姓名、编号、站点落在纸面上。护照里就是刚才那条河，十站竖排。', '04-passport.png'],
+    ['03', '自己选去哪', '两条路并列：上岗培训（听老周讲河、答六道题），或拓印体验（现在就印一张）。', '05-fork.png'],
+    ['04', '去做一件事', '现场记录、四宫格寻宝、或者拍一张印成拓印卡。都进同一本护照。', '07-quiz.png'],
+  ].map(([no, t, d, img], i) => (
+    <Box key={i} style={{ position: 'absolute', left: 76 + i * 289, top: 178, width: 262 }}>
+      <Box style={{ width: 262, height: 312, overflow: 'hidden', backgroundColor: '#0B474E', border: i === 0 ? '1px solid rgba(201,162,75,0.6)' : '1px solid rgba(201,162,75,0.18)' }}>
+        <Image src={`assets/${img}`} style={{ width: 262, height: 312, objectFit: 'contain', objectPosition: 'top center' }} />
+      </Box>
+      <Box style={{ display: 'flex', alignItems: 'baseline', marginTop: 14 }}>
+        <Text style={{ fontFamily: 'Helvetica Neue', fontSize: 12, color: '#C9A24B', marginRight: 9 }}>{no}</Text>
+        <Text style={{ fontFamily: 'Songti SC', fontSize: 19, letterSpacing: 1.5, color: '#F7F4EC' }}>{t}</Text>
+      </Box>
+      <Text style={{ marginTop: 6, height: 62, fontFamily: 'PingFang SC', fontSize: 12, lineHeight: 1.6, color: '#8FB0AE' }}>{d}</Text>
+    </Box>
+  ))}
+
+  {/* 底部：一句收束 + 两条支线的对照 */}
+  <Box style={{ position: 'absolute', left: 76, top: 600, width: 500, paddingLeft: 14, borderLeft: '2px solid #C9A24B' }}>
+    <Text style={{ fontFamily: 'Songti SC', fontSize: 16, lineHeight: 1.6, color: '#F7F4EC' }}>
+      护照不是奖励，是通行证——它证明你来过这条河。
+    </Text>
+  </Box>
+  <Text style={{ position: 'absolute', left: 640, top: 602, width: 564, fontFamily: 'PingFang SC', fontSize: 11.5, lineHeight: 1.7, color: '#8FB0AE', textAlign: 'right' }}>
+    上岗培训　6 题答对 4 题即过，卡住可点「给点提示」　·　拓印体验　每张 50 积分，生成成功才扣
+  </Text>
+
+  <Text style={{ position: 'absolute', left: 76, top: 692, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#4E7476' }}>
+    小小河工 · AI+ 公民河流教育计划
+  </Text>
+  <Text style={{ position: 'absolute', left: 1120, top: 692, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#4E7476' }}>
+    05 / 07
+  </Text>
+</Slide>

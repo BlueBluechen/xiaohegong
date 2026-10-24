@@ -51,6 +51,12 @@ body{
 .hl-d{margin-top:15px;font-size:12.5px;line-height:1.95;color:#8FB0B1;}
 .hl-d b{color:var(--cream);font-weight:500;}
 .hl-in{margin-top:26px;}
+/* 已有名字时的招呼行：不占输入框的位置，但让人知道自己是谁 */
+.hl-who{display:flex;align-items:baseline;gap:10px;margin-top:24px;
+  padding:13px 16px;border-left:2px solid rgba(201,162,75,.55);
+  background:rgba(201,162,75,.06);}
+.hl-who .lb{font-size:10px;letter-spacing:2px;color:#8FB0B1;flex:0 0 auto;}
+.hl-who .nm{font-family:"Songti SC",serif;font-size:19px;letter-spacing:1.5px;color:var(--cream);}
 .hl-lb{font-size:11px;letter-spacing:1.5px;color:#8FB0B1;margin-bottom:9px;}
 .hl-i{
   width:100%;background:transparent;border:none;
@@ -106,7 +112,9 @@ body{
 /* ---------- 成品 ---------- */
 #s-card{padding-top:38px;padding-bottom:34px;}
 .res-k{font-size:10px;letter-spacing:4px;color:var(--gold);text-align:center;}
-.res-h{font-family:"Songti SC",serif;font-size:17px;letter-spacing:1.5px;text-align:center;margin-top:16px;}
+/* 这里不再是一句「收下吧」，而是两行操作提示，所以用小字，不用标题字号 */
+.res-h{padding-top:14px;text-align:center;
+  font-size:11.5px;line-height:1.85;letter-spacing:.8px;color:#8FB0B1;}
 .res-h em{font-style:normal;color:var(--gold-l);}
 
 /* 竖版对半卡：上半原片（2:1）+ 下半完整拓印图（1:1）+ 文字带。
@@ -171,6 +179,15 @@ body{
   font-size:10.5px;line-height:1.9;color:#8FB0B1;
 }
 .res-note b{color:var(--cream);font-weight:500;}
+.samples{display:none;margin-top:16px;padding-top:16px;border-top:1px solid rgba(201,162,75,.22);}
+.samples.on{display:block;}
+.sp-h{font-size:10.5px;letter-spacing:2px;color:#8FB0B1;text-align:center;margin-bottom:12px;}
+.sp-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sp-i{position:relative;background:#FCF9F4;overflow:hidden;}
+.sp-i img{width:100%;display:block;}
+.sp-i .n{position:absolute;left:0;right:0;bottom:0;padding:5px 8px;
+  font-size:10px;letter-spacing:1.2px;color:#6B5D42;
+  background:linear-gradient(180deg,rgba(252,249,244,0) 0%,rgba(252,249,244,.94) 42%);}
 .cost{text-align:center;font-size:10.5px;line-height:1.9;color:#5C8388;margin-top:12px;}
 .cost b{color:var(--gold-l);font-weight:500;}
 .cost.lack{color:#D08A76;}
@@ -238,7 +255,13 @@ body{
       北京清河，<b>23.6 公里</b>，十座水闸。你在河边拍下的东西，
       可以印成一张拓印卡。
     </div>
-    <div class="hl-in">
+    <!-- 已经有名字的人：这行换成一句招呼，不再让他填一遍 -->
+    <div class="hl-who" id="hl-who" style="display:none">
+      <span class="lb">你是谁</span>
+      <span class="nm" id="hl-name">—</span>
+    </div>
+
+    <div class="hl-in" id="hl-in">
       <div class="hl-lb">你怎么称呼</div>
       <input class="hl-i" id="in-name" maxlength="8" placeholder="写个名字就行，比如「小石头」" autocomplete="off">
       <div class="hl-tip">名字和你在这台手机上的护照是同一个。<br>改这里，护照上也一起改。</div>
@@ -252,7 +275,7 @@ body{
   <!-- 2. 拍/选照片 -->
   <div class="scr" id="s-up">
     <div class="up-top">
-      <div class="up-k">第　一　步　·　<span id="up-who">—</span></div>
+
       <div class="up-h">先拍一张，或上传一张</div>
       <div class="up-d">桥、闸、水鸟、芦苇——<b>拍你看见的那一个</b>。<br>
         把你喜欢的照片，转绘成拓印效果。</div>
@@ -270,8 +293,15 @@ body{
     </div>
 
     <div style="margin-top:22px;padding-bottom:34px">
-      <button class="btn btn-gold" id="btn-render" disabled>印　出　来</button>
+      <button class="btn btn-gold" id="btn-render" disabled>开始拓印</button>
       <button class="btn btn-line" id="btn-noimg" style="margin-top:9px">没想法？看看拓印效果</button>
+
+      <!-- 2x2 效果墙：只用来「看」，所以下面只有一个「去体验」回到上传 -->
+      <div class="samples" id="samples">
+        <div class="sp-h">这四样，都能印成这样</div>
+        <div class="sp-g" id="sp-g"></div>
+        <button class="btn btn-gold" id="btn-sp-go" style="margin-top:14px">去体验</button>
+      </div>
       <!-- 费用必须在下手之前说清楚：生成成功才扣，余额不足直接拦住 -->
       <div class="cost" id="cost-line">每张拓印卡消耗 <b>50</b> 积分　·　你现在有 <b id="cost-pts">0</b> 分</div>
     </div>
@@ -299,11 +329,11 @@ body{
     </div>
 
     <div class="res-bot">
-      <button class="btn btn-gold" id="btn-keep">印进护照</button>
+      <button class="btn btn-gold" id="btn-keep">收进护照</button>
       <button class="btn btn-line" id="btn-another">换一张照片</button>
       <button class="btn btn-line" id="btn-passport">去河边干活 ›</button>
       <!-- 收尾语放最下面 -->
-      <div class="res-h" id="res-h">印好了，<em>收下吧</em></div>
+      <div class="res-h" id="res-h">长按可保留完整拓印图片；<br>截屏可保留拓印对比图</div>
     </div>
 
     <div id="mywall" style="display:none">
@@ -436,18 +466,20 @@ function refreshCost(){
   }
 }
 
-/* 已经有名字（建过档或在本页写过）的人，不再问一遍。
-   问第二遍等于告诉他「上次那句没记住」，也白白多一次点击。
-   直接进拍照页，顶部给他看「谁在印」。
-   注意：这段必须放在 resetUp/drop 定义之后 ——
-   它要调用 resetUp()，而 resetUp 里用到了 const drop。 */
+/* 已经有名字的人（建过档或在本页写过）：
+   不再问一遍名字，但**不能直接跳过这一页**。
+   他要先知道「拓印体验」到底是个什么东西，再自己点开始。
+   上一次的 bug 就是这里直接 show('s-up')，页面一闪而过，
+   人根本没看懂就被推到拍照页了。 */
 if(ME){
   inName.value=ME;
   btnGo.disabled=false;
+  const inBox=$('hl-in');
+  const whoBox=$('hl-who');
+  if(inBox) inBox.style.display='none';
+  if(whoBox) whoBox.style.display='flex';
+  const nm=$('hl-name'); if(nm) nm.textContent=ME;
   resetUp();
-  show('s-up');
-  const who=$('up-who');
-  if(who) who.textContent=ME;
 }
 
 drop.onclick=()=>{ if(!PHOTO) fileIn.click(); };
@@ -477,11 +509,32 @@ fileIn.onchange=ev=>{
   r.readAsDataURL(f);
 };
 
-/* 不拍照，用内置图 */
+/* 不拍照：先让他看看这四样印出来是什么样，看完再决定要不要玩 */
+const SP_N=4;
+
+function renderSamples(){
+  const g=$('sp-g'); if(!g) return;
+  g.innerHTML=SUBJECTS.slice(0,SP_N).map(s=>`
+    <div class="sp-i">
+      <img src="${ART[s.key]}" alt="${s.cn}">
+      <div class="n">${s.cn.replace(/\s/g,'')}</div>
+    </div>`).join('');
+}
+
 $('btn-noimg').onclick=()=>{
-  PHOTO=null; USED_PHOTO=false;
-  SUBJ=0;
-  doRender();
+  renderSamples();
+  $('samples').classList.add('on');
+  $('btn-noimg').style.display='none';
+  $('btn-render').style.display='none';
+  $('samples').scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+
+/* 看完效果 → 回到上传照片 */
+$('btn-sp-go').onclick=()=>{
+  $('samples').classList.remove('on');
+  $('btn-noimg').style.display='';
+  $('btn-render').style.display='';
+  const drop=$('drop'); if(drop) drop.scrollIntoView({behavior:'smooth',block:'center'});
 };
 
 /* 印出来 */

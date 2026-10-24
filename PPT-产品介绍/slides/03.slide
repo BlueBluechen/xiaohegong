@@ -1,0 +1,72 @@
+<Slide style={{ width: 1280, height: 720, backgroundColor: '#F7F4EC', position: 'relative', overflow: 'hidden' }}>
+  <Text style={{ position: 'absolute', left: 76, top: 46, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 4, color: '#C9A24B' }}>
+    03
+  </Text>
+  <Text style={{ position: 'absolute', left: 118, top: 42, fontFamily: 'Songti SC', fontSize: 34, letterSpacing: 3, color: '#072F35' }}>
+    十座闸，就是十节课
+  </Text>
+  <Box style={{ position: 'absolute', left: 76, top: 96, width: 54, height: 1, backgroundColor: 'rgba(201,162,75,0.55)' }} />
+
+  <Text style={{ position: 'absolute', left: 76, top: 110, width: 900, fontFamily: 'PingFang SC', fontSize: 15, lineHeight: 1.8, color: '#5C6B6B' }}>
+    每座闸都有名字、年份、闸型和一段自己的故事。这是孩子上岗前要认下的东西，也是这套内容最难被复制的地方。
+  </Text>
+
+  {/* 左：十站竖排，沿一条水脉下行 —— 和产品护照页同一套视觉 */}
+  <Box style={{ position: 'absolute', left: 76, top: 172, width: 430, height: 452 }}>
+    <Box style={{ position: 'absolute', left: 17, top: 10, width: 2, height: 428, backgroundColor: 'rgba(127,174,196,0.42)' }} />
+    <Box style={{ position: 'absolute', left: 4, top: 10, width: 28, height: 428, backgroundColor: 'rgba(191,217,228,0.16)' }} />
+
+    {[
+      ['01', '安河闸', '—', '清0 起点 · 1965'],
+      ['02', '肖家河闸', '1.6', '彩虹桥 · 河道最曲折'],
+      ['03', '树村闸', '1.9', '闸上带楼 · 十闸最美'],
+      ['04', '京包闸', '1.7', '四线交汇 · 万泉河口'],
+      ['05', '清河闸', '2.4', '小月河口 · 明代广济桥'],
+      ['06', '下清河闸', '2.6', '奥森北墙 · 岸坡转自然'],
+      ['07', '羊坊闸', '2.9', '土坡之始 · 清洋河口'],
+      ['08', '外环跌水闸', '1.4', '十闸唯一拦水坝'],
+      ['09', '沈家闸', '4.3', '闸距最远 · 慢行系统'],
+      ['10', '沙子营闸', '0.3', '尾闾 · 唯一翻板闸'],
+    ].map(([no, nm, km, note], i) => (
+      <Box key={i} style={{ position: 'absolute', left: 0, top: i * 43, width: 430, height: 43, display: 'flex', alignItems: 'center' }}>
+        <Box style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: i === 0 ? '#B5432F' : '#F7F4EC', border: i === 0 ? 'none' : '1.4px solid rgba(127,174,196,0.75)', marginLeft: 14, marginRight: 16 }} />
+        <Text style={{ width: 28, fontFamily: 'Helvetica Neue', fontSize: 12, color: '#B3A489' }}>{no}</Text>
+        <Text style={{ width: 108, fontFamily: 'Songti SC', fontSize: 17, letterSpacing: 1, color: '#072F35' }}>{nm}</Text>
+        <Text style={{ width: 46, fontFamily: 'PingFang SC', fontSize: 12, color: '#8A7A52' }}>{km}{km === '—' ? '' : ' km'}</Text>
+        <Text style={{ flex: 1, fontFamily: 'PingFang SC', fontSize: 12, color: '#5C6B6B' }}>{note}</Text>
+      </Box>
+    ))}
+  </Box>
+
+  {/* 右：真实产品截图（护照页十闸竖排）做 L1 主视觉 */}
+  <Box style={{ position: 'absolute', left: 566, top: 168, width: 300, height: 452, overflow: 'hidden' }}>
+    <Image src="assets/passport-card.png" style={{ width: 300, height: 452, objectFit: 'cover', objectPosition: 'top center' }} />
+  </Box>
+  <Text style={{ position: 'absolute', left: 566, top: 628, width: 300, fontFamily: 'PingFang SC', fontSize: 12, lineHeight: 1.7, color: '#8A7A52' }}>
+    护照内页：十站沿水脉排列，一眼看出自己在哪一段
+  </Text>
+
+  {/* 右tips：四类知识域 */}
+  <Box style={{ position: 'absolute', left: 906, top: 172, width: 300 }}>
+    <Text style={{ fontFamily: 'Songti SC', fontSize: 20, letterSpacing: 1.5, color: '#072F35' }}>四类知识域</Text>
+    <Box style={{ marginTop: 14, width: 46, height: 1, backgroundColor: 'rgba(201,162,75,0.55)' }} />
+    {[
+      ['水闸工程', '双孔钢闸、卷扬启闭、翻板坝'],
+      ['历史遗产', '广济桥、古城遗址、清河车站'],
+      ['三山五园', '颐和园北、圆明园正北的水系'],
+      ['生态科普', '挺水植物、指示物种、岸线软化'],
+    ].map(([t, d], i) => (
+      <Box key={i} style={{ marginTop: i === 0 ? 18 : 16 }}>
+        <Text style={{ fontFamily: 'PingFang SC', fontSize: 15, letterSpacing: 1, color: '#072F35' }}>{t}</Text>
+        <Text style={{ marginTop: 3, fontFamily: 'PingFang SC', fontSize: 12.5, lineHeight: 1.6, color: '#5C6B6B' }}>{d}</Text>
+      </Box>
+    ))}
+  </Box>
+
+  <Text style={{ position: 'absolute', left: 76, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    小小河工 · AI+ 公民河流教育计划
+  </Text>
+  <Text style={{ position: 'absolute', left: 1120, top: 676, fontFamily: 'PingFang SC', fontSize: 12, letterSpacing: 1.5, color: '#8A7A52' }}>
+    04 / 07
+  </Text>
+</Slide>

@@ -1,0 +1,57 @@
+<Slide style={{ width: 1280, height: 720, backgroundColor: '#072F35', position: 'relative', overflow: 'hidden' }}>
+  <Box style={{ position: 'absolute', left: 76, top: 72, width: 360, height: 1, backgroundColor: 'rgba(201,162,75,0.34)' }} />
+  <Text style={{ position: 'absolute', left: 76, top: 52, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 5, color: '#C9A24B' }}>
+    北　京　清　河
+  </Text>
+
+  <Text style={{ position: 'absolute', left: 72, top: 108, fontFamily: 'Songti SC', fontSize: 76, letterSpacing: 12, lineHeight: 1.15, color: '#F7F4EC' }}>
+    小小河工
+  </Text>
+
+  <Text style={{ position: 'absolute', left: 76, top: 234, fontFamily: 'Songti SC', fontSize: 26, letterSpacing: 4, color: '#C9A24B' }}>
+    AI+ 公民河流教育计划
+  </Text>
+
+  <Box style={{ position: 'absolute', left: 76, top: 302, width: 46, height: 1, backgroundColor: 'rgba(201,162,75,0.5)' }} />
+
+  <Text style={{ position: 'absolute', left: 76, top: 336, fontFamily: 'Songti SC', fontSize: 34, lineHeight: 1.7, letterSpacing: 1.5, color: '#F7F4EC' }}>
+    一条河不需要更多赞美。
+  </Text>
+  <Text style={{ position: 'absolute', left: 76, top: 392, fontFamily: 'Songti SC', fontSize: 34, lineHeight: 1.7, letterSpacing: 1.5, color: '#C9A24B' }}>
+    它需要更多记录。
+  </Text>
+
+  {/* 右下：一道水脉，呼应产品封面的水墨长卷 */}
+  {/* 水脉：用四层不同宽度/透明度的描边叠出水墨晕开的层次，
+      单层圆头线会像一根塑料管 */}
+  <SVG viewBox="0 0 540 300" style={{ position: 'absolute', left: 690, top: 196, width: 560, height: 312 }}>
+    <path d="M-10 262 C 110 252, 168 168, 276 138 S 430 84, 552 26"
+          fill="none" stroke="rgba(191,217,228,0.10)" strokeWidth="74" strokeLinecap="round" />
+    <path d="M-10 262 C 110 252, 168 168, 276 138 S 430 84, 552 26"
+          fill="none" stroke="rgba(191,217,228,0.16)" strokeWidth="52" strokeLinecap="round" />
+    <path d="M-10 262 C 110 252, 168 168, 276 138 S 430 84, 552 26"
+          fill="none" stroke="rgba(160,198,216,0.30)" strokeWidth="30" strokeLinecap="round" />
+    <path d="M-10 262 C 110 252, 168 168, 276 138 S 430 84, 552 26"
+          fill="none" stroke="rgba(190,214,228,0.34)" strokeWidth="10" strokeLinecap="round" />
+    {/* 十颗点，只是淡点，不喧宾夺主 */}
+    <circle cx="52" cy="256" r="3.4" fill="rgba(247,244,236,0.55)" />
+    <circle cx="126" cy="234" r="3.4" fill="rgba(247,244,236,0.55)" />
+    <circle cx="196" cy="196" r="3.4" fill="rgba(247,244,236,0.55)" />
+    <circle cx="252" cy="152" r="3.4" fill="rgba(247,244,236,0.55)" />
+    <circle cx="312" cy="130" r="3.4" fill="rgba(247,244,236,0.55)" />
+    <circle cx="374" cy="112" r="3.4" fill="rgba(247,244,236,0.55)" />
+    <circle cx="436" cy="84" r="3.4" fill="rgba(247,244,236,0.55)" />
+    <circle cx="492" cy="56" r="3.4" fill="rgba(247,244,236,0.55)" />
+    <circle cx="530" cy="36" r="3.4" fill="rgba(247,244,236,0.55)" />
+    {/* 起点：朱砂，唯一的高饱和点 */}
+    <circle cx="26" cy="264" r="8" fill="#B5432F" />
+    <circle cx="26" cy="264" r="17" fill="rgba(181,67,47,0.16)" />
+  </SVG>
+
+  <Text style={{ position: 'absolute', left: 76, top: 640, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 2, color: '#7E9B9B' }}>
+    23.6 公里　·　十座水闸　·　四条支流　·　沿岸九十余种鸟
+  </Text>
+  <Text style={{ position: 'absolute', left: 1100, top: 640, fontFamily: 'PingFang SC', fontSize: 13, letterSpacing: 1.5, color: '#7E9B9B' }}>
+    产品介绍　·　2026
+  </Text>
+</Slide>
