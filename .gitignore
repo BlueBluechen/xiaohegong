@@ -1,9 +1,16 @@
+# macOS
 .DS_Store
+
+# Python
 __pycache__/
 *.pyc
-preview-*/
-*.pdf
+
+# 打包产物
+*.zip
 *.bak
 
-# 飞书授权二维码（含临时凭证，勿提交）
+# 飞书授权二维码（含临时凭证）
 lark-auth-qr*.png
+
+# 火山 veFaaS 本地链接配置（含函数 ID 与本地路径）
+.vefaas/

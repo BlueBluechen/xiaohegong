@@ -1,0 +1,3193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#07363C">
+<title>小小河工 · AI+ 公民河流教育计划</title>
+<style>
+:root{
+  --dark:#07363C; --teal:#0E5C63; --teal2:#2E7D82; --teal3:#1C5559;
+  --gold:#C9A24B; --gold-d:#9A7A2E; --gold-l:#E4C987;
+  --cream:#F7F4EC; --paper:#FDFCF8; --sand:#FBFAF5;
+  --ink:#1B2A2A; --body:#4A5A59; --mut:#8B9998; --faint:#B3BDB9;
+  --line:#DCE3DF; --line-w:#E4E0D4; --seal:#B5432F; --blue:#5B8FA8;
+  --grn:#3B6D11; --grn-l:#EAF3DE;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  background:#08282d;
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--ink); display:flex; align-items:center; justify-content:center;
+  overflow:hidden; -webkit-font-smoothing:antialiased;
+}
+#app{
+  position:relative; width:100%; max-width:430px; height:100%; max-height:900px;
+  background:var(--cream); overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.45);
+}
+@media(min-width:520px){ #app{height:calc(100% - 40px); border-radius:12px;} }
+
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.screen.on{display:flex;}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+
+.btn{
+  display:block;width:100%;border:none;outline:none;cursor:pointer;background:transparent;
+  font-family:inherit;font-size:16px;font-weight:600;letter-spacing:2px;
+  border-radius:2px;padding:16px;transition:transform .14s,opacity .14s;
+}
+.btn:active{transform:scale(.985);}
+.btn:disabled{opacity:.34;cursor:default;transform:none;}
+.btn-gold{background:linear-gradient(135deg,#D9BA6B,#C9A24B);color:#3a2d0d;}
+.btn-teal{background:var(--teal);color:#F3F0E7;}
+.btn-line{background:transparent;border:1px solid var(--line);color:var(--body);font-weight:400;font-size:13.5px;letter-spacing:1px;padding:13px;}
+.btn-line.on-dark{border-color:rgba(255,255,255,.24);color:#A9C3C1;}
+.btn-sm{font-size:12.5px;padding:10px 16px;letter-spacing:1px;width:auto;display:inline-block;}
+.eyebrow{font-size:10.5px;letter-spacing:3px;color:var(--gold-d);font-weight:600;}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+.back{font-size:12px;color:var(--teal);cursor:pointer;letter-spacing:.5px;padding:4px 0;}
+
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 11px;border-radius:99px;font-size:10.5px;letter-spacing:1.2px;
+  border:1px solid var(--line);background:rgba(255,255,255,.5);
+}
+.pill.here{border-color:#97C459;color:var(--grn);background:var(--grn-l);}
+.pill.away{border-color:#D8D3C4;color:var(--mut);}
+.pill.lock{border-color:#E0DACB;color:#A89870;background:#F6F2E6;}
+.pill .dt{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.hm-bar .pill{border-color:rgba(151,196,89,.5);background:rgba(151,196,89,.14);color:#B8DC8E;}
+.hm-bar .pill.away{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#9FB8B6;}
+
+/* ================= 引导 ================= */
+#s-boot{background:var(--dark);}
+.bt-top{padding:50px 26px 0;position:relative;z-index:2;}
+.bt-mark{font-size:10px;letter-spacing:3.5px;color:var(--gold-l);}
+.bt-rule{width:32px;height:1px;background:var(--gold);margin:18px 0 24px;}
+.bt-h1{font-family:"Songti SC",serif;font-size:52px;font-weight:400;color:#F3F0E7;letter-spacing:7px;line-height:1.2;}
+.bt-sub{font-family:"Songti SC",serif;font-size:16px;letter-spacing:3px;color:var(--gold-l);margin-top:12px;}
+.bt-quote{margin-top:26px;font-size:13px;line-height:2.05;color:#A9C3C1;max-width:300px;}
+.bt-quote b{color:#F3F0E7;font-weight:500;}
+.bt-agenda{flex:1;padding:24px 26px 0;display:flex;flex-direction:column;justify-content:center;gap:0;}
+.ag{display:grid;grid-template-columns:74px 1fr;gap:13px;padding:11px 0;}
+.ag .k{font-size:9.5px;letter-spacing:1.2px;color:#5C8388;padding-top:3px;white-space:nowrap;}
+.ag .t{font-size:12.5px;color:#DCEAE8;line-height:1.55;}
+.ag .t b{color:var(--gold-l);font-weight:500;}
+.ag .t i{font-style:normal;font-size:10.5px;color:#7FA6A4;display:block;margin-top:1px;}
+.bt-bot{padding:18px 26px 34px;}
+
+/* ================= 建档 ================= */
+.gd-head{padding:42px 26px 0;}
+.gd-h1{font-family:"Songti SC",serif;font-size:27px;letter-spacing:1.5px;line-height:1.45;margin:8px 0 12px;}
+.gd-h1 em{font-style:normal;color:var(--teal);}
+.gd-desc{font-size:13px;line-height:1.95;color:var(--body);}
+.gd-body{flex:1;padding:24px 26px 0;}
+.field{margin-bottom:18px;}
+.field-l{font-size:11px;letter-spacing:2px;color:var(--mut);margin-bottom:8px;}
+.field-i{
+  width:100%;border:1px solid var(--line);background:var(--paper);border-radius:2px;
+  padding:14px 16px;font-family:inherit;font-size:16px;color:var(--ink);outline:none;transition:border-color .15s;
+}
+.field-i:focus{border-color:var(--teal2);}
+.field-i::placeholder{color:#C3CCC9;font-size:13.5px;}
+.agree{display:flex;gap:11px;align-items:flex-start;cursor:pointer;padding:14px 16px;
+  background:var(--paper);border:1px solid var(--line);border-radius:2px;margin-bottom:14px;}
+.agree .bx{flex:0 0 18px;width:18px;height:18px;border:1px solid #C0CBC7;border-radius:2px;margin-top:1px;position:relative;transition:.15s;}
+.agree.sel .bx{background:var(--teal);border-color:var(--teal);}
+.agree.sel .bx:after{content:"";position:absolute;left:5px;top:2px;width:5px;height:9px;
+  border:1.5px solid #fff;border-top:none;border-left:none;transform:rotate(42deg);}
+.agree .tx{font-size:12.5px;line-height:1.7;color:var(--body);}
+.privacy{font-size:11px;line-height:1.85;color:var(--mut);padding-left:13px;border-left:2px solid var(--line);}
+.privacy b{color:var(--teal);font-weight:500;}
+.gd-bot{padding:18px 26px 30px;}
+
+/* ================= 老周开场 ================= */
+#s-intro{background:var(--dark);}
+.in-top{padding:40px 26px 0;}
+.in-role{display:flex;align-items:center;gap:14px;}
+.in-av{
+  width:44px;height:44px;border-radius:50%;flex:0 0 44px;
+  background:linear-gradient(160deg,#1C5559,#0A3F45);border:1px solid rgba(201,162,75,.45);
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Songti SC",serif;font-size:18px;color:var(--gold-l);
+}
+.in-role .nm{font-size:13px;color:#F3F0E7;letter-spacing:1px;}
+.in-role .tg{font-size:10px;letter-spacing:1.6px;color:#6E9498;margin-top:3px;}
+.in-body{flex:1;padding:0 26px;display:flex;flex-direction:column;justify-content:center;}
+.bub{
+  background:rgba(255,255,255,.055);border-left:2px solid var(--gold);
+  padding:15px 18px;margin-bottom:10px;border-radius:0 3px 3px 0;
+  font-size:13.5px;line-height:1.9;color:#DCEAE8;
+  opacity:0;transform:translateY(10px);animation:bubIn .5s forwards;
+}
+.bub b{color:var(--gold-l);font-weight:500;}
+.bub .em{font-family:"Songti SC",serif;font-size:15px;}
+.bub:nth-child(1){animation-delay:.1s;}
+.bub:nth-child(2){animation-delay:.5s;}
+.bub:nth-child(3){animation-delay:.95s;}
+@keyframes bubIn{to{opacity:1;transform:translateY(0);}}
+.in-bot{padding:20px 26px 34px;}
+
+/* ================= 答题 ================= */
+.qz-top{padding:18px 22px 14px;border-bottom:1px solid #EDE9DD;flex:0 0 auto;}
+.qz-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.qz-step{font-size:10.5px;letter-spacing:2px;color:var(--mut);}
+.qz-pts{font-size:11px;letter-spacing:1px;color:var(--gold-d);font-weight:600;}
+.qz-pts b{font-family:"Songti SC",serif;font-size:15px;}
+.qz-nodes{display:flex;gap:5px;}
+.qz-nodes i{flex:1;height:3px;background:#E2DED1;border-radius:2px;transition:background .4s;}
+.qz-nodes i.done{background:var(--gold);}
+.qz-nodes i.now{background:var(--teal2);}
+.qz-nodes i.miss{background:#D9BDB8;}
+.qz-body{flex:1;padding:20px 22px 0;overflow-y:auto;}
+.qz-gate{display:inline-flex;align-items:center;gap:7px;margin-bottom:12px;}
+.qz-gate .dot{width:5px;height:5px;border-radius:50%;background:var(--seal);}
+.qz-gate span{font-size:10.5px;letter-spacing:2px;color:var(--gold-d);font-weight:600;}
+.qz-story{
+  font-size:12.5px;line-height:1.85;color:var(--body);
+  padding-left:12px;border-left:1px solid rgba(201,162,75,.5);margin-bottom:16px;
+}
+.qz-q{font-family:"Songti SC",serif;font-size:21px;line-height:1.6;letter-spacing:.3px;color:var(--ink);margin-bottom:18px;}
+.qz-q .num{font-family:"PingFang SC",sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;display:block;margin-bottom:7px;font-weight:600;}
+.opt{
+  display:flex;gap:13px;align-items:flex-start;background:var(--paper);
+  border:1px solid var(--line);border-radius:2px;padding:14px 16px;margin-bottom:8px;
+  cursor:pointer;transition:.16s;
+}
+.opt .k{
+  flex:0 0 21px;width:21px;height:21px;border-radius:50%;border:1px solid #C7D0CD;
+  display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mut);
+  margin-top:1px;transition:.16s;
+}
+.opt .t{font-size:14px;line-height:1.6;color:var(--ink);}
+.opt:active{transform:scale(.99);}
+.opt.dead{opacity:.32;pointer-events:none;}
+.opt.ok{border-color:var(--gold);background:#FAF6E9;}
+.opt.ok .k{border-color:var(--gold);background:var(--gold);color:#fff;}
+.opt.ok .t{color:#5C4A16;font-weight:500;}
+.opt.no{border-color:#D3C6C2;background:#FAF5F3;animation:shake .36s;}
+.opt.no .k{border-color:#C0A9A3;color:#A08A85;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}45%{transform:translateX(5px);}70%{transform:translateX(-3px);}}
+.tip{margin-top:4px;padding:12px 15px;background:#F1EFE6;border-left:2px solid var(--gold);
+  font-size:12.5px;line-height:1.85;color:var(--body);display:none;}
+.tip.on{display:block;animation:bubIn .3s forwards;}
+.tip b{color:var(--gold-d);}
+.know{margin-top:13px;padding:15px 16px;background:var(--dark);border-radius:2px;display:none;}
+.know.on{display:block;animation:bubIn .4s forwards;}
+.know .kh{font-size:9.5px;letter-spacing:2.4px;color:var(--gold);margin-bottom:7px;display:flex;align-items:center;gap:7px;}
+.know .kh:before{content:"";width:14px;height:1px;background:var(--gold);}
+.know .kt{font-size:12.5px;line-height:1.85;color:#DCEAE8;}
+.know .kt b{color:var(--gold-l);font-weight:500;}
+.know .gain{margin-top:10px;padding-top:9px;border-top:1px solid #1C4C51;
+  display:flex;align-items:center;gap:12px;font-size:10.5px;letter-spacing:1px;color:#8FB0B1;flex-wrap:wrap;}
+.know .gain .p{color:var(--gold-l);font-weight:600;font-size:12.5px;}
+.know .gain .rw{color:#B8DC8E;}
+.qz-bot{padding:13px 22px 26px;flex:0 0 auto;}
+.qz-foot{margin-top:11px;text-align:center;font-size:10px;letter-spacing:1.6px;color:var(--faint);}
+.combo{position:absolute;right:22px;top:46px;text-align:right;opacity:0;
+  transform:translateY(6px) scale(.9);transition:.28s;pointer-events:none;}
+.combo.on{opacity:1;transform:none;}
+.combo .n{font-family:"Songti SC",serif;font-size:24px;color:var(--seal);line-height:1;font-weight:600;}
+.combo .l{font-size:9px;letter-spacing:2px;color:var(--seal);opacity:.75;margin-top:2px;}
+.float-pt{position:fixed;font-family:"Songti SC",serif;font-size:22px;color:var(--gold-d);
+  font-weight:600;pointer-events:none;z-index:99;animation:floatUp 1s ease-out forwards;}
+@keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.8);}
+  25%{opacity:1;transform:translateY(-10px) scale(1.05);}
+  100%{opacity:0;transform:translateY(-54px) scale(1);}}
+
+/* ================= 护照主页 ================= */
+#s-home{background:var(--cream);}
+.hm-top{background:var(--dark);padding:0 0 20px;}
+.hm-bar{display:flex;align-items:center;justify-content:space-between;padding:15px 22px 11px;}
+.hm-brand{font-size:10px;letter-spacing:3px;color:var(--gold-l);}
+.hm-card{padding:0 22px;}
+.pp{background:var(--cream);border-radius:3px;padding:15px 17px 13px;position:relative;overflow:hidden;}
+.pp-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.pp-name{font-family:"Songti SC",serif;font-size:24px;letter-spacing:2px;color:var(--ink);line-height:1.25;}
+.pp-no{font-family:ui-monospace,monospace;font-size:11px;color:var(--mut);letter-spacing:1.2px;margin-top:5px;}
+.pp-rank{display:inline-block;margin-top:10px;padding:4px 11px;background:var(--gold);color:#3a2d0d;
+  font-size:10.5px;letter-spacing:1.8px;font-weight:600;border-radius:2px;}
+.pp-pts{text-align:right;flex:0 0 auto;}
+.pp-pts .v{font-family:"Songti SC",serif;font-size:29px;color:var(--teal);line-height:1;}
+.pp-pts .k{font-size:9.5px;letter-spacing:1.6px;color:var(--mut);margin-top:4px;}
+.pp-prog{margin-top:13px;padding-top:11px;border-top:1px dashed #D5D0C1;}
+.pp-prog .lb{display:flex;justify-content:space-between;font-size:10px;letter-spacing:1.2px;color:var(--mut);margin-bottom:6px;}
+.pp-prog .track{height:3px;background:#E4E0D3;border-radius:2px;overflow:hidden;}
+.pp-prog .fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-d));border-radius:2px;
+  transition:width .8s cubic-bezier(.2,.8,.3,1);}
+.pp-stamps{display:flex;gap:5px;margin-top:11px;align-items:center;}
+.pp-stamps i{width:15px;height:15px;border-radius:50%;border:1px solid #D5D0C1;cursor:pointer;}
+.pp-stamps i.on{border-color:var(--seal);background:rgba(181,67,47,.14);
+  box-shadow:inset 0 0 0 2px rgba(247,244,236,1),inset 0 0 0 3px rgba(181,67,47,.35);}
+.pp-stamps .lb{margin-left:auto;font-size:9.5px;letter-spacing:1px;color:var(--mut);}
+
+.hm-sec{padding:18px 22px 0;}
+.hm-sec-h{display:flex;align-items:baseline;gap:9px;margin-bottom:3px;}
+.hm-sec-h .no{font-family:"Songti SC",serif;font-size:11px;color:var(--gold);font-weight:600;letter-spacing:0;}
+.hm-sec-h .t{font-size:14px;font-weight:600;letter-spacing:.5px;}
+.hm-sec-h .r{margin-left:auto;}
+.hm-sec-d{font-size:11.5px;line-height:1.8;color:var(--mut);margin-bottom:12px;}
+
+.mod{
+  background:var(--paper);border:1px solid var(--line);border-radius:4px;
+  padding:15px 16px;margin-bottom:9px;position:relative;overflow:hidden;transition:.18s;
+}
+.mod.act{cursor:pointer;}
+.mod.act:active{transform:scale(.99);}
+.mod.dis{background:#F9F7F0;border-color:#E6E1D4;}
+.mod.dim{opacity:.74;}
+.mod-h{display:flex;align-items:flex-start;gap:11px;}
+.mod-ic{
+  flex:0 0 33px;width:33px;height:33px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Songti SC",serif;font-size:14.5px;
+  background:var(--grn-l);color:var(--grn);border:1px solid #C0DD97;
+}
+.mod.dis .mod-ic{background:#F0EDE2;color:#B0A88C;border-color:#E0DAC9;}
+.mod-tt{flex:1;min-width:0;}
+.mod-t{font-size:14px;font-weight:600;letter-spacing:.3px;margin-bottom:3px;}
+.mod.dim .mod-t{color:#6E7A76;}
+.mod-s{font-size:11.5px;line-height:1.7;color:var(--mut);}
+.mod-tag{flex:0 0 auto;}
+.mod-d{margin-top:10px;padding-top:9px;border-top:1px dashed #E4DFD0;
+  font-size:11px;line-height:1.75;color:#7C8A86;}
+.mod-arrow{
+  position:absolute;right:14px;bottom:13px;font-size:10.5px;color:var(--gold-d);
+  letter-spacing:1px;background:var(--paper);padding:2px 0 2px 8px;
+}
+.mod.dim .mod-arrow{background:#F9F7F0;}
+.mod-d{padding-right:52px;}
+
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #EDE9DD;cursor:pointer;}
+.rec-item:last-child{border-bottom:none;}
+.rec-dot{flex:0 0 6px;width:6px;height:6px;border-radius:50%;margin-top:6px;background:var(--blue);}
+.rec-b{flex:1;min-width:0;}
+.rec-t{font-size:12.5px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:6px;}
+.rec-t .gr{font-size:8.5px;letter-spacing:.5px;padding:1px 5px;border-radius:2px;font-weight:600;}
+.grade-a{background:var(--grn-l);color:var(--grn);}
+.grade-b{background:#F1EFE6;color:#8A7A52;}
+.rec-s{font-size:10.5px;color:var(--mut);margin-top:2px;line-height:1.6;}
+.rec-meta{flex:0 0 auto;text-align:right;}
+.rec-meta .d{font-family:ui-monospace,monospace;font-size:9.5px;color:var(--faint);}
+.rec-meta .p{font-size:10.5px;color:var(--gold-d);font-weight:600;margin-top:2px;}
+.empty{padding:20px 0;text-align:center;font-size:11.5px;color:var(--faint);line-height:1.9;}
+.hm-bot{padding:16px 22px 26px;}
+
+.demo-bar{
+  margin:0 22px 12px;padding:10px 13px;background:#F4F1E6;border:1px dashed #D8CFB4;
+  border-radius:3px;display:flex;align-items:center;gap:9px;
+}
+.demo-bar .tx{flex:1;font-size:10.5px;line-height:1.55;color:#8A7A52;}
+.demo-bar button{
+  flex:0 0 auto;font-family:inherit;font-size:10.5px;letter-spacing:.5px;
+  padding:6px 10px;border:1px solid #C9B98C;background:#fff;color:#7A6431;
+  border-radius:2px;cursor:pointer;
+}
+
+/* ================= 到岸签到 ================= */
+@keyframes sealIn{from{transform:rotate(-12deg) scale(2);opacity:0;}to{transform:rotate(-12deg) scale(1);opacity:1;}}
+.ck-hero{background:var(--dark);padding:32px 24px 28px;text-align:center;position:relative;overflow:hidden;}
+.ck-hero .rd{position:absolute;inset:0;pointer-events:none;opacity:.5;}
+.ck-k{font-size:10px;letter-spacing:3px;color:var(--gold);position:relative;z-index:2;}
+.ck-t{font-family:"Songti SC",serif;font-size:27px;letter-spacing:2px;color:#F3F0E7;
+  margin-top:13px;line-height:1.4;position:relative;z-index:2;}
+.ck-t em{font-style:normal;color:var(--gold-l);}
+.ck-place{margin-top:11px;font-size:11.5px;letter-spacing:1.5px;color:#8FB0B1;position:relative;z-index:2;}
+.ck-dist{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:6px 13px;
+  border:1px solid #2A6469;border-radius:99px;font-size:10.5px;letter-spacing:1px;color:#A9C3C1;
+  position:relative;z-index:2;}
+.ck-body{flex:1;padding:22px 24px 0;}
+.ck-note{font-size:12.5px;line-height:1.95;color:var(--body);margin-bottom:18px;}
+.ck-note b{color:var(--teal);font-weight:600;}
+.ck-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:3px;overflow:hidden;margin-bottom:16px;}
+.ck-stats div{background:var(--paper);padding:14px 8px;text-align:center;}
+.ck-stats .v{font-family:"Songti SC",serif;font-size:21px;color:var(--teal);line-height:1.2;}
+.ck-stats .v small{font-size:11px;color:var(--mut);}
+.ck-stats .k{font-size:9.5px;letter-spacing:1.4px;color:var(--mut);margin-top:5px;}
+.reward-box{background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:15px 16px;}
+.reward-box .h{font-size:10px;letter-spacing:2px;color:var(--gold-d);font-weight:600;margin-bottom:9px;}
+.reward-box ul{list-style:none;font-size:12px;line-height:1.8;color:var(--body);}
+.reward-box ul li{padding-left:13px;position:relative;}
+.reward-box ul li:before{content:"";position:absolute;left:0;top:9px;width:4px;height:4px;border-radius:50%;background:var(--gold);}
+.ck-bot{padding:16px 24px 28px;}
+
+/* ================= 四宫格 ================= */
+.ht-top{padding:15px 22px 13px;border-bottom:1px solid #EDE9DD;flex:0 0 auto;background:var(--cream);}
+.ht-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+.ht-prog{font-size:10.5px;letter-spacing:1.6px;color:var(--mut);}
+.ht-prog b{color:var(--gold-d);font-family:"Songti SC",serif;font-size:14px;}
+.ht-h{font-family:"Songti SC",serif;font-size:20px;letter-spacing:1px;line-height:1.45;}
+.ht-sub{font-size:11px;color:var(--mut);margin-top:4px;line-height:1.7;}
+.ht-body{flex:1;padding:15px 20px 0;overflow-y:auto;display:flex;flex-direction:column;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.ht-body{flex:1;padding:14px 20px 0;overflow-y:auto;}
+.cell{
+  background:#F2EBDC;border:1px solid #E0D6BE;border-radius:3px;
+  aspect-ratio:1/1.16;padding:10px 10px 0;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;cursor:pointer;transition:.18s;
+}
+.cell .motif{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  opacity:.95;z-index:0;
+}
+/* 文字统一压在底部的宣纸色条上，保证任何底图都读得清 */
+.cell .idx,.cell .nm,.cell .hint{position:relative;z-index:3;}
+.cell .idx{
+  position:absolute;left:10px;top:10px;
+  background:rgba(242,235,220,.92);color:#9A7A2E;
+  padding:1px 7px;border-radius:2px;font-size:9.5px;
+}
+.cell .nm{
+  margin-top:auto;
+  background:rgba(242,235,220,.94);
+  padding:4px 8px;border-radius:2px 2px 0 0;
+  font-size:13px;
+}
+.cell .hint{
+  background:rgba(242,235,220,.94);
+  padding:0 8px 5px;border-radius:0 0 2px 2px;
+  font-size:9.5px;line-height:1.5;
+}
+.cell:active{transform:scale(.985);}
+.cell .idx{font-family:"Songti SC",serif;font-size:10px;color:var(--gold);letter-spacing:1px;}
+.cell .nm{font-size:13.5px;font-weight:600;margin-top:6px;line-height:1.35;color:var(--ink);}
+.cell .hint{font-size:10px;line-height:1.6;color:var(--mut);margin-top:5px;}
+.cell .shot{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  opacity:0;transition:opacity .5s;z-index:1;
+}
+.cell.got .shot{opacity:1;}
+.cell.got .shot{opacity:1;}
+/* 已抓到：只加一圈朱砂描边 + 右上角印章，不动底图与文字 */
+.cell.got{border-color:#C9A24B;box-shadow:inset 0 0 0 1.5px rgba(201,162,75,.5);}
+.cell.got .nm{color:#5C4A16;font-weight:600;}
+.cell.got .hint{color:#8A7A52;}
+.cell .sealmark{
+  position:absolute;right:9px;bottom:58px;width:26px;height:26px;border-radius:50%;
+  border:1.5px solid var(--seal);color:var(--seal);z-index:4;background:rgba(242,235,220,.9);
+  display:none;align-items:center;justify-content:center;
+  font-family:"Songti SC",serif;font-size:10.5px;font-weight:600;transform:rotate(-12deg);
+}
+.cell.got .sealmark{display:flex;animation:sealIn .45s cubic-bezier(.34,1.56,.64,1);}
+.ht-tipbox{margin-top:auto;padding:12px 14px;background:#F4F1E6;border-left:2px solid var(--gold);
+  font-size:11px;line-height:1.8;color:#6E6250;}
+.ht-tipbox b{color:var(--gold-d);}
+.ht-bot{padding:15px 22px 26px;flex:0 0 auto;}
+
+/* ================= 拍照 ================= */
+.sh-top{padding:15px 22px 0;flex:0 0 auto;}
+.sh-body{flex:1;padding:18px 22px 0;overflow-y:auto;}
+.sh-step{font-size:10px;letter-spacing:2.4px;color:var(--gold-d);font-weight:600;margin-bottom:9px;}
+.sh-h{font-family:"Songti SC",serif;font-size:21px;line-height:1.55;letter-spacing:.5px;margin-bottom:7px;}
+.sh-sub{font-size:11.5px;line-height:1.8;color:var(--mut);margin-bottom:16px;}
+.sh-frame{
+  width:100%;aspect-ratio:4/3;border:1px dashed #C9D1CE;border-radius:3px;
+  background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;position:relative;overflow:hidden;margin-bottom:13px;
+}
+.sh-frame img{width:100%;height:100%;object-fit:cover;}
+.sh-frame .ic{font-family:"Songti SC",serif;font-size:25px;color:#C3BFAE;}
+.sh-frame .lb{font-size:11.5px;color:var(--mut);letter-spacing:1px;}
+.sh-frame .sub{font-size:9.5px;color:var(--faint);}
+.sh-pick{margin-top:2px;}
+.sh-pick .q{font-size:12.5px;font-weight:600;margin-bottom:10px;line-height:1.6;}
+.kopt{
+  display:flex;gap:11px;align-items:center;background:var(--paper);border:1px solid var(--line);
+  border-radius:2px;padding:13px 14px;margin-bottom:7px;cursor:pointer;transition:.15s;
+}
+.kopt:active{transform:scale(.99);}
+.kopt .k{flex:0 0 19px;width:19px;height:19px;border-radius:50%;border:1px solid #C7D0CD;
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--mut);}
+.kopt .t{font-size:13px;line-height:1.5;}
+.kopt.ok{border-color:var(--gold);background:#FAF6E9;}
+.kopt.ok .k{border-color:var(--gold);background:var(--gold);color:#fff;}
+.kopt.no{opacity:.4;}
+.sh-feedback{margin-top:11px;padding:12px 14px;border-radius:2px;font-size:12px;line-height:1.8;display:none;}
+.sh-feedback.on{display:block;animation:bubIn .3s forwards;}
+.sh-feedback.good{background:var(--grn-l);border-left:2px solid var(--grn);color:#27500A;}
+.sh-feedback.bad{background:#FBF3EF;border-left:2px solid var(--seal);color:#7A3E2E;}
+.sh-feedback b{font-weight:600;}
+.sh-bot{padding:15px 22px 26px;flex:0 0 auto;}
+
+/* ================= 现场记录（L3） ================= */
+#s-field{background:var(--cream);}
+.fd-top{padding:15px 22px 12px;flex:0 0 auto;background:var(--cream);border-bottom:1px solid #EDE9DD;}
+.fd-h{font-family:"Songti SC",serif;font-size:21px;line-height:1.5;letter-spacing:.5px;margin-bottom:6px;}
+.fd-sub{font-size:11px;line-height:1.7;color:var(--mut);}
+.fd-chiprow{display:flex;gap:7px;margin-bottom:11px;flex-wrap:wrap;}
+.fd-body{flex:1;padding:16px 22px 0;overflow-y:auto;}
+.fd-q{font-family:"Songti SC",serif;font-size:19px;line-height:1.6;margin-bottom:5px;}
+.fd-qsub{font-size:11.5px;color:var(--mut);margin-bottom:15px;line-height:1.7;}
+.fopt{
+  display:flex;gap:11px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);
+  border-radius:2px;padding:14px 15px;margin-bottom:8px;cursor:pointer;transition:.16s;
+}
+.fopt:active{transform:scale(.99);}
+.fopt .k{flex:0 0 20px;width:20px;height:20px;border-radius:50%;border:1px solid #C7D0CD;
+  display:flex;align-items:center;justify-content:center;font-size:10.5px;color:var(--mut);margin-top:1px;}
+.fopt .tx{flex:1;}
+.fopt .t{font-size:13.5px;line-height:1.55;color:var(--ink);}
+.fopt .o{margin-top:6px;font-size:9.5px;color:var(--gold-d);letter-spacing:.2px;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;
+  background:#F4F1E6;display:inline-block;padding:2px 7px;border-radius:2px;}
+.fopt.pick{border-color:var(--teal);background:#EFF4F2;}
+.fopt.pick .k{background:var(--teal);border-color:var(--teal);color:#fff;}
+.fopt.dead{opacity:.4;pointer-events:none;}
+.fd-reply{margin-top:13px;padding:13px 15px;background:#EEF3F0;border:1px solid rgba(14,74,92,.1);
+  border-radius:3px;font-size:12px;line-height:1.85;color:#1E4A4F;display:none;}
+.fd-reply.on{display:block;animation:bubIn .3s forwards;}
+.fd-extra{margin-top:15px;}
+.fd-lb{font-size:10px;letter-spacing:1.8px;color:var(--mut);margin-bottom:7px;display:flex;align-items:center;gap:7px;}
+.fd-lb .opt-tag{font-size:8.5px;letter-spacing:.5px;padding:1px 5px;border-radius:2px;
+  background:#F1EFE6;color:#8A7A52;font-weight:400;}
+.fd-note{width:100%;min-height:64px;padding:11px 13px;border:1px solid var(--line);border-radius:2px;
+  background:var(--paper);font-family:inherit;font-size:13px;color:var(--ink);line-height:1.6;resize:none;outline:none;}
+.fd-note:focus{border-color:var(--teal2);}
+.fd-photo{display:flex;gap:9px;align-items:center;margin-top:4px;}
+.fd-ph{
+  flex:0 0 76px;width:76px;height:76px;border:1px dashed #C9D1CE;border-radius:2px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-size:9px;color:var(--mut);cursor:pointer;background:var(--sand);overflow:hidden;position:relative;text-align:center;line-height:1.3;
+}
+.fd-ph img{width:100%;height:100%;object-fit:cover;}
+.fd-ph-tip{flex:1;font-size:10px;line-height:1.7;color:var(--faint);}
+.fd-ph-tip b{color:#8A7A52;font-weight:500;}
+.fd-bot{padding:15px 22px 26px;flex:0 0 auto;}
+
+/* ================= 足迹图 ================= */
+#s-trail{background:var(--cream);}
+.tr-top{padding:15px 22px 12px;flex:0 0 auto;border-bottom:1px solid #EDE9DD;}
+.tr-h{font-family:"Songti SC",serif;font-size:21px;letter-spacing:1px;margin-bottom:5px;}
+.tr-sub{font-size:11px;color:var(--mut);line-height:1.7;}
+.tr-hud{display:flex;gap:18px;margin-top:11px;}
+.tr-hud .it{text-align:left;}
+.tr-hud .v{font-family:"Songti SC",serif;font-size:18px;color:var(--teal);line-height:1.2;}
+.tr-hud .v small{font-size:10px;color:var(--mut);}
+.tr-hud .k{font-size:9px;letter-spacing:1.2px;color:var(--mut);margin-top:2px;}
+.tr-body{flex:1;overflow-y:auto;position:relative;}
+.tr-rows{position:relative;padding:10px 0 16px;}
+.tr-river{position:absolute;left:0;top:0;pointer-events:none;z-index:0;}
+.tstan{position:relative;display:flex;align-items:center;gap:14px;min-height:68px;
+  padding:0 22px;cursor:pointer;z-index:1;}
+.tstan:active{background:rgba(10,46,51,.03);}
+.tstan .nd{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;
+  justify-content:center;font-family:"Songti SC",serif;font-size:11.5px;
+  background:#F8F4E9;border:1px solid #C0B8A4;color:#A29B89;transition:all .3s;z-index:1;}
+.tstan.done .nd{background:var(--blue);border-color:var(--blue);color:#fff;}
+.tstan.here .nd{background:var(--seal);border-color:var(--seal);color:#fff;
+  box-shadow:0 0 0 6px rgba(181,67,47,.13);}
+.tstan .info{flex:1;min-width:0;}
+.tstan .nm{font-size:14.5px;color:#7C8A86;letter-spacing:.04em;}
+.tstan.done .nm{color:var(--ink);}
+.tstan.here .nm{color:#8E3423;font-weight:600;}
+.tstan .meta{font-size:10px;color:var(--mut);margin-top:2px;letter-spacing:.06em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tstan .cnt{flex:none;font-size:9.5px;color:var(--mut);padding:3px 7px;border-radius:2px;background:#F1EFE6;}
+.tstan.done .cnt{background:rgba(91,143,168,.14);color:#3E6E85;}
+.tstan .chip{font-size:9.5px;padding:5px 9px;border-radius:2px;background:var(--seal);color:#fff;
+  letter-spacing:.12em;flex:none;}
+.tr-bot{padding:12px 22px 24px;flex:0 0 auto;border-top:1px solid #EDE9DD;background:var(--cream);}
+
+/* ================= 站点详情 ================= */
+#s-station{background:var(--cream);}
+.st-top{padding:15px 22px 0;flex:0 0 auto;}
+.st-hero{background:var(--dark);padding:28px 24px 26px;position:relative;overflow:hidden;}
+.st-hero .rd{position:absolute;inset:0;opacity:.35;pointer-events:none;}
+.st-no{font-size:10px;letter-spacing:2.5px;color:var(--gold);position:relative;z-index:2;}
+.st-nm{font-family:"Songti SC",serif;font-size:31px;letter-spacing:2.5px;color:#F3F0E7;
+  margin-top:10px;position:relative;z-index:2;line-height:1.3;}
+.st-meta{margin-top:9px;font-size:11px;letter-spacing:1.2px;color:#8FB0B1;position:relative;z-index:2;}
+.st-story{margin-top:16px;padding-top:14px;border-top:1px solid rgba(201,162,75,.28);
+  font-size:12.5px;line-height:1.9;color:#C7D8D6;position:relative;z-index:2;}
+.st-body{flex:1;padding:18px 22px 0;overflow-y:auto;}
+.st-card{background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:15px 16px;margin-bottom:10px;}
+.st-card .h{font-size:9.5px;letter-spacing:2px;color:var(--gold-d);font-weight:600;margin-bottom:8px;
+  display:flex;align-items:center;gap:7px;}
+.st-card .h:before{content:"";width:12px;height:1px;background:var(--gold);}
+.st-card .t{font-size:12.5px;line-height:1.85;color:var(--body);}
+.st-card .t b{color:var(--ink);font-weight:600;}
+.st-actions{display:grid;gap:8px;margin-top:6px;}
+.act-row{display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid var(--line);
+  border-radius:3px;padding:13px 15px;cursor:pointer;transition:.16s;}
+.act-row:active{transform:scale(.99);}
+.act-row.dis{opacity:.6;cursor:default;}
+.act-row .ic{flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:var(--grn-l);
+  color:var(--grn);display:flex;align-items:center;justify-content:center;
+  font-family:"Songti SC",serif;font-size:13px;border:1px solid #C0DD97;}
+.act-row.dis .ic{background:#F0EDE2;color:#B0A88C;border-color:#E0DAC9;}
+.act-row .tx{flex:1;}
+.act-row .t{font-size:13px;font-weight:600;}
+.act-row .s{font-size:10.5px;color:var(--mut);margin-top:2px;}
+.act-row .ar{font-size:10.5px;color:var(--gold-d);}
+.st-bot{padding:16px 22px 26px;flex:0 0 auto;}
+
+/* ================= 记录流 ================= */
+#s-records{background:var(--cream);}
+.rc-top{padding:15px 22px 0;flex:0 0 auto;}
+.rc-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px;}
+.rc-h{font-family:"Songti SC",serif;font-size:22px;letter-spacing:1px;}
+.rc-tot{font-size:11px;color:var(--mut);}
+.rc-tot b{font-family:"Songti SC",serif;font-size:15px;color:var(--teal);}
+.rc-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:2px;}
+.rc-tabs button{
+  flex:1;background:none;border:none;font-family:inherit;font-size:11.5px;letter-spacing:1px;
+  color:var(--mut);padding:10px 0 11px;cursor:pointer;position:relative;
+}
+.rc-tabs button.on{color:var(--ink);font-weight:600;}
+.rc-tabs button.on:after{content:"";position:absolute;left:50%;transform:translateX(-50%);
+  bottom:-1px;width:26px;height:2px;background:var(--gold);}
+.rc-body{flex:1;overflow-y:auto;padding:6px 22px 0;}
+.point-row{display:flex;gap:11px;align-items:flex-start;padding:13px 0;border-bottom:1px solid #EDE9DD;cursor:pointer;}
+.point-row:last-child{border-bottom:none;}
+.point-row .d2{flex:0 0 6px;width:6px;height:6px;border-radius:50%;margin-top:6px;background:#D8D2C2;}
+.point-row.has .d2{background:var(--seal);}
+.point-row .bd{flex:1;min-width:0;}
+.point-row .top{display:flex;align-items:baseline;gap:8px;}
+.point-row .pt{font-size:13.5px;font-weight:600;color:var(--ink);}
+.point-row .tm{font-size:10px;color:var(--faint);margin-left:auto;flex:none;}
+.point-row .vl{font-size:11.5px;color:var(--body);margin-top:3px;line-height:1.6;}
+.point-row .who{font-size:9.5px;color:var(--faint);margin-top:3px;letter-spacing:.5px;}
+.rec-card{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #EDE9DD;cursor:pointer;}
+.rec-card:last-child{border-bottom:none;}
+.rec-card .d2{flex:0 0 6px;width:6px;height:6px;border-radius:50%;margin-top:6px;}
+.rec-card .bd{flex:1;min-width:0;}
+.rec-card .top{display:flex;align-items:baseline;gap:7px;}
+.rec-card .pt{font-size:12.5px;font-weight:600;color:var(--ink);}
+.rec-card .tm{font-size:9.5px;color:var(--faint);margin-left:auto;flex:none;}
+.rec-card .vl{font-size:11.5px;color:var(--body);margin-top:3px;}
+.rec-card .nt{font-size:11px;color:var(--teal);margin-top:4px;line-height:1.65;padding-left:8px;
+  border-left:1px solid rgba(201,162,75,.4);}
+.rec-card .who{font-size:9.5px;color:var(--faint);margin-top:4px;}
+.rc-bot{padding:14px 22px 24px;flex:0 0 auto;}
+
+/* ================= 记录详情 ================= */
+#s-detail{background:var(--cream);}
+.dt-top{padding:15px 22px 0;flex:0 0 auto;}
+.dt-body{flex:1;padding:18px 22px 0;overflow-y:auto;}
+.kv{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid #EDE9DD;}
+.kv:last-child{border-bottom:none;}
+.kv .k{flex:0 0 66px;font-size:10.5px;letter-spacing:1.2px;color:var(--mut);padding-top:2px;}
+.kv .v{flex:1;font-size:12.5px;line-height:1.7;color:var(--ink);}
+.kv .v .unit{font-size:10.5px;color:var(--mut);margin-left:3px;}
+.dt-note{margin:14px 0;padding:13px 15px;background:var(--paper);border-left:2px solid var(--gold);
+  font-family:"Songti SC",serif;font-size:13px;line-height:1.8;color:var(--body);}
+.dt-sec{font-size:9.5px;letter-spacing:2px;color:var(--gold-d);font-weight:600;margin:18px 0 8px;
+  display:flex;align-items:center;gap:7px;}
+.dt-sec:before{content:"";width:12px;height:1px;background:var(--gold);}
+.dt-photo{width:100%;border-radius:3px;margin:6px 0 4px;display:block;}
+.same-row{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px dashed #EDE9DD;font-size:11.5px;}
+.same-row .tm{flex:0 0 54px;font-family:ui-monospace,monospace;font-size:10px;color:var(--faint);}
+.same-row .v{flex:1;color:var(--body);}
+.same-row .who{flex:none;font-size:9.5px;color:var(--faint);}
+.dt-bot{padding:14px 22px 24px;flex:0 0 auto;}
+
+/* ================= 自然笔记 ================= */
+#s-explore{background:var(--cream);}
+.ex-top{padding:15px 22px 0;flex:0 0 auto;}
+.ex-h{font-family:"Songti SC",serif;font-size:22px;letter-spacing:1px;line-height:1.5;}
+.ex-sub{font-size:11.5px;line-height:1.8;color:var(--mut);margin-top:6px;}
+.ex-body{flex:1;padding:18px 22px 0;overflow-y:auto;}
+.ex-state{font-size:11px;letter-spacing:1.5px;color:var(--mut);margin-bottom:12px;}
+.ex-shoot{
+  width:100%;aspect-ratio:4/3;border:1px dashed #C9D1CE;border-radius:3px;background:var(--sand);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;overflow:hidden;position:relative;
+}
+.ex-shoot img{width:100%;height:100%;object-fit:cover;}
+.ex-shoot .ic{font-family:"Songti SC",serif;font-size:26px;color:#C3BFAE;}
+.ex-shoot .lb{font-size:12px;color:var(--mut);letter-spacing:1px;}
+.ex-cands{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;}
+.ex-cands button{
+  font-family:inherit;font-size:12.5px;padding:9px 15px;border:1px solid var(--line);
+  background:var(--paper);color:var(--body);border-radius:2px;cursor:pointer;
+}
+.ex-cands button:active{background:#EFF4F2;}
+.ex-card{margin-top:14px;background:var(--dark);border-radius:3px;padding:17px 18px;display:none;}
+.ex-card.on{display:block;animation:bubIn .4s forwards;}
+.ex-card .tag{font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px;}
+.ex-card .nm{font-family:"Songti SC",serif;font-size:20px;color:#F3F0E7;letter-spacing:1.5px;margin-bottom:11px;}
+.ex-card .row{display:flex;gap:9px;margin-bottom:9px;}
+.ex-card .row .l{flex:0 0 16px;font-family:"Songti SC",serif;font-size:10px;color:var(--gold);padding-top:2px;}
+.ex-card .row .t{flex:1;font-size:12px;line-height:1.8;color:#DCEAE8;}
+.ex-card .row .t b{color:var(--gold-l);font-weight:500;}
+.ex-bot{padding:15px 22px 26px;flex:0 0 auto;}
+.ex-notes{margin-top:16px;}
+.ex-note-row{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #EDE9DD;}
+
+/* ================= 守点 ================= */
+#s-guard{background:var(--cream);}
+.gu-hero{background:var(--dark);padding:30px 24px 26px;position:relative;overflow:hidden;}
+.gu-hero .rd{position:absolute;inset:0;opacity:.4;pointer-events:none;}
+.gu-k{font-size:10px;letter-spacing:3px;color:var(--gold);position:relative;z-index:2;}
+.gu-t{font-family:"Songti SC",serif;font-size:26px;letter-spacing:1.5px;color:#F3F0E7;
+  margin-top:11px;line-height:1.45;position:relative;z-index:2;}
+.gu-t em{font-style:normal;color:var(--gold-l);}
+.gu-d{margin-top:11px;font-size:11.5px;line-height:1.85;color:#A9C3C1;position:relative;z-index:2;max-width:300px;}
+.gu-body{flex:1;padding:20px 24px 0;}
+.gu-lock{background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:16px 17px;margin-bottom:14px;}
+.gu-lock .h{font-size:9.5px;letter-spacing:2px;color:#A89870;font-weight:600;margin-bottom:8px;}
+.gu-lock .t{font-size:12.5px;line-height:1.85;color:var(--body);}
+.gu-lock .t b{color:var(--teal);font-weight:600;}
+.gu-list{list-style:none;}
+.gu-list li{display:grid;grid-template-columns:24px 1fr;gap:11px;padding:14px 0;border-bottom:1px solid #EDE9DD;}
+.gu-list li:last-child{border-bottom:none;}
+.gu-list .n{font-family:"Songti SC",serif;font-size:11.5px;color:var(--gold);padding-top:2px;}
+.gu-list .h{font-size:13px;font-weight:600;margin-bottom:3px;}
+.gu-list .d{font-size:11px;line-height:1.75;color:var(--mut);}
+.gu-bot{padding:15px 24px 28px;}
+
+/* ================= 浮层 ================= */
+#grant{position:absolute;inset:0;z-index:150;background:#07363C;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 30px;overflow-y:auto;}
+#grant.on{display:flex;}
+.gr-k{font-size:10px;letter-spacing:3.5px;color:var(--gold);opacity:0;animation:bubIn .4s .1s forwards;}
+.gr-t{font-family:"Songti SC",serif;font-size:27px;letter-spacing:2px;color:#F3F0E7;
+  margin-top:14px;text-align:center;line-height:1.5;opacity:0;animation:bubIn .5s .25s forwards;}
+.gr-t em{font-style:normal;color:var(--gold-l);}
+.gr-medal{width:132px;height:132px;border-radius:50%;margin-top:24px;position:relative;flex:0 0 auto;
+  border:2px solid var(--seal);display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(2.4) rotate(-20deg);
+  animation:medalIn .6s .5s cubic-bezier(.34,1.56,.64,1) forwards;}
+.gr-medal:before{content:"";position:absolute;inset:7px;border:1px solid rgba(181,67,47,.5);border-radius:50%;}
+.gr-medal .in{text-align:center;color:var(--seal);font-family:"Songti SC",serif;
+  font-size:16px;line-height:1.35;letter-spacing:1.5px;font-weight:600;}
+@keyframes medalIn{to{opacity:.92;transform:scale(1) rotate(-12deg);}}
+.gr-pts{margin-top:24px;font-size:11.5px;letter-spacing:1.5px;color:#A9C3C1;
+  opacity:0;animation:bubIn .4s .9s forwards;}
+.gr-pts b{font-family:"Songti SC",serif;font-size:25px;color:var(--gold-l);}
+.gr-note{margin-top:18px;font-size:11.5px;line-height:1.9;color:#8FB0B1;text-align:center;
+  max-width:290px;opacity:0;animation:bubIn .4s 1.05s forwards;}
+.gr-note b{color:#F3F0E7;font-weight:500;}
+.gr-bot{width:100%;margin-top:30px;opacity:0;animation:bubIn .4s 1.2s forwards;}
+
+#seal{
+  position:absolute;left:50%;top:50%;z-index:160;width:150px;height:150px;margin:-75px 0 0 -75px;
+  border:3px solid var(--seal);border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:var(--seal);font-family:"Songti SC",serif;font-size:44px;font-weight:600;
+  opacity:0;pointer-events:none;transform:scale(.3) rotate(-30deg);
+}
+#seal.on{animation:stampHit .7s cubic-bezier(.2,1.3,.4,1) forwards;}
+@keyframes stampHit{
+  0%{opacity:0;transform:scale(.3) rotate(-30deg);}
+  55%{opacity:.95;transform:scale(1.1) rotate(-8deg);}
+  100%{opacity:0;transform:scale(1) rotate(-8deg);}
+}
+
+#toast{
+  position:absolute;left:50%;bottom:74px;transform:translateX(-50%) translateY(14px);
+  background:rgba(7,54,60,.95);color:#F3F0E7;font-size:12px;letter-spacing:1px;
+  padding:10px 18px;border-radius:2px;opacity:0;pointer-events:none;transition:.25s;
+  z-index:200;white-space:nowrap;border:1px solid rgba(201,162,75,.35);max-width:88%;
+  overflow:hidden;text-overflow:ellipsis;
+}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+
+#up{position:absolute;inset:0;z-index:180;display:none;align-items:center;justify-content:center;
+  background:rgba(4,26,29,.9);padding:30px;}
+#up.on{display:flex;}
+.up-box{background:var(--cream);border-radius:4px;padding:28px 24px;text-align:center;width:100%;max-width:290px;}
+.up-box .k{font-size:10px;letter-spacing:3px;color:var(--gold-d);}
+.up-box .t{font-family:"Songti SC",serif;font-size:25px;margin:13px 0 6px;letter-spacing:2px;}
+.up-box .d{font-size:11.5px;line-height:1.8;color:var(--body);margin-bottom:18px;}
+
+@media(max-height:720px){
+  .bt-h1{font-size:42px;}
+  .qz-q{font-size:19px;margin-bottom:14px;}
+  .pp-name{font-size:22px;}
+  .ck-t{font-size:24px;}
+  .gr-medal{width:120px;height:120px;}
+  .st-nm{font-size:26px;}
+}
+
+/* ================= Tab 栏 ================= */
+.tabbar{
+  display:flex;background:var(--cream);border-bottom:1px solid #E6E1D4;
+  flex:0 0 auto;position:relative;z-index:3;
+}
+.tabbar button{
+  flex:1;background:none;border:none;font-family:inherit;cursor:pointer;
+  padding:9px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:11px;letter-spacing:1px;color:var(--mut);transition:.18s;position:relative;
+}
+.tabbar button i{
+  font-style:normal;font-family:"Songti SC",serif;font-size:14px;
+  width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1px solid #DDD7C6;color:#B0A88C;transition:.18s;
+}
+.tabbar button.on{color:var(--ink);font-weight:600;}
+.tabbar button.on i{background:var(--teal);border-color:var(--teal);color:#F3F0E7;}
+.tabbar button.on:after{
+  content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:22px;height:2px;background:var(--gold);
+}
+.tabpage{display:none;}
+.tabpage.on{display:block;}
+.tab-note{
+  margin:12px 22px 0;padding:11px 13px;background:#F4F1E6;
+  border-radius:3px;font-size:11px;line-height:1.75;color:#8A7A52;
+}
+.tab-note b{color:var(--gold-d);}
+
+/* ================= 十闸通进度 ================= */
+.gr-prog{
+  width:100%;max-width:300px;margin-top:22px;padding:14px 16px;
+  background:rgba(255,255,255,.055);border:1px solid rgba(201,162,75,.28);
+  border-radius:3px;opacity:0;animation:bubIn .4s .95s forwards;
+}
+.gr-prog-h{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-size:9.5px;letter-spacing:2px;color:var(--gold);margin-bottom:9px;
+}
+.gr-prog-h span:last-child{font-family:"Songti SC",serif;font-size:14px;letter-spacing:1px;color:var(--gold-l);}
+.gr-prog-track{height:3px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;}
+.gr-prog-fill{
+  height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-l));
+  border-radius:2px;transition:width .9s cubic-bezier(.2,.8,.3,1);
+}
+.gr-prog-d{margin-top:9px;font-size:10.5px;line-height:1.7;color:#8FB0B1;}
+.gr-prog-d b{color:#F3F0E7;font-weight:500;}
+
+/* 知识卡里的 story 补充 */
+.kd-story{
+  margin-top:11px;padding-top:10px;border-top:1px solid #1C4C51;
+  font-size:11.5px;line-height:1.8;color:#9FC0BE;font-style:normal;
+}
+.kd-story:before{content:"老周说　";color:var(--gold);font-size:9.5px;letter-spacing:1.4px;}
+
+/* ================= 等级卡 ================= */
+.lvl-row{
+  display:flex;align-items:center;gap:11px;padding:12px 0;
+  border-bottom:1px solid #EDE9DD;
+}
+.lvl-row:last-child{border-bottom:none;}
+.lvl-dot{
+  flex:0 0 26px;width:26px;height:26px;border-radius:50%;
+  border:1px solid #DDD7C6;display:flex;align-items:center;justify-content:center;
+  font-family:"Songti SC",serif;font-size:10px;color:#B0A88C;background:#F8F4E9;
+}
+.lvl-row.done .lvl-dot{background:var(--teal);border-color:var(--teal);color:#fff;}
+.lvl-row.cur .lvl-dot{background:var(--gold);border-color:var(--gold);color:#3a2d0d;
+  box-shadow:0 0 0 4px rgba(201,162,75,.16);}
+.lvl-b{flex:1;min-width:0;}
+.lvl-n{font-size:13px;font-weight:600;color:var(--ink);}
+.lvl-row:not(.done):not(.cur) .lvl-n{color:#9AA5A1;font-weight:400;}
+.lvl-d{font-size:10.5px;color:var(--mut);margin-top:2px;line-height:1.6;}
+.lvl-p{flex:0 0 auto;font-family:ui-monospace,monospace;font-size:10px;color:var(--faint);}
+
+/* 统计格 */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:3px;overflow:hidden;}
+.stat-grid div{background:var(--paper);padding:14px 12px;}
+.stat-grid .v{font-family:"Songti SC",serif;font-size:21px;color:var(--teal);line-height:1.2;}
+.stat-grid .v small{font-size:10.5px;color:var(--mut);}
+.stat-grid .k{font-size:9.5px;letter-spacing:1.2px;color:var(--mut);margin-top:4px;}
+
+/* 开场里的河名 */
+.river-name{
+  font-family:"Songti SC",serif;font-size:19px;color:var(--gold-l);
+  letter-spacing:3px;display:inline-block;margin:3px 0 1px;
+}
+
+/* ================= 底部 Tab 栏 ================= */
+#s-home .hm-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:15px 22px 11px;background:var(--dark);flex:0 0 auto;
+}
+.hm-brand{font-size:10px;letter-spacing:3px;color:var(--gold-l);}
+.tabbar{
+  display:flex;background:var(--cream);border-top:1px solid #E6E1D4;
+  flex:0 0 auto;padding-bottom:env(safe-area-inset-bottom,0);
+}
+.tabbar button{
+  flex:1;background:none;border:none;font-family:inherit;cursor:pointer;
+  padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:10.5px;letter-spacing:2px;color:var(--mut);transition:.18s;position:relative;
+}
+.tabbar button i{
+  font-style:normal;font-family:"Songti SC",serif;font-size:13px;
+  width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1px solid #DDD7C6;color:#B0A88C;transition:.18s;
+}
+.tabbar button.on{color:var(--ink);font-weight:600;}
+.tabbar button.on i{background:var(--teal);border-color:var(--teal);color:#F3F0E7;}
+.tabbar button.here i:after{
+  content:"";position:absolute;right:2px;top:1px;width:5px;height:5px;
+  border-radius:50%;background:var(--seal);
+}
+
+/* 我的页的护照卡 */
+.mine-card-wrap{padding:16px 22px 0;}
+.mine-card-wrap .pp{box-shadow:0 1px 0 rgba(0,0,0,.03);border:1px solid #E8E2D2;}
+
+/* 知识卡行 */
+.card-row{
+  display:flex;align-items:center;gap:11px;background:var(--paper);
+  border:1px solid var(--line);border-radius:3px;padding:11px 13px;
+  margin-bottom:7px;cursor:pointer;transition:.15s;
+}
+.card-row:active{transform:scale(.99);}
+.cd-s{
+  flex:0 0 28px;width:28px;height:28px;border-radius:2px;
+  background:#B5432F;color:#F8F4E8;display:flex;align-items:center;justify-content:center;
+  font-family:"Songti SC",serif;font-size:11px;letter-spacing:0;
+}
+.cd-b{flex:1;min-width:0;}
+.cd-t{font-size:13px;font-weight:600;color:var(--ink);}
+.cd-d{font-size:10.5px;color:var(--mut);margin-top:2px;line-height:1.55;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cd-a{flex:0 0 auto;font-size:10.5px;color:var(--gold-d);}
+
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- 引导 -->
+<div class="screen on" id="s-boot">
+  <svg style="position:absolute;inset:0;opacity:.45;pointer-events:none" viewBox="0 0 430 900" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="gk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0E5C63" stop-opacity="0"/>
+      <stop offset="1" stop-color="#0E5C63" stop-opacity=".6"/></linearGradient></defs>
+    <path d="M-20 640 C 90 610, 150 680, 240 660 C 330 640, 380 580, 460 605" fill="none" stroke="url(#gk)" stroke-width="44" stroke-linecap="round"/>
+    <path d="M-20 720 C 110 690, 180 760, 280 735 C 370 712, 400 670, 460 688" fill="none" stroke="url(#gk)" stroke-width="20" stroke-linecap="round" opacity=".65"/>
+    <circle cx="372" cy="116" r="64" fill="none" stroke="#C9A24B" stroke-opacity=".12"/>
+    <circle cx="372" cy="116" r="94" fill="none" stroke="#C9A24B" stroke-opacity=".06"/>
+  </svg>
+  <div class="bt-top">
+    <div class="bt-mark">AI+ 公民河流教育计划</div>
+    <div class="bt-rule"></div>
+    <div class="bt-h1">小小<br>河工</div>
+    <div class="bt-sub">走一趟，替这条河记十件事</div>
+    <div class="bt-quote">
+      这条河不需要更多赞美。<br>
+      它需要的是——<b>同一个点位，<br>被同一个孩子，看过十二次。</b>
+    </div>
+  </div>
+  <div class="bt-agenda">
+    <div class="ag"><div class="k">在任何地方</div>
+      <div class="t">答几道题，领一本护照<b>　零门槛</b>
+        <i>不在河边也能开始</i></div></div>
+    <div class="ag"><div class="k">走到河边</div>
+      <div class="t">签到、抽四宫格、做一次观察<b>　到场即有奖</b>
+        <i>走出家门本身就是公益</i></div></div>
+    <div class="ag"><div class="k">留下来</div>
+      <div class="t">认领一个点位，双周回来<b>　深度参与</b>
+        <i>让观察变成时间序列</i></div></div>
+  </div>
+  <div class="bt-bot">
+    <button class="btn btn-gold" id="btn-boot">开始</button>
+    <div style="margin-top:11px;text-align:center;font-size:10px;letter-spacing:2px;color:#5C8388">
+      23.6 公里　·　十座水闸　·　四条支流
+    </div>
+  </div>
+</div>
+
+<!-- 建档 -->
+<div class="screen" id="s-register">
+  <div class="gd-head">
+    <div class="eyebrow">第一步　·　建档</div>
+    <h1 class="gd-h1">这本护照是给孩子的，<br>所以<em>请家长来填</em>。</h1>
+    <p class="gd-desc">按现行规定，未成年人的账号需要监护人代为注册。
+      这一页由家长完成，孩子只管在后面答题。</p>
+  </div>
+  <div class="gd-body">
+    <div class="field">
+      <div class="field-l">孩子怎么称呼</div>
+      <input class="field-i" id="in-name" maxlength="8" placeholder="写个小名就行，比如「小石头」" autocomplete="off">
+    </div>
+    <div class="agree" id="agree">
+      <div class="bx"></div>
+      <div class="tx">我是孩子的家长或监护人，代其注册这本护照</div>
+    </div>
+    <div class="privacy">
+      我们只保存 <b>这个昵称</b> 和 <b>一个护照编号</b>。<br>
+      不收集孩子的真实姓名、生日、手机号。<br>
+      定位仅用于判断是否到达河边，不上传轨迹。
+    </div>
+  </div>
+  <div class="gd-bot">
+    <button class="btn btn-teal" id="btn-make" disabled>生成护照</button>
+  </div>
+</div>
+
+<!-- 老周开场 -->
+<div class="screen" id="s-intro">
+  <div class="in-top">
+    <div class="in-role">
+      <div class="in-av">闸</div>
+      <div>
+        <div class="nm">看闸人　老周</div>
+        <div class="tg">清河 · 安河闸　·　工龄 31 年</div>
+      </div>
+    </div>
+  </div>
+  <div class="in-body">
+    <div class="bub">欢迎上工。<br>我是这一段的看闸人，姓周。</div>
+    <div class="bub">在拿到第一枚章之前，先认认这条河——<br>
+      <span class="river-name">北京清河</span><br>
+      它 <b>23.6 公里</b>，<b>十座闸</b>，从西山一直流到温榆河。</div>
+    <div class="bub">我会随手考你几道。<br>答对了，你就<b>能去河边干活了</b>。</div>
+  </div>
+  <div class="in-bot">
+    <button class="btn btn-gold" id="btn-intro-go">开始考核</button>
+  </div>
+</div>
+
+<!-- 答题 -->
+<div class="screen" id="s-quiz">
+  <div class="qz-top">
+    <div class="qz-bar">
+      <div class="qz-step" id="q-step">第 1 题</div>
+      <div class="qz-pts">积分 <b id="q-pts">0</b></div>
+    </div>
+    <div class="qz-nodes" id="q-nodes"></div>
+    <div class="combo" id="combo"><div class="n">×2</div><div class="l">连　击</div></div>
+  </div>
+  <div class="qz-body">
+    <div class="qz-q" id="q-text"></div>
+    <div id="q-opts"></div>
+    <div class="tip" id="q-tip"></div>
+    <div class="know" id="q-know">
+      <div class="kh">老周说</div>
+      <div class="kt" id="q-kt"></div>
+      <div class="gain">
+        <span class="p" id="q-gain">+20</span>
+        <span id="q-gain-l">积分已计入护照</span>
+        <span class="rw" id="q-rw"></span>
+        <span class="kd-collect" id="q-collect">知识卡 ×1</span>
+      </div>
+    </div>
+  </div>
+  <div class="qz-bot">
+    <button class="btn btn-teal" id="btn-next" disabled>下一题</button>
+    <div class="qz-foot" id="q-foot">答对 4 题即可过关　·　题库共 10 题</div>
+  </div>
+</div>
+
+<!-- 授证 -->
+<div id="grant">
+  <div class="gr-k" id="gr-k">上　岗　考　核　通　过</div>
+  <div class="gr-t" id="gr-t">你已经是</div>
+  <div class="gr-medal"><div class="in" id="gr-medal-in">见习<br>河工</div></div>
+  <div class="gr-pts" id="gr-pts-line">护照已签发　·　积分 <b id="gr-pts">0</b></div>
+
+  <!-- 十闸通进度 -->
+  <div class="gr-prog" id="gr-prog">
+    <div class="gr-prog-h">
+      <span>十　闸　通</span>
+      <span id="gr-prog-n">0 / 10</span>
+    </div>
+    <div class="gr-prog-track"><div class="gr-prog-fill" id="gr-prog-fill"></div></div>
+    <div class="gr-prog-d" id="gr-prog-d">再答对 4 道没见过的题，这本护照就转正</div>
+  </div>
+
+  <div class="gr-note" id="gr-note"></div>
+  <div class="gr-bot">
+    <button class="btn btn-gold" id="gr-more">再答一轮 ›</button>
+    <button class="btn btn-line on-dark" id="gr-go" style="margin-top:9px">进我的护照</button>
+  </div>
+</div>
+
+<!-- 主页：三 Tab + 底部栏 -->
+<div class="screen" id="s-home">
+  <div class="hm-bar">
+    <div class="hm-brand">小小河工</div>
+    <div id="hm-loc"></div>
+  </div>
+
+  <div class="scroll" id="hm-scroll">
+
+    <!-- ===== Tab 1 探索：一切不依赖定位的 ===== -->
+    <div class="tabpage on" id="tab-explore">
+      <div id="hm-demo"></div>
+
+      <div class="hm-sec" style="padding-top:14px">
+        <div class="hm-sec-h"><span class="t">今天做点什么</span><span class="r" id="hm-r-today"></span></div>
+        <div id="mod-next"></div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">01</span><span class="t">上岗考核</span><span class="r" id="hm-r1"></span></div>
+        <div class="hm-sec-d">十座闸的题库，每次抽 6 道。答对 4 道过关。</div>
+        <div id="mod-quiz"></div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">02</span><span class="t">十座闸</span></div>
+        <div class="hm-sec-d">每座闸都有自己的名字、年份和一段故事。不用到场也能看。</div>
+        <div id="mod-gates"></div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">03</span><span class="t">随手拍</span></div>
+        <div class="hm-sec-d">拍一张，告诉你它在滨水系统里是什么角色。</div>
+        <div id="mod-explore"></div>
+      </div>
+
+      <div class="hm-sec" style="padding-bottom:20px">
+        <div class="hm-sec-h"><span class="no">04</span><span class="t">河边正在发生</span><span class="r" id="hm-r-feed"></span></div>
+        <div class="hm-sec-d">别人的到场记录。你没空去的时候，这条河也有人看着。</div>
+        <div id="mod-feed"></div>
+      </div>
+    </div>
+
+    <!-- ===== Tab 2 巡河：必须到场的 ===== -->
+    <div class="tabpage" id="tab-field">
+      <div class="tab-note" id="field-note"></div>
+
+      <div class="hm-sec" style="padding-top:14px">
+        <div class="hm-sec-h"><span class="no">01</span><span class="t">到岸签到</span><span class="r" id="hm-r2"></span></div>
+        <div class="hm-sec-d">走出家门就值得奖励。先签到，再解锁后面几件事。</div>
+        <div id="mod-checkin"></div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">02</span><span class="t">四宫格</span></div>
+        <div class="hm-sec-d">抽一张和这个点位匹配的图，拍齐四样。</div>
+        <div id="mod-hunt"></div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">03</span><span class="t">现场观察</span></div>
+        <div class="hm-sec-d">这一站有一个任务。这是唯一能进数据集的一层。</div>
+        <div id="mod-field"></div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">04</span><span class="t">守一个点</span></div>
+        <div class="hm-sec-d">认领一个点位，隔两周回来看一眼。</div>
+        <div id="mod-guard"></div>
+      </div>
+
+      <div class="hm-sec" style="padding-bottom:20px">
+        <button class="btn btn-line" id="go-trail">看全河足迹图 ›</button>
+      </div>
+    </div>
+
+    <!-- ===== Tab 3 我的 ===== -->
+    <div class="tabpage" id="tab-mine">
+      <div class="mine-card-wrap">
+        <div class="pp">
+          <div class="pp-row">
+            <div>
+              <div class="pp-name" id="hp-name">—</div>
+              <div class="pp-no" id="hp-no">NO.0000</div>
+              <div class="pp-rank" id="hp-rank">见习河工</div>
+            </div>
+            <div class="pp-pts">
+              <div class="v" id="hp-pts">0</div>
+              <div class="k">积分</div>
+            </div>
+          </div>
+          <div class="pp-prog">
+            <div class="lb"><span id="hp-prog-lb">距巡河员</span><span id="hp-prog-v">0 / 100</span></div>
+            <div class="track"><div class="fill" id="hp-fill" style="width:0%"></div></div>
+          </div>
+          <div class="pp-stamps" id="hp-stamps"></div>
+        </div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">01</span><span class="t">等级</span></div>
+        <div id="mod-levels"></div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">02</span><span class="t">统计</span></div>
+        <div id="mod-stats"></div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">03</span><span class="t">已收录的知识卡</span><span class="r" id="hm-r-cards"></span></div>
+        <div class="hm-sec-d">答对一道题，收藏一张。随时能回来看。</div>
+        <div id="mod-cards"></div>
+      </div>
+
+      <div class="hm-sec">
+        <div class="hm-sec-h"><span class="no">04</span><span class="t">我的记录</span></div>
+        <div id="mod-myrecs"></div>
+      </div>
+
+      <div class="hm-sec" style="padding-bottom:20px">
+        <div class="hm-sec-h"><span class="no">05</span><span class="t">自然笔记</span></div>
+        <div id="mod-mynotes"></div>
+      </div>
+
+      <div class="hm-bot">
+        <button class="btn btn-line" id="btn-reset">这是别人的手机？换一位河工</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tabbar" id="tabbar">
+    <button data-tab="explore" class="on"><i>学</i>探索</button>
+    <button data-tab="field"><i>巡</i>巡河</button>
+    <button data-tab="mine"><i>我</i>我的</button>
+  </div>
+</div>
+
+<!-- 到岸签到 -->
+<div class="screen" id="s-checkin">
+  <div class="ck-hero">
+    <svg class="rd" viewBox="0 0 430 300" preserveAspectRatio="xMidYMid slice">
+      <circle cx="215" cy="150" r="70" fill="none" stroke="#C9A24B" stroke-opacity=".18"/>
+      <circle cx="215" cy="150" r="110" fill="none" stroke="#C9A24B" stroke-opacity=".09"/>
+      <circle cx="215" cy="150" r="150" fill="none" stroke="#C9A24B" stroke-opacity=".05"/>
+    </svg>
+    <div class="ck-k">到　岸</div>
+    <div class="ck-t" id="ck-t">你到了。</div>
+    <div class="ck-place" id="ck-place">清河闸 · 点位 05</div>
+    <div class="ck-dist" id="ck-dist"><span>已确认在河边</span></div>
+  </div>
+  <div class="ck-body">
+    <div class="ck-note" id="ck-note">
+      你来这一趟，本身就是公益。<br>
+      <b>不是因为记下了什么，是因为这条河边多了一个人。</b>
+    </div>
+    <div class="ck-stats">
+      <div><div class="v" id="ck-total">0</div><div class="k">到岸次数</div></div>
+      <div><div class="v" id="ck-streak">0<small>天</small></div><div class="k">连续</div></div>
+      <div><div class="v" id="ck-km">0<small>km</small></div><div class="k">累计里程</div></div>
+    </div>
+    <div class="reward-box">
+      <div class="h">签 到 能 拿 到 什 么</div>
+      <ul>
+        <li>出勤积分 <b>+30</b>，连续签到每天再加 5，最多加到 25</li>
+        <li>一枚到岸章，计入护照与足迹图</li>
+        <li>解锁这个点位的四宫格与现场观察</li>
+      </ul>
+    </div>
+  </div>
+  <div class="ck-bot">
+    <button class="btn btn-gold" id="btn-checkin">签到</button>
+    <button class="btn btn-line" id="ck-back" style="margin-top:9px">回护照</button>
+  </div>
+</div>
+
+<!-- 四宫格 -->
+<div class="screen" id="s-hunt">
+  <div class="ht-top">
+    <div class="ht-bar">
+      <div class="back" id="ht-back">‹ 回护照</div>
+      <div class="ht-prog">进度 <b id="ht-n">0</b> / 4</div>
+    </div>
+    <div class="ht-h" id="ht-h">四宫格</div>
+    <div class="ht-sub" id="ht-sub"></div>
+  </div>
+  <div class="ht-body">
+    <div class="grid2" id="ht-grid"></div>
+    <div class="ht-tipbox" id="ht-tip">
+      <b>怎么玩</b>　不用点格子。直接<b>拍一张</b>，
+      系统会问你这张照片拍的是什么——答对了，格子就自动填上。
+    </div>
+  </div>
+  <div class="ht-bot">
+    <button class="btn btn-gold" id="btn-shot">拍一张</button>
+  </div>
+</div>
+
+<!-- 拍照 -->
+<div class="screen" id="s-shot">
+  <div class="sh-top"><div class="back" id="sh-back">‹ 回到四宫格</div></div>
+  <div class="sh-body">
+    <div class="sh-step" id="sh-step">第 一 步　·　拍 一 张</div>
+    <div class="sh-h" id="sh-h">你在河边，<br>看见什么就拍什么。</div>
+    <div class="sh-sub" id="sh-sub">不必刻意找。这张图里有的东西，多半就在你眼前。</div>
+    <div class="sh-frame" id="sh-frame"></div>
+    <div class="sh-pick" id="sh-pick" style="display:none">
+      <div class="q" id="sh-q">这张照片里，最主要的是哪一样？</div>
+      <div id="sh-opts"></div>
+    </div>
+    <div class="sh-feedback" id="sh-fb"></div>
+  </div>
+  <div class="sh-bot"><button class="btn btn-teal" id="btn-sh-ok" disabled>确认</button></div>
+</div>
+
+<!-- 现场记录 L3 -->
+<div class="screen" id="s-field">
+  <div class="fd-top">
+    <div class="back" id="fd-back">‹ 回护照</div>
+    <div class="fd-chiprow" style="margin-top:10px">
+      <span class="pill" id="fd-pill-gate"></span>
+      <span class="pill" id="fd-pill-type"></span>
+    </div>
+    <div class="fd-h" id="fd-h">这一站的任务</div>
+    <div class="fd-sub" id="fd-sub"></div>
+  </div>
+  <div class="fd-body">
+    <div class="fd-q" id="fd-q"></div>
+    <div class="fd-qsub" id="fd-qsub"></div>
+    <div id="fd-opts"></div>
+    <div class="fd-reply" id="fd-reply"></div>
+
+    <div class="fd-extra" id="fd-extra" style="display:none">
+      <div class="fd-lb">补一句你看到的　<span class="opt-tag">选填</span></div>
+      <textarea class="fd-note" id="fd-note" placeholder="比如：水边的石头很滑，芦苇已经白了"></textarea>
+      <div class="fd-lb" style="margin-top:14px">拍一张　<span class="opt-tag">选填</span></div>
+      <div class="fd-photo">
+        <label class="fd-ph" id="fd-ph">＋ 拍照<input type="file" accept="image/*" capture="environment" hidden id="fd-file"></label>
+        <div class="fd-ph-tip" id="fd-ph-tip">
+          <b>有照片的记录标 A 级</b>，研究机构会优先采用。<br>
+          没拍也没关系，标 B 级，一样能存。
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fd-bot"><button class="btn btn-gold" id="btn-field-ok" disabled>提交这条记录</button></div>
+</div>
+
+<!-- 足迹图 -->
+<div class="screen" id="s-trail">
+  <div class="tr-top">
+    <div class="back" id="tr-back">‹ 回护照</div>
+    <div class="tr-h" style="margin-top:8px">足迹图</div>
+    <div class="tr-sub">你在哪一段做过记录，哪一站就点亮。<span style="color:#A89870">稀疏是正常的。</span></div>
+    <div class="tr-hud">
+      <div class="it"><div class="v" id="tr-km">0.0<small>km</small></div><div class="k">已巡里程</div></div>
+      <div class="it"><div class="v" id="tr-stamp">0<small>/10</small></div><div class="k">已记点位</div></div>
+      <div class="it"><div class="v" id="tr-rec">0<small>条</small></div><div class="k">现场记录</div></div>
+    </div>
+  </div>
+  <div class="tr-body">
+    <div class="tr-rows" id="tr-rows">
+      <svg class="tr-river" id="tr-river"></svg>
+    </div>
+  </div>
+  <div class="tr-bot"><button class="btn btn-line" id="tr-guard">认领一个点位 ›</button></div>
+</div>
+
+<!-- 站点详情 -->
+<div class="screen" id="s-station">
+  <div class="st-hero">
+    <svg class="rd" viewBox="0 0 430 260" preserveAspectRatio="xMidYMid slice">
+      <circle cx="370" cy="60" r="52" fill="none" stroke="#C9A24B" stroke-opacity=".16"/>
+      <circle cx="370" cy="60" r="82" fill="none" stroke="#C9A24B" stroke-opacity=".08"/>
+    </svg>
+    <div class="st-no" id="st-no">第 01 站　·　共 10 站</div>
+    <div class="st-nm" id="st-nm">安河闸</div>
+    <div class="st-meta" id="st-meta"></div>
+    <div class="st-story" id="st-story"></div>
+  </div>
+  <div class="st-body">
+    <div class="st-card">
+      <div class="h">这一站的知识</div>
+      <div class="t" id="st-know"></div>
+    </div>
+    <div class="st-actions" id="st-actions"></div>
+    <div class="dt-sec" style="margin-top:18px">在这个点位记过的</div>
+    <div id="st-recs"></div>
+  </div>
+  <div class="st-bot"><button class="btn btn-line" id="st-back">回足迹图</button></div>
+</div>
+
+<!-- 记录流 -->
+<div class="screen" id="s-records">
+  <div class="rc-top">
+    <div class="back" id="rc-back">‹ 回护照</div>
+    <div class="rc-hd" style="margin-top:8px">
+      <div class="rc-h" id="rc-h">点位</div>
+      <div class="rc-tot">共 <b id="rc-total">0</b> 条</div>
+    </div>
+    <div class="rc-tabs" id="rc-tabs">
+      <button data-tab="point" class="on">按点位</button>
+      <button data-tab="time">按时间</button>
+      <button data-tab="mine">我的</button>
+    </div>
+  </div>
+  <div class="rc-body" id="rc-body"></div>
+  <div class="rc-bot"><button class="btn btn-line" id="rc-all">看看全部点位</button></div>
+</div>
+
+<!-- 记录详情 -->
+<div class="screen" id="s-detail">
+  <div class="dt-top"><div class="back" id="dt-back">‹ 返回</div></div>
+  <div class="dt-body" id="dt-body"></div>
+  <div class="dt-bot"><button class="btn btn-line" id="dt-close">关闭</button></div>
+</div>
+
+<!-- 自然笔记 -->
+<div class="screen" id="s-explore">
+  <div class="ex-top">
+    <div class="back" id="ex-back">‹ 回护照</div>
+    <div class="ex-h" style="margin-top:8px">随手拍一张，<br>听听它在系统里干什么。</div>
+    <div class="ex-sub">芦苇、柳树、岸石、水鸟——你在清河岸边看到的每一样东西，
+      都在滨水系统的设计里有一个角色。拍下来，告诉你它是什么角色。</div>
+  </div>
+  <div class="ex-body">
+    <div class="ex-state" id="ex-state">今天已有 0 张自然笔记</div>
+    <div class="ex-shoot" id="ex-shoot"></div>
+    <div class="ex-cands" id="ex-cands"></div>
+    <div class="ex-card" id="ex-card"></div>
+  </div>
+  <div class="ex-bot"><button class="btn btn-line" id="ex-notes">我的自然笔记 <span id="ex-n">0</span> 张 ›</button></div>
+</div>
+
+<!-- 守点 -->
+<div class="screen" id="s-guard">
+  <div class="gu-hero">
+    <svg class="rd" viewBox="0 0 430 260" preserveAspectRatio="xMidYMid slice">
+      <path d="M-20 190 C 90 165, 160 215, 250 195 C 340 176, 390 140, 460 158"
+        fill="none" stroke="#0E5C63" stroke-width="30" stroke-linecap="round"/>
+    </svg>
+    <div class="gu-k">深　度　层</div>
+    <div class="gu-t">认领一个点位，<br>然后<em>一直看着它</em>。</div>
+    <div class="gu-d">十站打卡是一次性的。真正有价值的事，发生在同一个位置的第十二次。</div>
+  </div>
+  <div class="gu-body">
+    <div class="gu-lock">
+      <div class="h">现 在 还 不 能 用</div>
+      <div class="t" id="gu-lock-t">这一层要求<b>先完成一次到岸签到</b>，并且需要正式版的账号体系。
+        这是路线图 P1 的内容，目前只做展示。</div>
+    </div>
+    <ul class="gu-list">
+      <li><div class="n">01</div><div>
+        <div class="h">认领点位</div>
+        <div class="d">选出离你家最近的那一个，把它变成「我的点位」。别人也能看，但你是它的常驻观察者。</div></div></li>
+      <li><div class="n">02</div><div>
+        <div class="h">双周复访</div>
+        <div class="d">同一套观察项，隔两周再来一次。水位、透明度、岸线、鸟况——变的是数据，不变的是位置。</div></div></li>
+      <li><div class="n">03</div><div>
+        <div class="h">同点位时间轴</div>
+        <div class="d">你的第 1 次和第 12 次并排放着。这是孩子第一次看见「季节」长什么样。</div></div></li>
+      <li><div class="n">04</div><div>
+        <div class="h">进入开放数据集</div>
+        <div class="d">带点位、时间、观测值、证据的记录，经三道校验后可以给河长办和研究机构直接引用。</div></div></li>
+    </ul>
+  </div>
+  <div class="gu-bot"><button class="btn btn-line" id="gu-back">回护照</button></div>
+</div>
+
+<div id="seal"></div>
+<div id="up">
+  <div class="up-box">
+    <div class="k">恭　喜　晋　升</div>
+    <div class="t" id="up-t">巡河员</div>
+    <div class="d" id="up-d"></div>
+    <button class="btn btn-teal" id="up-close">知道了</button>
+  </div>
+</div>
+<div id="toast"></div>
+</div>
+<script>
+/* 内容源：飞书 Base CACyb67OaaFXZPskQQtc6IDTnDc
+   改内容 → 改飞书表格 → 跑 build_from_feishu.py --inline
+   本文件的三块常量（GATES/HUNTS/KB）由脚本生成，勿手改 */
+const GATES=[{"id": 1, "name": "安河闸", "lat": 40.0068, "lng": 116.247, "seg": "西段 · 起点", "type": "水文观测", "src": "河长办", "km": 0, "story": "1966 年京密引水渠建成，清河的起点就改到了引水渠东岸。我南距颐和园北如意门约 1 公里，闸的南北两端还立着「清0」石碑。", "q": "我是清河的第一座水闸，始建于 1965 年，也是清河的「零公里」处。我是谁？", "opts": ["安河闸", "肖家河闸", "沙子营闸", "树村闸"], "ans": 0, "hint": "我的名字里有一个「安」字，就在京密引水渠边。人们还叫我「清0」的起点。", "k": "安河闸始建于 1965 年，2008、2014 两次改建，双孔平板钢闸门、卷扬式启闭，主要功能是泄洪。", "reward": "羽毛 ×1", "task": {"q": "走到水边，低头看看：能看见水底吗？", "sub": "从这一步开始，你不只是在答题", "opts": [{"t": "能看见水底的石头", "r": "看得见石头，说明这一段水流清、含沙少。这条记录很珍贵。", "obs": [{"key": "透明度", "num": 3, "unit": "级", "txt": "高（看得见水底）"}]}, {"t": "看不见，水有点浑", "r": "记下来了。水浑不一定是坏消息——夏天藻类多，也会这样。", "obs": [{"key": "透明度", "num": 1, "unit": "级", "txt": "低（水浑）"}]}, {"t": "水面漂着东西", "r": "记下来了。这类记录会直接进入河道巡护的关注清单。", "obs": [{"key": "漂浮物", "num": 1, "unit": "级", "txt": "有"}, {"key": "透明度", "num": 1, "unit": "级", "txt": "低"}]}]}}, {"id": 2, "name": "肖家河闸", "lat": 40.0085, "lng": 116.264, "seg": "西段", "type": "岸线观察", "src": "志愿队", "km": 1.6, "story": "我在肖家河桥西，上距安河闸约 1.6 公里。我身边有一座漂亮的彩虹桥，东边还有大环型立交桥。", "q": "我西侧有一座七彩的「彩虹桥」，上距安河闸约 1.6 公里。我是哪座水闸？", "opts": ["肖家河闸", "树村闸", "羊坊闸", "沈家闸"], "ans": 0, "hint": "我紧邻「肖家河桥」，名字与这条河、这座桥相同。", "k": "安河闸到肖家河闸之间河道曲折、姿态优美；肖家河闸是清河由西向东的第二道关卡。", "reward": "彩虹桥明信片 ×1", "task": {"q": "看看脚下的河岸：是自然的土坡，还是砌好的水泥？", "sub": "河岸的样子，决定了谁能在这里住下来", "opts": [{"t": "土坡，长着草和芦苇", "r": "自然岸坡能给水鸟和昆虫留出藏身的地方。这是好迹象。", "obs": [{"key": "岸线硬化度", "num": 0, "unit": "级", "txt": "自然土坡"}]}, {"t": "水泥或石砌的硬岸", "r": "硬岸挡水更稳，但生物少。北京这几年正在把这类岸线一点点「软化」。", "obs": [{"key": "岸线硬化度", "num": 2, "unit": "级", "txt": "硬质护岸"}]}, {"t": "一半一半，还在改", "r": "过渡段最有意思——过几年再来，你会看见它的变化。", "obs": [{"key": "岸线硬化度", "num": 1, "unit": "级", "txt": "过渡段"}]}]}}, {"id": 3, "name": "树村闸", "lat": 40.0136, "lng": 116.2895, "seg": "清河之洲", "type": "异常通报", "src": "河长办", "km": 3.5, "story": "我在圆明园正北方向，闸上带楼、闸桥一体，是清河十闸中最有观赏价值的一座。", "q": "我「闸上带楼、闸桥一体」，被誉为清河十闸中最美的闸门。我是？", "opts": ["树村闸", "清河闸", "京包闸", "外环跌水闸"], "ans": 0, "hint": "我在「树村」地界，圆明园正北，登楼能看见西山。", "k": "树村闸上距肖家河闸约 1.9 公里，闸桥供步行与骑行通过，登闸可远眺百望山、寿安山与香山。", "reward": "树村闸影贴纸 ×1", "task": {"q": "站在闸口看看附近：地上有垃圾吗？", "sub": "这不是考题，是巡查", "opts": [{"t": "很干净", "r": "干净不是天生的，是有人每天在管。你的记录会证明这一点。", "obs": [{"key": "垃圾密度", "num": 0, "unit": "级", "txt": "无"}]}, {"t": "有一些，不多的几处", "r": "少量垃圾多数是游客留下的。记录比指责有用。", "obs": [{"key": "垃圾密度", "num": 1, "unit": "级", "txt": "少量"}]}, {"t": "能看到明显的堆积", "r": "记下来了。这类点位会被标成「需要关注」——先记下来，比先下结论重要。", "obs": [{"key": "垃圾密度", "num": 2, "unit": "级", "txt": "多处"}]}]}}, {"id": 4, "name": "京包闸", "lat": 40.016, "lng": 116.309, "seg": "中段", "type": "物种观察", "src": "闸管员", "km": 5.2, "story": "我守在京包铁路西侧，旁边是箭亭立交桥——京新高速、京张高铁、京包铁路、地铁 13 号线都在这里交汇。万泉河就在我附近汇入清河。", "q": "我以身边的铁路得名，位于京包铁路西侧。我是？", "opts": ["京包闸", "沈家闸", "羊坊闸", "下清河闸"], "ans": 0, "hint": "我的名字取自「京包铁路」的前两个字。", "k": "京包闸上距树村闸约 1.7 公里；附近汇芳桥桥头题有乾隆《断桥残雪》诗，景点名为「汇芳残雪」。", "reward": "乾隆诗签 ×1", "task": {"q": "抬头看看水面和天空：有水鸟吗？", "sub": "这条河现在是九十多种鸟的家", "opts": [{"t": "有，正在水面上", "r": "水面的多是野鸭、鸊鷉。别靠近，远远记一笔就好。", "obs": [{"key": "水鸟活动", "num": 2, "unit": "级", "txt": "水面活动"}]}, {"t": "有，站在岸边或树上", "r": "岸边停歇的多是鹭类。它们对水质和鱼量很敏感。", "obs": [{"key": "水鸟活动", "num": 1, "unit": "级", "txt": "岸边停歇"}]}, {"t": "暂时没看到", "r": "「没看到」也是一条有效记录——它说明这个时段、这个点位没有鸟。", "obs": [{"key": "水鸟活动", "num": null, "unit": "级", "txt": "未观测"}]}]}}, {"id": 5, "name": "清河闸", "lat": 40.0203, "lng": 116.335, "seg": "中段 · 小月河口", "type": "水文观测", "src": "河长办", "km": 7.6, "story": "我在清河大桥（京藏高速跨河大桥）西侧，小月河在我身边汇入清河。河边有明代古桥广济桥，还有古清真寺。", "q": "我旁边的小月河上有一座明代古桥「广济桥」，始建于明永乐七年。我是哪座闸？", "opts": ["清河闸", "安河闸", "沙子营闸", "树村闸"], "ans": 0, "hint": "我就以这条河的名字命名——「清河」的闸。", "k": "清河沿岸有六处古迹：广济桥、清河古城遗址、清河火车站（詹天佑主持修建）、本裕仓、清河制呢厂办公楼、清河清真寺。", "reward": "古迹图鉴 ×1", "task": {"q": "再看一眼水色：它更接近哪种颜色？", "sub": "颜色是水最直接的表情", "opts": [{"t": "偏蓝，比较清", "r": "偏蓝通常意味着藻类少、悬浮物少。这是好水色的常见样子。", "obs": [{"key": "水色浊度", "num": 1, "unit": "级", "txt": "偏蓝（清）"}]}, {"t": "偏绿", "r": "偏绿多半是藻类在长。夏天下午尤其明显——和时间有关。", "obs": [{"key": "水色浊度", "num": 2, "unit": "级", "txt": "偏绿"}]}, {"t": "偏黄褐，有点浊", "r": "黄褐常和降雨、泥沙有关。如果你刚下过雨，这就很正常。", "obs": [{"key": "水色浊度", "num": 3, "unit": "级", "txt": "黄褐（浊）"}]}]}}, {"id": 6, "name": "下清河闸", "lat": 40.0235, "lng": 116.36, "seg": "中段 · 奥森北", "type": "岸线观察", "src": "志愿队", "km": 10.2, "story": "我在奥林匹克森林公园北围墙外，闸桥一体，只供步行和骑行的人通过。过了我，河道岸坡开始变得更自然。", "q": "我紧挨奥林匹克森林公园北墙，只允许步行和骑行通过。我是？", "opts": ["下清河闸", "外环跌水闸", "京包闸", "肖家河闸"], "ans": 0, "hint": "我在「清河闸」的下游，所以名字里有个「下」字。", "k": "自清河闸起，南岸改为土坡、林草茂密；下清河闸上距清河闸约 2.6 公里。", "reward": "奥森观鸟卡 ×1", "task": {"q": "看看岸边的植物：是成片的，还是零散的？", "sub": "植被的连续性，是生态恢复的指标之一", "opts": [{"t": "成片，连成一条绿带", "r": "连续的绿带能形成「生态廊道」，小动物才敢沿着河走。", "obs": [{"key": "植被连续性", "num": 3, "unit": "级", "txt": "连续成带"}]}, {"t": "零散几丛", "r": "零散的植被往往是新种的，还没长开。三年后再来看。", "obs": [{"key": "植被连续性", "num": 2, "unit": "级", "txt": "零散"}]}, {"t": "几乎没有，多是裸露地面", "r": "记下来了。这类岸段通常会被优先安排补植。", "obs": [{"key": "植被连续性", "num": 1, "unit": "级", "txt": "稀疏"}]}]}}, {"id": 7, "name": "羊坊闸", "lat": 40.029, "lng": 116.385, "seg": "东段", "type": "物种观察", "src": "闸管员", "km": 13.1, "story": "我在立水桥西南约 600 米处。从我这里开始，清河两岸都变成了土坡，自然的气息越来越浓。", "q": "我位于立水桥西南约 600 米，过了我河道两岸都是自然土坡。我是？", "opts": ["羊坊闸", "沈家闸", "树村闸", "安河闸"], "ans": 0, "hint": "我地处「羊坊」，立水桥在我的东北方向不远。", "k": "羊坊闸上距下清河闸约 2.9 公里；清洋河（奥林匹克公园龙形水系退水河）在其上游不远处汇入清河。", "reward": "芦苇书签 ×1", "task": {"q": "闭上眼睛听十秒：你能分辨出几种声音？", "sub": "河流不只有样子，还有声音", "opts": [{"t": "只有风声和水声", "r": "安静本身就是一种稀缺资源。城市里越来越少了。", "obs": [{"key": "声环境自然度", "num": 3, "unit": "级", "txt": "只有风声水声"}]}, {"t": "有鸟叫，还有水声", "r": "有鸟鸣，说明这里的植被和昆虫足够养活它们。", "obs": [{"key": "声环境自然度", "num": 2, "unit": "级", "txt": "有鸟鸣"}]}, {"t": "主要是车流和人声", "r": "清河有一段紧邻快速路。声音也是一种「栖息地质量」。", "obs": [{"key": "声环境自然度", "num": 1, "unit": "级", "txt": "以车流人声为主"}]}]}}, {"id": 8, "name": "外环跌水闸", "lat": 40.031, "lng": 116.405, "seg": "东段", "type": "水文观测", "src": "闸管员", "km": 14.5, "story": "我在地铁 13 号线环线外约 150 米，是十闸中唯一的拦水坝，却也叫「闸」。立水桥就在我西边。", "q": "我是清河十闸中唯一的拦水坝（跌水坝），在地铁环线外。我是？", "opts": ["外环跌水闸", "沙子营闸", "清河闸", "京包闸"], "ans": 0, "hint": "「跌水」就是水流从坝上跌落的意思，我又在地铁「外环」线外。", "k": "外环跌水闸上距羊坊闸约 1.4 公里；立水桥是京北跨清河六大交通枢纽之一，旁有地铁斜拉桥。", "reward": "跌水坝徽章 ×1", "task": {"q": "看着水流：它是急的，还是缓的？", "sub": "流速决定了什么样的生物能在这里生活", "opts": [{"t": "很急，能听到水声", "r": "急流会带来更多溶解氧，喜欢清水的鱼才活得下去。", "obs": [{"key": "流速", "num": 3, "unit": "级", "txt": "急"}]}, {"t": "慢，几乎看不出在动", "r": "缓流容易积存养分。闸坝上游往往是这种状态。", "obs": [{"key": "流速", "num": 1, "unit": "级", "txt": "缓"}]}, {"t": "中间，慢慢在淌", "r": "中速是大多数河段的常态，也是生物多样性最稳的状态。", "obs": [{"key": "流速", "num": 2, "unit": "级", "txt": "中"}]}]}}, {"id": 9, "name": "沈家闸", "lat": 40.033, "lng": 116.425, "seg": "东段 · 温榆河公园", "type": "异常通报", "src": "河长办", "km": 18.8, "story": "我在北京温榆河公园的西部，上距外环跌水闸约 4.3 公里，这是十闸之间相隔最远的一段。", "q": "我坐落于温榆河公园西部，是进入温榆河公园的第一座水闸。我是？", "opts": ["沈家闸", "下清河闸", "肖家河闸", "羊坊闸"], "ans": 0, "hint": "我姓「沈」，在温榆河公园的西边守着河面。", "k": "立水桥以东进入「滨水慢行系统」，两岸约 17 公里只供步行和骑行，是骑行者的乐园。", "reward": "温榆河公园地图 ×1", "task": {"q": "找找岸边：有被人踩出来的小路吗？", "sub": "人的痕迹，也是一种数据", "opts": [{"t": "有，很明显的土路", "r": "这些小路会告诉我们，大家真正想去哪里看河。", "obs": [{"key": "岸线野化度", "num": 3, "unit": "级", "txt": "明显土路"}]}, {"t": "没有，都是修好的步道", "r": "规范步道对河岸更友好，但也会把人和水隔开一点。", "obs": [{"key": "岸线野化度", "num": 1, "unit": "级", "txt": "规范步道"}]}, {"t": "有零星的脚印", "r": "零星脚印说明还在「试探」阶段。可以观察它会不会变宽。", "obs": [{"key": "岸线野化度", "num": 2, "unit": "级", "txt": "零星脚印"}]}]}}, {"id": 10, "name": "沙子营闸", "lat": 40.0345, "lng": 116.438, "seg": "尾闾 · 温榆河口", "type": "物种观察", "src": "志愿队", "km": 19.1, "story": "我在清河的尾端，距清河入温榆河口只有约 300 米。我是十闸中唯一的翻板式平板钢闸门，全开时翻起平卧，还能当桥用。", "q": "我是清河最后一座闸，唯一的翻板式平板钢闸门，开启时可平卧当桥。我是？", "opts": ["沙子营闸", "安河闸", "沈家闸", "外环跌水闸"], "ans": 0, "hint": "我在「沙子营」，过了我再游 300 米，清河就到尽头啦。", "k": "沙子营闸为 3 孔翻板式平板钢闸门、液压启闭；过闸 300 米即清河入温榆河口，23.6 公里的旅程到此结束。", "reward": "通关金钥匙 ×1", "task": {"q": "最后一眼：水面和岸边，哪边更热闹？", "sub": "这是你的第十条记录", "opts": [{"t": "水面更热闹", "r": "水鸟多的地方，通常鱼也多。这条河的食物链是完整的。", "obs": [{"key": "河岸活力", "num": 1, "unit": "级", "txt": "以水为主"}]}, {"t": "岸边更热闹", "r": "岸边的昆虫和植物养活了更多生命。两条线索都值得记下。", "obs": [{"key": "河岸活力", "num": 2, "unit": "级", "txt": "以岸为主"}]}, {"t": "两边都很安静", "r": "安静不一定是坏事——傍晚和清晨，本来就是两种不同的河。", "obs": [{"key": "河岸活力", "num": 0, "unit": "级", "txt": "都安静"}]}]}}];
+
+const KB=[{"n": "芦苇", "tag": "生态护岸", "f1": "细高、穗状花序，成片长在浅水边", "f2": "它是生态护岸的主力。用植物代替水泥，岸线才「软」得下来。", "f3": "这片芦苇同时也是水鸟的隐蔽所——人靠得太近，它们就不来了。"}, {"n": "香蒲", "tag": "水质过滤", "f1": "叶片细长直立，顶端有香肠状的穗", "f2": "挺水植物的根区能吸收氮磷，人工湿地常拿它做「过滤层」。", "f3": "它长得越旺，说明这一段水里的养分越多。"}, {"n": "垂柳", "tag": "遮阴固岸", "f1": "枝条下垂，贴着水边生长", "f2": "耐水湿、根系能固岸，是老河道的标配，也是遮阴与停留点。", "f3": "柳树下的水面通常更凉，夏天鱼爱待在这儿。"}, {"n": "白鹭", "tag": "指示物种", "f1": "白色、长腿长颈，常在浅水里静立", "f2": "它是这条河的指示物种。慢行系统要求「保持距离」，就是为它留的。", "f3": "它出现的地方，通常鱼也够多——这是条完整食物链的证据。"}, {"n": "岸边石", "tag": "硬质护岸", "f1": "整齐砌筑或裸露的卵石带", "f2": "硬质护岸防冲刷，但生物少。北京这几年正在把它逐步「软化」成土坡。", "f3": "如果你脚下这段还是硬的，说明它还没轮到改造。"}, {"n": "木栈道", "tag": "慢行系统", "f1": "架空在水面或岸边", "f2": "它是滨水慢行系统的一部分：让人靠近，又不踩坏岸边的植物。", "f3": "立水桥以东约 17 公里，只走人、不走车。"}, {"n": "浮萍", "tag": "富营养信号", "f1": "水面一层均匀的绿膜", "f2": "设计上要保证水体流动，否则养分容易积住——浮萍就是信号。", "f3": "看到这个，记一条「水色偏绿」很有价值。"}, {"n": "野草", "tag": "低维护", "f1": "低矮、成片、不修剪", "f2": "这类「不整齐」的草是有意留的：省水、招虫、喂鸟。", "f3": "看起来乱，其实比草坪有用得多。"}];
+
+const SEED=[
+{gateId:5,uid:"NO.041",type:"水文观测",v:"透明度 · 低",note:"水面浮着一层薄薄的绿",mo:10,d:19,hh:14,mm:32},
+{gateId:9,uid:"NO.023",type:"异常通报",v:"垃圾 · 少量",note:"",mo:10,d:18,hh:9,mm:10},
+{gateId:3,uid:"NO.088",type:"岸线观察",v:"岸型 · 自然土坡",note:"芦苇比上个月高了半截",mo:10,d:17,hh:16,mm:45},
+{gateId:4,uid:"NO.012",type:"物种观察",v:"水鸟 · 岸边停歇",note:"三只白鹭，没敢靠近",mo:10,d:15,hh:7,mm:20},
+{gateId:10,uid:"NO.041",type:"物种观察",v:"水鸟 · 未观测",note:"",mo:10,d:12,hh:15,mm:5},
+{gateId:1,uid:"NO.057",type:"水文观测",v:"透明度 · 高",note:"能看见水底的石头，很滑",mo:10,d:10,hh:11,mm:30},
+];
+
+/* 四宫格风物 · 木刻拓印占位图（内联 base64 SVG，零外部依赖） */
+const MOTIF={
+  swan:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiNCNTQzMkYiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxNTAiIHJ4PSI1MiIgcnk9IjgiIGZpbGw9IiMyQjJCMkIiIG9wYWNpdHk9Ii4xNCIvPjxwYXRoIGQ9Ik02MiAxMzIgUTU4IDEwMCA4NCA4OCBRMTA2IDc4IDEyMiA5MCBRMTQyIDEwNCAxMzggMTI4IFExMzQgMTQ2IDEwOCAxNDggUTgwIDE1MCA2MiAxMzIgWiIgZmlsbD0iIzI2MjYyNiIvPjxwYXRoIGQ9Ik0xMTggOTIgUTEzMiA4MiAxMzggNjQgUTE0MiA1MCAxMzQgNDIgUTEyOCAzNiAxMjIgNDQgUTExOCA1MiAxMjIgNjIgUTEyNiA3NCAxMTIgODQgWiIgZmlsbD0iIzI2MjYyNiIvPjxjaXJjbGUgY3g9IjEyOSIgY3k9IjQ2IiByPSIzLjIiIGZpbGw9IiNGMkVCREMiLz48Y2lyY2xlIGN4PSIxMjkuNiIgY3k9IjQ2IiByPSIxLjUiIGZpbGw9IiMwQTBBMEEiLz48cGF0aCBkPSJNMTM3IDUwIEwxNTAgNDcgTDEzOCA1NSBaIiBmaWxsPSIjQjU0MzJGIi8+PHBhdGggZD0iTTcwIDEyMCBRODYgMTA4IDEwOCAxMTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YyRUJEQyIgc3Ryb2tlLXdpZHRoPSIxLjYiIG9wYWNpdHk9Ii41Ii8+PHBhdGggZD0iTTY4IDEzMCBRODYgMTIwIDExMCAxMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YyRUJEQyIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9Ii4zNSIvPjwvZz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFpbikiLz48L3N2Zz4=',
+  bridge:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM3QTRCMzIiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxwYXRoIGQ9Ik0yOCAxMjggUTEwMCA1OCAxNzIgMTI4IiBmaWxsPSJub25lIiBzdHJva2U9IiM3QTRCMzIiIHN0cm9rZS13aWR0aD0iOSIvPjxwYXRoIGQ9Ik0yOCAxMjggUTEwMCA2NCAxNzIgMTI4IiBmaWxsPSJub25lIiBzdHJva2U9IiNCNTQzMkYiIHN0cm9rZS13aWR0aD0iMi40IiBvcGFjaXR5PSIuNTUiLz48cGF0aCBkPSJNNDAgMTMyIFExMDAgNzYgMTYwIDEzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjN0E0QjMyIiBzdHJva2Utd2lkdGg9IjQiLz48bGluZSB4MT0iNDYiIHkxPSIxMjgiIHgyPSI2MCIgeTI9Ijk4IiBzdHJva2U9IiM3QTRCMzIiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSIxNTQiIHkxPSIxMjgiIHgyPSIxNDAiIHkyPSI5OCIgc3Ryb2tlPSIjN0E0QjMyIiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iNzAiIHkxPSIxMTAiIHgyPSI3MCIgeTI9IjEzMiIgc3Ryb2tlPSIjN0E0QjMyIiBzdHJva2Utd2lkdGg9IjIuNiIvPjxsaW5lIHgxPSIxMDAiIHkxPSI5MiIgeDI9IjEwMCIgeTI9IjEzNCIgc3Ryb2tlPSIjN0E0QjMyIiBzdHJva2Utd2lkdGg9IjIuNiIvPjxsaW5lIHgxPSIxMzAiIHkxPSIxMTAiIHgyPSIxMzAiIHkyPSIxMzIiIHN0cm9rZT0iIzdBNEIzMiIgc3Ryb2tlLXdpZHRoPSIyLjYiLz48cGF0aCBkPSJNMjIgMTQ2IFExMDAgMTUyIDE3OCAxNDYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzVCOEZBOCIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIuNSIvPjxwYXRoIGQ9Ik0zMCAxNTYgUTEwMCAxNjEgMTcwIDE1NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNUI4RkE4IiBzdHJva2Utd2lkdGg9IjEuNCIgb3BhY2l0eT0iLjM0Ii8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  reed:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM3RTgxNTgiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTYyIDE2OCBRNTggMTIwIDY2IDc0IiBmaWxsPSJub25lIiBzdHJva2U9IiM4QThCNUMiIHN0cm9rZS13aWR0aD0iMi42Ii8+PHBhdGggZD0iTTkyIDE3MiBROTIgMTE4IDk2IDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiM4QThCNUMiIHN0cm9rZS13aWR0aD0iMi42Ii8+PHBhdGggZD0iTTEyNCAxNzAgUTEyOCAxMjIgMTI2IDc4IiBmaWxsPSJub25lIiBzdHJva2U9IiM4QThCNUMiIHN0cm9rZS13aWR0aD0iMi42Ii8+PHBhdGggZD0iTTE0OCAxNjYgUTE1MiAxMjggMTQ4IDk2IiBmaWxsPSJub25lIiBzdHJva2U9IiM4QThCNUMiIHN0cm9rZS13aWR0aD0iMi4yIi8+PHBhdGggZD0iTTU4IDgyIFE2NiA1MiA3NCA4MiBRNjYgMTAwIDU4IDgyIFoiIGZpbGw9IiNDNkI5OEEiLz48cGF0aCBkPSJNODggNzQgUTk2IDQwIDEwNCA3NCBROTYgOTYgODggNzQgWiIgZmlsbD0iI0Q4Q0NBMCIvPjxwYXRoIGQ9Ik0xMTggODYgUTEyNiA1MiAxMzQgODYgUTEyNiAxMDYgMTE4IDg2IFoiIGZpbGw9IiNDNkI5OEEiLz48cGF0aCBkPSJNMTQyIDEwNCBRMTUwIDgwIDE1NiAxMDQgUTE1MCAxMTggMTQyIDEwNCBaIiBmaWxsPSIjRDhDQ0EwIi8+PHBhdGggZD0iTTYyIDE0MCBRNDAgMTI4IDMyIDEwOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEE4QjVDIiBzdHJva2Utd2lkdGg9IjEuOCIgb3BhY2l0eT0iLjgiLz48cGF0aCBkPSJNOTQgMTQ2IFExMTYgMTM0IDEyNiAxMTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhBOEI1QyIgc3Ryb2tlLXdpZHRoPSIxLjgiIG9wYWNpdHk9Ii44Ii8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  gate:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM2RTVBNDQiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxyZWN0IHg9IjQyIiB5PSIxMTIiIHdpZHRoPSIxMTYiIGhlaWdodD0iNDYiIGZpbGw9IiM0QTRBNDQiLz48cGF0aCBkPSJNMzYgMTEyIEwxMDAgNzggTDE2NCAxMTIgWiIgZmlsbD0iIzZFNUE0NCIvPjxwYXRoIGQ9Ik0zNiAxMTIgTDEwMCA4MCBMMTY0IDExMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQjU0MzJGIiBzdHJva2Utd2lkdGg9IjIuNCIvPjxyZWN0IHg9Ijc2IiB5PSI4OCIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjI0IiBmaWxsPSIjOEM3QTVFIi8+PHJlY3QgeD0iODgiIHk9Ijk0IiB3aWR0aD0iMTAiIGhlaWdodD0iMTQiIGZpbGw9IiMyNjI2MjYiLz48cmVjdCB4PSIxMDQiIHk9Ijk0IiB3aWR0aD0iMTAiIGhlaWdodD0iMTQiIGZpbGw9IiMyNjI2MjYiLz48cmVjdCB4PSI1OCIgeT0iMTI2IiB3aWR0aD0iMTYiIGhlaWdodD0iMjQiIGZpbGw9IiMyNjI2MjYiLz48cmVjdCB4PSIxMjYiIHk9IjEyNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjI0IiBmaWxsPSIjMjYyNjI2Ii8+PGxpbmUgeDE9IjEwMCIgeTE9IjExOCIgeDI9IjEwMCIgeTI9IjE1OCIgc3Ryb2tlPSIjMjYyNjI2IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNMjAgMTY2IFExMDAgMTcwIDE4MCAxNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzVCOEZBOCIgc3Ryb2tlLXdpZHRoPSIyLjQiIG9wYWNpdHk9Ii41Ii8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  stone:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM4RTg4NzkiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxwYXRoIGQ9Ik03MiAxNTggTDcyIDc0IFExMDAgNjIgMTI4IDc0IEwxMjggMTU4IFoiIGZpbGw9IiNCOUIyQTAiLz48cGF0aCBkPSJNODAgODIgTDgwIDE0OCIgc3Ryb2tlPSIjOEU4ODc5IiBzdHJva2Utd2lkdGg9IjEuNiIvPjxwYXRoIGQ9Ik0xMjAgODIgTDEyMCAxNDgiIHN0cm9rZT0iIzhFODg3OSIgc3Ryb2tlLXdpZHRoPSIxLjYiLz48bGluZSB4MT0iOTAiIHkxPSI5NCIgeDI9IjExMCIgeTI9Ijk0IiBzdHJva2U9IiNCNTQzMkYiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSI5NCIgeTE9IjEwOCIgeDI9IjEwNiIgeTI9IjEwOCIgc3Ryb2tlPSIjQjU0MzJGIiBzdHJva2Utd2lkdGg9IjIuNCIvPjxsaW5lIHgxPSI5MCIgeTE9IjEyMiIgeDI9IjExMCIgeTI9IjEyMiIgc3Ryb2tlPSIjQjU0MzJGIiBzdHJva2Utd2lkdGg9IjIuNCIvPjxsaW5lIHgxPSI5NCIgeTE9IjEzNiIgeDI9IjEwNiIgeTI9IjEzNiIgc3Ryb2tlPSIjQjU0MzJGIiBzdHJva2Utd2lkdGg9IjIiLz48cmVjdCB4PSI2NCIgeT0iMTU4IiB3aWR0aD0iNzIiIGhlaWdodD0iMTAiIGZpbGw9IiM4RTg4NzkiLz48L2c+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9InVybCgjZ3JhaW4pIi8+PC9zdmc+',
+  egret:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM5Qzk2ODYiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxNjQiIHJ4PSI0NiIgcnk9IjYiIGZpbGw9IiMyQjJCMkIiIG9wYWNpdHk9Ii4xMiIvPjxwYXRoIGQ9Ik03NCAxNDAgUTY4IDExMCA4OCA5NiBRMTA4IDg0IDEyNCA5NiBRMTQwIDEwOCAxMzYgMTMwIEwxMzIgMTQ4IFExMjAgMTU4IDEwMCAxNTggUTgyIDE1OCA3NCAxNDAgWiIgZmlsbD0iI0Y4RjRFOCIgc3Ryb2tlPSIjOUM5Njg2IiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMTggMTAwIFExMjQgODYgMTI2IDY2IFExMjggNTQgMTIyIDUwIFExMTYgNDYgMTE0IDU2IFExMTIgNjggMTEyIDg0IFoiIGZpbGw9IiNGOEY0RTgiIHN0cm9rZT0iIzlDOTY4NiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI1NCIgcj0iMi4yIiBmaWxsPSIjMkIyQjJCIi8+PHBhdGggZD0iTTEyNiA1OCBMMTQyIDU1IEwxMjYgNjQgWiIgZmlsbD0iI0M5QTI0QiIvPjxwYXRoIGQ9Ik04NiAxNTAgTDg0IDE2NCBNODggMTUwIEw5MCAxNjQiIHN0cm9rZT0iI0M5QTI0QiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTk0IDExMiBRMTA0IDEwNiAxMTYgMTEwIiBmaWxsPSJub25lIiBzdHJva2U9IiNCOUIyQTAiIHN0cm9rZS13aWR0aD0iMS42Ii8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  willow:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM4QThCNUMiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTEwMCAxNzIgUTEwMCAxMjAgOTYgODYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUE0NCIgc3Ryb2tlLXdpZHRoPSI1Ii8+PHBhdGggZD0iTTk2IDEwNCBRNzAgOTYgNTIgODQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUE0NCIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTk2IDk2IFExMjIgODggMTQyIDc2IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVBNDQiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik01OCA5MiBRNTQgMTE4IDYyIDE0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEE4QjVDIiBzdHJva2Utd2lkdGg9IjEuNiIvPjxwYXRoIGQ9Ik03MCA5OCBRNjggMTI2IDc2IDE0OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEE4QjVDIiBzdHJva2Utd2lkdGg9IjEuNiIvPjxwYXRoIGQ9Ik04NCAxMDIgUTg0IDEzMiA5MCAxNTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhBOEI1QyIgc3Ryb2tlLXdpZHRoPSIxLjYiLz48cGF0aCBkPSJNMTA4IDEwMCBRMTEwIDEzMCAxMDYgMTUyIiBmaWxsPSJub25lIiBzdHJva2U9IiM4QThCNUMiIHN0cm9rZS13aWR0aD0iMS42Ii8+PHBhdGggZD0iTTEyNCA5NCBRMTMwIDEyMiAxMjYgMTQ2IiBmaWxsPSJub25lIiBzdHJva2U9IiM4QThCNUMiIHN0cm9rZS13aWR0aD0iMS42Ii8+PHBhdGggZD0iTTEzOCA4NCBRMTQ4IDExMCAxNDYgMTM2IiBmaWxsPSJub25lIiBzdHJva2U9IiM4QThCNUMiIHN0cm9rZS13aWR0aD0iMS42Ii8+PGNpcmNsZSBjeD0iNjIiIGN5PSIxNDIiIHI9IjIuNCIgZmlsbD0iIzhBOEI1QyIvPjxjaXJjbGUgY3g9Ijc2IiBjeT0iMTUwIiByPSIyLjQiIGZpbGw9IiM4QThCNUMiLz48Y2lyY2xlIGN4PSI5MCIgY3k9IjE1NiIgcj0iMi40IiBmaWxsPSIjOEE4QjVDIi8+PGNpcmNsZSBjeD0iMTA2IiBjeT0iMTU0IiByPSIyLjQiIGZpbGw9IiM4QThCNUMiLz48Y2lyY2xlIGN4PSIxMjYiIGN5PSIxNDgiIHI9IjIuNCIgZmlsbD0iIzhBOEI1QyIvPjxjaXJjbGUgY3g9IjE0NiIgY3k9IjEzOCIgcj0iMi40IiBmaWxsPSIjOEE4QjVDIi8+PHBhdGggZD0iTTMwIDE3MiBRMTAwIDE3NiAxNzAgMTcyIiBmaWxsPSJub25lIiBzdHJva2U9IiM1QjhGQTgiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iLjQ1Ii8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  rainbow:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM5QzdBNUUiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNMzQgMTQ4IFExMDAgNjAgMTY2IDE0OCIgc3Ryb2tlPSIjQjU0MzJGIi8+PHBhdGggZD0iTTQ4IDE1MiBRMTAwIDg0IDE1MiAxNTIiIHN0cm9rZT0iI0M5QTI0QiIvPjxwYXRoIGQ9Ik02MiAxNTYgUTEwMCAxMDYgMTM4IDE1NiIgc3Ryb2tlPSIjNUI4RkE4Ii8+PHBhdGggZD0iTTc2IDE2MCBRMTAwIDEyOCAxMjQgMTYwIiBzdHJva2U9IiM3RTgxNTgiLz48L2c+PGcgZmlsdGVyPSJ1cmwoI3JvdWdoKSI+PGxpbmUgeDE9IjM0IiB5MT0iMTQ4IiB4Mj0iMzQiIHkyPSIxNzIiIHN0cm9rZT0iIzZFNUE0NCIgc3Ryb2tlLXdpZHRoPSI1Ii8+PGxpbmUgeDE9IjE2NiIgeTE9IjE0OCIgeDI9IjE2NiIgeTI9IjE3MiIgc3Ryb2tlPSIjNkU1QTQ0IiBzdHJva2Utd2lkdGg9IjUiLz48L2c+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9InVybCgjZ3JhaW4pIi8+PC9zdmc+',
+  curve:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZyIgd2lkdGg9IjUiIGhlaWdodD0iNSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMSIgY3k9IjEuNSIgcj0iLjYiIGZpbGw9IiM1QjhGQTgiIG9wYWNpdHk9Ii4xMyIvPjxjaXJjbGUgY3g9IjMuNSIgY3k9IjQiIHI9Ii40NSIgZmlsbD0iIzJCMkIyQiIgb3BhY2l0eT0iLjA5Ii8+PC9wYXR0ZXJuPjxmaWx0ZXIgaWQ9InIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIxLjEiIG51bU9jdGF2ZXM9IjIiLz48ZmVEaXNwbGFjZW1lbnRNYXAgaW49IlNvdXJjZUdyYXBoaWMiIHNjYWxlPSIyIi8+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjJFQkRDIi8+PGcgZmlsdGVyPSJ1cmwoI3IpIj48ZyBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxwYXRoIGQ9Ik0xNCA4MiBRNzQgODIgNzQgMTI2IFE3NCAxNjYgMTMwIDE2NiBRMTc2IDE2NiAxODQgMTMwIiBzdHJva2U9IiNBOUM2RDQiIHN0cm9rZS13aWR0aD0iMjYiIG9wYWNpdHk9Ii44NSIvPjxwYXRoIGQ9Ik0xNCA4MiBRNzQgODIgNzQgMTI2IFE3NCAxNjYgMTMwIDE2NiBRMTc2IDE2NiAxODQgMTMwIiBzdHJva2U9IiM1QjhGQTgiIHN0cm9rZS13aWR0aD0iMi42Ii8+PHBhdGggZD0iTTE0IDk0IFE2NiA5NCA2NiAxMjYgUTY2IDE1NiAxMzAgMTU2IFExNzAgMTU2IDE3OCAxMjYiIHN0cm9rZT0iIzVCOEZBOCIgc3Ryb2tlLXdpZHRoPSIxLjQiIG9wYWNpdHk9Ii40NSIvPjxwYXRoIGQ9Ik0zMiA2NiBRNTYgNjAgNzggNjYiIHN0cm9rZT0iIzhBOEI1QyIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48cGF0aCBkPSJNMTIwIDE3NiBRMTQ2IDE4MiAxNzIgMTc2IiBzdHJva2U9IiM4QThCNUMiIHN0cm9rZS13aWR0aD0iMi40Ii8+PGcgc3Ryb2tlPSIjOEE4QjVDIiBzdHJva2Utd2lkdGg9IjEuNiI+PHBhdGggZD0iTTQwIDYyIEwzOCA1MCIvPjxwYXRoIGQ9Ik01NiA1OCBMNTYgNDYiLz48cGF0aCBkPSJNNzIgNjIgTDc0IDUwIi8+PHBhdGggZD0iTTEzMiAxODAgTDEzMCAxOTAiLz48cGF0aCBkPSJNMTUyIDE4MiBMMTUyIDE5MiIvPjxwYXRoIGQ9Ik0xNzAgMTc4IEwxNzIgMTg4Ii8+PC9nPjwvZz48L2c+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9InVybCgjZykiLz48cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMTk4IiBoZWlnaHQ9IjE5OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNUI4RkE4IiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9Ii4xNiIvPjwvc3ZnPg==',
+  step:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM4RTg4NzkiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxyZWN0IHg9IjIwIiB5PSIxMjAiIHdpZHRoPSIxNjAiIGhlaWdodD0iMTAiIGZpbGw9IiNBOUEzOTIiLz48cmVjdCB4PSIyMCIgeT0iMTMyIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjOTQ4RTdFIi8+PHJlY3QgeD0iMjAiIHk9IjE0NCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIxMCIgZmlsbD0iI0E5QTM5MiIvPjxyZWN0IHg9IjIwIiB5PSIxNTYiIHdpZHRoPSIxNjAiIGhlaWdodD0iMTAiIGZpbGw9IiM5NDhFN0UiLz48ZyBzdHJva2U9IiM2RTY5NUMiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIuNyI+PGxpbmUgeDE9IjU0IiB5MT0iMTIwIiB4Mj0iNTQiIHkyPSIxMzIiLz48bGluZSB4MT0iOTYiIHkxPSIxMjAiIHgyPSI5NiIgeTI9IjEzMiIvPjxsaW5lIHgxPSIxNDAiIHkxPSIxMjAiIHgyPSIxNDAiIHkyPSIxMzIiLz48bGluZSB4MT0iNDAiIHkxPSIxMzIiIHgyPSI0MCIgeTI9IjE0NCIvPjxsaW5lIHgxPSI4MiIgeTE9IjEzMiIgeDI9IjgyIiB5Mj0iMTQ0Ii8+PGxpbmUgeDE9IjEyNiIgeTE9IjEzMiIgeDI9IjEyNiIgeTI9IjE0NCIvPjxsaW5lIHgxPSIxNjQiIHkxPSIxMzIiIHgyPSIxNjQiIHkyPSIxNDQiLz48bGluZSB4MT0iNTgiIHkxPSIxNDQiIHgyPSI1OCIgeTI9IjE1NiIvPjxsaW5lIHgxPSIxMDQiIHkxPSIxNDQiIHgyPSIxMDQiIHkyPSIxNTYiLz48bGluZSB4MT0iMTQ4IiB5MT0iMTQ0IiB4Mj0iMTQ4IiB5Mj0iMTU2Ii8+PC9nPjxwYXRoIGQ9Ik0yMCAxMTIgUTEwMCAxMDYgMTgwIDExMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNUI4RkE4IiBzdHJva2Utd2lkdGg9IjIuNCIgb3BhY2l0eT0iLjUiLz48L2c+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9InVybCgjZ3JhaW4pIi8+PC9zdmc+',
+  rail:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM0QTRBNDQiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxyZWN0IHg9IjIwIiB5PSI5NiIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI4IiBmaWxsPSIjNEE0QTQ0Ii8+PGcgc3Ryb2tlPSIjMjYyNjI2IiBzdHJva2Utd2lkdGg9IjMiPjxsaW5lIHgxPSIyOCIgeTE9Ijg4IiB4Mj0iMjgiIHkyPSI5NiIvPjxsaW5lIHgxPSI0NCIgeTE9Ijg4IiB4Mj0iNDQiIHkyPSI5NiIvPjxsaW5lIHgxPSI2MCIgeTE9Ijg4IiB4Mj0iNjAiIHkyPSI5NiIvPjxsaW5lIHgxPSI3NiIgeTE9Ijg4IiB4Mj0iNzYiIHkyPSI5NiIvPjxsaW5lIHgxPSI5MiIgeTE9Ijg4IiB4Mj0iOTIiIHkyPSI5NiIvPjxsaW5lIHgxPSIxMDgiIHkxPSI4OCIgeDI9IjEwOCIgeTI9Ijk2Ii8+PGxpbmUgeDE9IjEyNCIgeTE9Ijg4IiB4Mj0iMTI0IiB5Mj0iOTYiLz48bGluZSB4MT0iMTQwIiB5MT0iODgiIHgyPSIxNDAiIHkyPSI5NiIvPjxsaW5lIHgxPSIxNTYiIHkxPSI4OCIgeDI9IjE1NiIgeTI9Ijk2Ii8+PGxpbmUgeDE9IjE3MiIgeTE9Ijg4IiB4Mj0iMTcyIiB5Mj0iOTYiLz48L2c+PGxpbmUgeDE9IjIwIiB5MT0iODQiIHgyPSIxODAiIHkyPSI4NCIgc3Ryb2tlPSIjNEE0QTQ0IiBzdHJva2Utd2lkdGg9IjIuNCIvPjxnIGZpbGw9IiM2RTZBNUUiPjxyZWN0IHg9IjM2IiB5PSIxMDQiIHdpZHRoPSI4IiBoZWlnaHQ9IjUyIi8+PHJlY3QgeD0iOTIiIHk9IjEwNCIgd2lkdGg9IjgiIGhlaWdodD0iNTIiLz48cmVjdCB4PSIxNTYiIHk9IjEwNCIgd2lkdGg9IjgiIGhlaWdodD0iNTIiLz48L2c+PHBhdGggZD0iTTIwIDE1NiBRMTAwIDE2MCAxODAgMTU2IiBmaWxsPSJub25lIiBzdHJva2U9IiM1QjhGQTgiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iLjQ1Ii8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  huit:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZyIgd2lkdGg9IjUiIGhlaWdodD0iNSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMSIgY3k9IjEuNSIgcj0iLjYiIGZpbGw9IiNCNTQzMkYiIG9wYWNpdHk9Ii4xMyIvPjxjaXJjbGUgY3g9IjMuNSIgY3k9IjQiIHI9Ii40NSIgZmlsbD0iIzJCMkIyQiIgb3BhY2l0eT0iLjA5Ii8+PC9wYXR0ZXJuPjxmaWx0ZXIgaWQ9InIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIxLjEiIG51bU9jdGF2ZXM9IjIiLz48ZmVEaXNwbGFjZW1lbnRNYXAgaW49IlNvdXJjZUdyYXBoaWMiIHNjYWxlPSIyIi8+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjJFQkRDIi8+PGcgZmlsdGVyPSJ1cmwoI3IpIj48Zz48cmVjdCB4PSI1MiIgeT0iMzQiIHdpZHRoPSI5NiIgaGVpZ2h0PSIxMzIiIHJ4PSIyIiBmaWxsPSIjRThFMENDIiBzdHJva2U9IiM4RTg4NzkiIHN0cm9rZS13aWR0aD0iMi40Ii8+PHJlY3QgeD0iNjAiIHk9IjQyIiB3aWR0aD0iODAiIGhlaWdodD0iMTE2IiBmaWxsPSJub25lIiBzdHJva2U9IiNCNTQzMkYiIHN0cm9rZS13aWR0aD0iMS40IiBvcGFjaXR5PSIuNTUiLz48ZyBzdHJva2U9IiNCNTQzMkYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIuOTIiPjxsaW5lIHgxPSI4OCIgeTE9IjU2IiB4Mj0iODgiIHkyPSI3NiIvPjxsaW5lIHgxPSI4MCIgeTE9IjY2IiB4Mj0iOTYiIHkyPSI2NiIvPjxsaW5lIHgxPSIxMTIiIHkxPSI1NCIgeDI9IjExMiIgeTI9Ijc4Ii8+PGxpbmUgeDE9IjEwNSIgeTE9IjYwIiB4Mj0iMTE5IiB5Mj0iNjAiLz48bGluZSB4MT0iMTA1IiB5MT0iNzAiIHgyPSIxMTkiIHkyPSI3MCIvPjxsaW5lIHgxPSI4OCIgeTE9IjkyIiB4Mj0iODgiIHkyPSIxMTIiLz48bGluZSB4MT0iODAiIHkxPSIxMDIiIHgyPSI5NiIgeTI9IjEwMiIvPjxsaW5lIHgxPSIxMTIiIHkxPSI5MCIgeDI9IjExMiIgeTI9IjExNCIvPjxsaW5lIHgxPSIxMDYiIHkxPSI5OCIgeDI9IjExOCIgeTI9Ijk4Ii8+PGxpbmUgeDE9Ijg4IiB5MT0iMTI2IiB4Mj0iODgiIHkyPSIxNDYiLz48bGluZSB4MT0iODEiIHkxPSIxMzYiIHgyPSI5NSIgeTI9IjEzNiIvPjxsaW5lIHgxPSIxMTEiIHkxPSIxMjgiIHgyPSIxMTkiIHkyPSIxNDQiLz48bGluZSB4MT0iMTE5IiB5MT0iMTI4IiB4Mj0iMTExIiB5Mj0iMTQ0Ii8+PC9nPjxwYXRoIGQ9Ik02NCAxNjYgTDEzNiAxNjYiIHN0cm9rZT0iIzhFODg3OSIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9nPjwvZz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNnKSIvPjxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSIxOTgiIGhlaWdodD0iMTk4IiBmaWxsPSJub25lIiBzdHJva2U9IiNCNTQzMkYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iLjE2Ii8+PC9zdmc+',
+  wan:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM1QjhGQTgiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTEwIDcwIFE3MCA3NCA3MCAxMTIgUTcwIDE1MiAxMzAgMTU4IFExNzIgMTYyIDE5MCAxNDQiIHN0cm9rZT0iI0E5QzZENCIgc3Ryb2tlLXdpZHRoPSIxNyIgb3BhY2l0eT0iLjg1Ii8+PHBhdGggZD0iTTE5MCA2NCBRMTMwIDcyIDExMiAxMDggUTk2IDEzOCAxMDAgMTY4IiBzdHJva2U9IiNCQ0Q0REUiIHN0cm9rZS13aWR0aD0iMTIiIG9wYWNpdHk9Ii44NSIvPjxwYXRoIGQ9Ik0xMCA3MCBRNzAgNzQgNzAgMTEyIFE3MCAxNTIgMTMwIDE1OCBRMTcyIDE2MiAxOTAgMTQ0IiBzdHJva2U9IiM1QjhGQTgiIHN0cm9rZS13aWR0aD0iMi40Ii8+PHBhdGggZD0iTTE5MCA2NCBRMTMwIDcyIDExMiAxMDggUTk2IDEzOCAxMDAgMTY4IiBzdHJva2U9IiM1QjhGQTgiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEyOCIgcj0iNCIgZmlsbD0iI0I1NDMyRiIgc3Ryb2tlPSJub25lIi8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  color:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZyIgd2lkdGg9IjUiIGhlaWdodD0iNSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMSIgY3k9IjEuNSIgcj0iLjYiIGZpbGw9IiM1QjhGQTgiIG9wYWNpdHk9Ii4xMyIvPjxjaXJjbGUgY3g9IjMuNSIgY3k9IjQiIHI9Ii40NSIgZmlsbD0iIzJCMkIyQiIgb3BhY2l0eT0iLjA5Ii8+PC9wYXR0ZXJuPjxmaWx0ZXIgaWQ9InIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIxLjEiIG51bU9jdGF2ZXM9IjIiLz48ZmVEaXNwbGFjZW1lbnRNYXAgaW49IlNvdXJjZUdyYXBoaWMiIHNjYWxlPSIyIi8+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjJFQkRDIi8+PGcgZmlsdGVyPSJ1cmwoI3IpIj48Zz48cmVjdCB4PSIyMiIgeT0iNTQiIHdpZHRoPSIxNTYiIGhlaWdodD0iMzAiIGZpbGw9IiM3RkFFQzQiLz48cmVjdCB4PSIyMiIgeT0iODYiIHdpZHRoPSIxNTYiIGhlaWdodD0iMzAiIGZpbGw9IiM4RkIwOEEiLz48cmVjdCB4PSIyMiIgeT0iMTE4IiB3aWR0aD0iMTU2IiBoZWlnaHQ9IjMwIiBmaWxsPSIjQzRBODZFIi8+PGcgc3Ryb2tlPSIjRjhGNEU4IiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiIG9wYWNpdHk9Ii41NSI+PHBhdGggZD0iTTI4IDY0IFE1MCA1OCA3MiA2NCBROTQgNzAgMTE2IDY0IFExMzggNTggMTYwIDY0Ii8+PHBhdGggZD0iTTI4IDk2IFE1MCA5MCA3MiA5NiBROTQgMTAyIDExNiA5NiBRMTM4IDkwIDE2MCA5NiIvPjxwYXRoIGQ9Ik0yOCAxMjggUTUwIDEyMiA3MiAxMjggUTk0IDEzNCAxMTYgMTI4IFExMzggMTIyIDE2MCAxMjgiLz48L2c+PGNpcmNsZSBjeD0iMTAwIiBjeT0iNjkiIHI9IjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0I1NDMyRiIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48L2c+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2cpIi8+PHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjE5OCIgaGVpZ2h0PSIxOTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzVCOEZBOCIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIuMTYiLz48L3N2Zz4=',
+  wall:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZyIgd2lkdGg9IjUiIGhlaWdodD0iNSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMSIgY3k9IjEuNSIgcj0iLjYiIGZpbGw9IiM2RTdBNkUiIG9wYWNpdHk9Ii4xMyIvPjxjaXJjbGUgY3g9IjMuNSIgY3k9IjQiIHI9Ii40NSIgZmlsbD0iIzJCMkIyQiIgb3BhY2l0eT0iLjA5Ii8+PC9wYXR0ZXJuPjxmaWx0ZXIgaWQ9InIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIxLjEiIG51bU9jdGF2ZXM9IjIiLz48ZmVEaXNwbGFjZW1lbnRNYXAgaW49IlNvdXJjZUdyYXBoaWMiIHNjYWxlPSIyIi8+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjJFQkRDIi8+PGcgZmlsdGVyPSJ1cmwoI3IpIj48Zz48cGF0aCBkPSJNMTQgNzggTDEwMCA1OCBMMTg2IDc4IEwxODYgODggTDE0IDg4IFoiIGZpbGw9IiM2RTdBNkUiLz48ZyBzdHJva2U9IiM0RTVBNEUiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIuNiI+PGxpbmUgeDE9IjE0IiB5MT0iODAiIHgyPSIxODYiIHkyPSI4MCIvPjxsaW5lIHgxPSIxNCIgeTE9Ijg1IiB4Mj0iMTg2IiB5Mj0iODUiLz48L2c+PHJlY3QgeD0iMTQiIHk9Ijg4IiB3aWR0aD0iMTcyIiBoZWlnaHQ9IjYyIiBmaWxsPSIjRDhDRkJDIi8+PGcgZmlsbD0iI0M0QjlBMCI+PHJlY3QgeD0iMzAiIHk9IjEwMCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjEyIi8+PHJlY3QgeD0iNzAiIHk9IjEwMCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjEyIi8+PHJlY3QgeD0iMTEwIiB5PSIxMDAiIHdpZHRoPSIyNiIgaGVpZ2h0PSIxMiIvPjxyZWN0IHg9IjE1MCIgeT0iMTAwIiB3aWR0aD0iMjQiIGhlaWdodD0iMTIiLz48cmVjdCB4PSIzMCIgeT0iMTI0IiB3aWR0aD0iMjYiIGhlaWdodD0iMTIiLz48cmVjdCB4PSIxMTAiIHk9IjEyNCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjEyIi8+PHJlY3QgeD0iMTUwIiB5PSIxMjQiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxMiIvPjwvZz48cGF0aCBkPSJNODQgMTUwIEw4NCAxMTIgUTEwMCAxMDIgMTE2IDExMiBMMTE2IDE1MCBaIiBmaWxsPSIjNEEzQTJBIi8+PHBhdGggZD0iTTE0IDE1MCBMMTg2IDE1MCIgc3Ryb2tlPSIjOEM4NDZFIiBzdHJva2Utd2lkdGg9IjQiLz48L2c+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2cpIi8+PHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjE5OCIgaGVpZ2h0PSIxOTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFN0E2RSIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIuMTYiLz48L3N2Zz4=',
+  slope:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM3RTgxNTgiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxwYXRoIGQ9Ik0xMCAxNTggUTcwIDExOCAxMzAgMTI4IFExNzIgMTM0IDE5MiAxNTIgTDE5MiAxNzIgTDEwIDE3MiBaIiBmaWxsPSIjOUE4RTVFIi8+PHBhdGggZD0iTTEwIDE1OCBRNzAgMTE4IDEzMCAxMjggUTE3MiAxMzQgMTkyIDE1MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU2QTNFIiBzdHJva2Utd2lkdGg9IjIiLz48ZyBzdHJva2U9IiM2RThCNEUiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxwYXRoIGQ9Ik01MiAxNDggUTQ4IDEzNCA1NCAxMjQiLz48cGF0aCBkPSJNNzAgMTQyIFE2NiAxMjYgNzQgMTE2Ii8+PHBhdGggZD0iTTkyIDEzNCBRODggMTIwIDk2IDExMCIvPjxwYXRoIGQ9Ik0xMTQgMTMyIFExMTIgMTE4IDExOCAxMDgiLz48cGF0aCBkPSJNMTM4IDEzNiBRMTM2IDEyMiAxNDQgMTE0Ii8+PHBhdGggZD0iTTE2MCAxNDQgUTE2MCAxMzAgMTY4IDEyMiIvPjwvZz48cGF0aCBkPSJNMTAgMTE4IFExMDAgMTA0IDE5MiAxMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzVCOEZBOCIgc3Ryb2tlLXdpZHRoPSIxMiIgb3BhY2l0eT0iLjQ1Ii8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  path:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM5QzhFNUUiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxwYXRoIGQ9Ik00MiAxNzYgUTYwIDEyMCAxMDAgOTYgUTE0MCA3MiAxNTggMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0M4QkY5RSIgc3Ryb2tlLXdpZHRoPSIyNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTQyIDE3NiBRNjAgMTIwIDEwMCA5NiBRMTQwIDcyIDE1OCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQjU0MzJGIiBzdHJva2Utd2lkdGg9IjEuOCIgc3Ryb2tlLWRhc2hhcnJheT0iOSA3IiBvcGFjaXR5PSIuOCIvPjxnIGZpbGw9IiM0RTZCNEEiIG9wYWNpdHk9Ii43Ij48Y2lyY2xlIGN4PSIyOCIgY3k9IjE1MCIgcj0iMTAiLz48Y2lyY2xlIGN4PSIxODAiIGN5PSI2MCIgcj0iOSIvPjxjaXJjbGUgY3g9IjQ2IiBjeT0iMTEyIiByPSI3Ii8+PGNpcmNsZSBjeD0iMTY4IiBjeT0iMTEwIiByPSI4Ii8+PC9nPjwvZz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFpbikiLz48L3N2Zz4=',
+  grass:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM3RTgxNTgiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIHN0cm9rZT0iIzdFODE1OCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNNTIgMTY4IFE0NCAxMzIgMzYgMTEyIiBzdHJva2Utd2lkdGg9IjIuNCIvPjxwYXRoIGQ9Ik02NiAxNjggUTYyIDEyOCA1OCAxMDAiIHN0cm9rZS13aWR0aD0iMi40Ii8+PHBhdGggZD0iTTgwIDE2OCBRODAgMTMwIDg0IDEwNCIgc3Ryb2tlLXdpZHRoPSIyLjIiLz48cGF0aCBkPSJNOTYgMTY4IFExMDAgMTI4IDEwOCAxMDgiIHN0cm9rZS13aWR0aD0iMi40Ii8+PHBhdGggZD0iTTExMiAxNjggUTExOCAxMzQgMTI4IDExNiIgc3Ryb2tlLXdpZHRoPSIyLjIiLz48cGF0aCBkPSJNMTI4IDE2OCBRMTM4IDEzOCAxNTIgMTI0IiBzdHJva2Utd2lkdGg9IjIuNCIvPjxwYXRoIGQ9Ik0xNDQgMTY4IFExNTYgMTQ2IDE3MCAxMzgiIHN0cm9rZS13aWR0aD0iMi4yIi8+PHBhdGggZD0iTTQwIDE2OCBRMzggMTQ4IDMwIDEzOCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9nPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIGZpbGw9IiNDOUEyNEIiPjxjaXJjbGUgY3g9IjM2IiBjeT0iMTEwIiByPSIzIi8+PGNpcmNsZSBjeD0iNTgiIGN5PSI5OCIgcj0iMyIvPjxjaXJjbGUgY3g9Ijg0IiBjeT0iMTAyIiByPSIyLjYiLz48Y2lyY2xlIGN4PSIxMDgiIGN5PSIxMDYiIHI9IjMiLz48Y2lyY2xlIGN4PSIxMjgiIGN5PSIxMTQiIHI9IjIuNiIvPjxjaXJjbGUgY3g9IjE1MiIgY3k9IjEyMiIgcj0iMyIvPjwvZz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFpbikiLz48L3N2Zz4=',
+  weir:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM3RTdBNkEiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxyZWN0IHg9IjE4IiB5PSI4OCIgd2lkdGg9IjE2NCIgaGVpZ2h0PSIxMiIgZmlsbD0iIzhFODg3OSIvPjxyZWN0IHg9IjE4IiB5PSIxMDAiIHdpZHRoPSIxNjQiIGhlaWdodD0iNiIgZmlsbD0iIzZFNjk1QyIvPjxnIHN0cm9rZT0iI0Y4RjRFOCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9Ii45Ij48bGluZSB4MT0iMzYiIHkxPSIxMDYiIHgyPSIzNCIgeTI9IjEzNiIvPjxsaW5lIHgxPSI2MCIgeTE9IjEwNiIgeDI9IjU4IiB5Mj0iMTQwIi8+PGxpbmUgeDE9Ijg2IiB5MT0iMTA2IiB4Mj0iODQiIHkyPSIxMzgiLz48bGluZSB4MT0iMTEyIiB5MT0iMTA2IiB4Mj0iMTEwIiB5Mj0iMTQyIi8+PGxpbmUgeDE9IjE0MCIgeTE9IjEwNiIgeDI9IjEzOCIgeTI9IjEzOCIvPjxsaW5lIHgxPSIxNjQiIHkxPSIxMDYiIHgyPSIxNjIiIHkyPSIxMzQiLz48L2c+PHBhdGggZD0iTTIwIDE1MiBRMTAwIDE0NiAxODAgMTUyIFExMDAgMTY0IDIwIDE1MiBaIiBmaWxsPSIjQTlDNkQ0IiBvcGFjaXR5PSIuOCIvPjwvZz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFpbikiLz48L3N2Zz4=',
+  foam:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiNBOUEzOTIiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIGZpbGw9IiNGOEY0RTgiIHN0cm9rZT0iI0E5QTM5MiIgc3Ryb2tlLXdpZHRoPSIxLjIiPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTIyIiByPSIxNiIvPjxjaXJjbGUgY3g9IjEwMCIgY3k9IjExMiIgcj0iMjAiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxMjQiIHI9IjE1Ii8+PGNpcmNsZSBjeD0iODgiIGN5PSIxNDAiIHI9IjEyIi8+PGNpcmNsZSBjeD0iMTE0IiBjeT0iMTQyIiByPSIxMSIvPjxjaXJjbGUgY3g9IjU2IiBjeT0iMTQwIiByPSI4Ii8+PGNpcmNsZSBjeD0iMTQ2IiBjeT0iMTQwIiByPSI5Ii8+PC9nPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIHN0cm9rZT0iIzhGQTlCNCIgc3Ryb2tlLXdpZHRoPSIxLjYiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTQwIDk2IFE1NiA4NiA3MiA5MiIvPjxwYXRoIGQ9Ik0xMjggOTAgUTE0NCA4NCAxNTggOTIiLz48L2c+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9InVybCgjZ3JhaW4pIi8+PC9zdmc+',
+  metro:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM0QTRBNDQiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxwYXRoIGQ9Ik0xMDAgMjYgTDEwMCAxMjgiIHN0cm9rZT0iIzRBNEE0NCIgc3Ryb2tlLXdpZHRoPSI1Ii8+PHBhdGggZD0iTTEwMCA0MCBMNDQgMTA4IE0xMDAgNDAgTDE1NiAxMDggTTEwMCA2MiBMNjQgMTEyIE0xMDAgNjIgTDEzOCAxMTIiIHN0cm9rZT0iIzZFNkE1RSIgc3Ryb2tlLXdpZHRoPSIxLjYiLz48cmVjdCB4PSIyMCIgeT0iMTI4IiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjgiIGZpbGw9IiM0QTRBNDQiLz48bGluZSB4MT0iMjAiIHkxPSIxMjAiIHgyPSIxODAiIHkyPSIxMjAiIHN0cm9rZT0iIzhFODg3OSIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48cGF0aCBkPSJNNDYgMTM2IFExMDAgMTQyIDE1NCAxMzYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzVCOEZBOCIgc3Ryb2tlLXdpZHRoPSIxMiIgb3BhY2l0eT0iLjQ1Ii8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  sound:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZyIgd2lkdGg9IjUiIGhlaWdodD0iNSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMSIgY3k9IjEuNSIgcj0iLjYiIGZpbGw9IiM1QjhGQTgiIG9wYWNpdHk9Ii4xMyIvPjxjaXJjbGUgY3g9IjMuNSIgY3k9IjQiIHI9Ii40NSIgZmlsbD0iIzJCMkIyQiIgb3BhY2l0eT0iLjA5Ii8+PC9wYXR0ZXJuPjxmaWx0ZXIgaWQ9InIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIxLjEiIG51bU9jdGF2ZXM9IjIiLz48ZmVEaXNwbGFjZW1lbnRNYXAgaW49IlNvdXJjZUdyYXBoaWMiIHNjYWxlPSIyIi8+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjJFQkRDIi8+PGcgZmlsdGVyPSJ1cmwoI3IpIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM1QjhGQTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PGVsbGlwc2UgY3g9IjYwIiBjeT0iMTUwIiByeD0iMTgiIHJ5PSI0IiBzdHJva2Utd2lkdGg9IjIiLz48ZWxsaXBzZSBjeD0iNjAiIGN5PSIxNTAiIHJ4PSIzNCIgcnk9IjciIHN0cm9rZS13aWR0aD0iMS44IiBvcGFjaXR5PSIuNyIvPjxlbGxpcHNlIGN4PSI2MCIgY3k9IjE1MCIgcng9IjUwIiByeT0iMTAiIHN0cm9rZS13aWR0aD0iMS42IiBvcGFjaXR5PSIuNDUiLz48cGF0aCBkPSJNOTYgNzQgUTExMiAxMDAgOTYgMTI2IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNMTEyIDY0IFExMzYgMTAwIDExMiAxMzYiIHN0cm9rZS13aWR0aD0iMi42Ii8+PHBhdGggZD0iTTEyOCA1NCBRMTYwIDEwMCAxMjggMTQ2IiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik02MCA2OCBMNjAgMTMyIiBzdHJva2U9IiM4QThCNUMiIHN0cm9rZS13aWR0aD0iMi4yIi8+PGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNyIgZmlsbD0iI0M5QTI0QiIgc3Ryb2tlPSJub25lIi8+PC9nPjwvZz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNnKSIvPjxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSIxOTgiIGhlaWdodD0iMTk4IiBmaWxsPSJub25lIiBzdHJva2U9IiM1QjhGQTgiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iLjE2Ii8+PC9zdmc+',
+  park:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM1RTdCNTIiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxwYXRoIGQ9Ik0yMCAxNTYgUTEwMCAxNDggMTgwIDE1NiBMMTgwIDE3NiBMMjAgMTc2IFoiIGZpbGw9IiM5QUE4NkUiLz48cmVjdCB4PSI5NCIgeT0iMTEyIiB3aWR0aD0iNiIgaGVpZ2h0PSI0NiIgZmlsbD0iIzZFNUE0NCIvPjxjaXJjbGUgY3g9Ijk3IiBjeT0iOTYiIHI9IjI2IiBmaWxsPSIjNEU2QjRBIi8+PGNpcmNsZSBjeD0iNzIiIGN5PSIxMTIiIHI9IjE2IiBmaWxsPSIjNUU3QjUyIi8+PGNpcmNsZSBjeD0iMTI0IiBjeT0iMTEwIiByPSIxOCIgZmlsbD0iIzVFN0I1MiIvPjxwYXRoIGQ9Ik0yMCAxNDAgUTEwMCAxMzIgMTgwIDE0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQzhCRjlFIiBzdHJva2Utd2lkdGg9IjgiIG9wYWNpdHk9Ii43Ii8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  trib:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM1QjhGQTgiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzVCOEZBOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNOCAxMDAgUTgwIDEwNCAxMDAgMTAwIFExNDAgOTIgMTkyIDEwMCIgc3Ryb2tlLXdpZHRoPSIxNSIgb3BhY2l0eT0iLjQ1Ii8+PHBhdGggZD0iTTggMTAwIFE4MCAxMDQgMTAwIDEwMCBRMTQwIDkyIDE5MiAxMDAiIHN0cm9rZS13aWR0aD0iMi40Ii8+PHBhdGggZD0iTTk2IDI2IFExMDAgNjAgMTAwIDEwMCIgc3Ryb2tlLXdpZHRoPSIxMSIgb3BhY2l0eT0iLjQiLz48cGF0aCBkPSJNOTYgMjYgUTEwMCA2MCAxMDAgMTAwIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjQuNSIgZmlsbD0iI0I1NDMyRiIgc3Ryb2tlPSJub25lIi8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  bird:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiMyNjI2MjYiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIGZpbGw9IiMyNjI2MjYiPjxwYXRoIGQ9Ik00MCAxMTAgUTYyIDk2IDg0IDEwNCBRMTAwIDExMCAxMDAgMTE4IFE4NCAxMjYgNjIgMTIyIFE0NCAxMTggNDAgMTEwIFoiLz48cGF0aCBkPSJNOTIgMTA2IFExMDAgOTYgMTA2IDg0IFExMTAgNzYgMTE2IDc4IFExMTIgODggMTA0IDEwMCBaIi8+PGNpcmNsZSBjeD0iMTEyIiBjeT0iODAiIHI9IjEuOCIgZmlsbD0iI0YyRUJEQyIvPjxwYXRoIGQ9Ik0xMTggODIgTDEzMCA4MCBMMTE4IDg4IFoiIGZpbGw9IiNCNTQzMkYiLz48cGF0aCBkPSJNMTIwIDEyMiBRMTMyIDExNiAxNDYgMTE4IFExMzQgMTI2IDEyMCAxMjggWiIvPjxwYXRoIGQ9Ik02MCAxMjIgTDU4IDEzOCBNNjYgMTIyIEw2OCAxMzgiIHN0cm9rZT0iIzI2MjYyNiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  flap:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM3RTdBNkEiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxyZWN0IHg9IjIwIiB5PSIxNDAiIHdpZHRoPSIxNjAiIGhlaWdodD0iOCIgZmlsbD0iIzZFNjk1QyIvPjxwYXRoIGQ9Ik0zNiAxNDAgTDM2IDk2IEw5MiA5NiBMOTIgMTQwIFoiIGZpbGw9IiM4RTg4NzkiLz48cGF0aCBkPSJNOTIgMTQwIEw5MiA5MiBMMTQ4IDc4IEwxNDggMTQwIFoiIGZpbGw9IiNBOUEzOTIiLz48cGF0aCBkPSJNOTIgOTIgTDE0OCA3OCIgc3Ryb2tlPSIjQjU0MzJGIiBzdHJva2Utd2lkdGg9IjIuNiIvPjxsaW5lIHgxPSIzNiIgeTE9IjExMCIgeDI9IjkyIiB5Mj0iMTEwIiBzdHJva2U9IiM2RTY5NUMiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjkyIiB5MT0iMTA2IiB4Mj0iMTQ4IiB5Mj0iOTYiIHN0cm9rZT0iIzZFNjk1QyIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjAgMTU2IFExMDAgMTUyIDE4MCAxNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzVCOEZBOCIgc3Ryb2tlLXdpZHRoPSI4IiBvcGFjaXR5PSIuNDUiLz48L2c+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9InVybCgjZ3JhaW4pIi8+PC9zdmc+',
+  marsh:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM3RTgxNTgiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIHN0cm9rZT0iIzdFODE1OCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNMzAgMTcyIFEyNiAxMjggMzAgOTIiIHN0cm9rZS13aWR0aD0iMi40Ii8+PHBhdGggZD0iTTQ4IDE3NCBRNDYgMTMwIDUyIDk2IiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik02NiAxNzIgUTY2IDEyNiA3MCA4NiIgc3Ryb2tlLXdpZHRoPSIyLjYiLz48cGF0aCBkPSJNODYgMTc0IFE4OCAxMjggOTIgOTIiIHN0cm9rZS13aWR0aD0iMi4yIi8+PHBhdGggZD0iTTEwNiAxNzIgUTExMCAxMjYgMTEyIDg4IiBzdHJva2Utd2lkdGg9IjIuNiIvPjxwYXRoIGQ9Ik0xMjYgMTc0IFExMzIgMTMwIDEzNiA5NiIgc3Ryb2tlLXdpZHRoPSIyLjIiLz48cGF0aCBkPSJNMTQ4IDE3MiBRMTU0IDEyOCAxNTggOTIiIHN0cm9rZS13aWR0aD0iMi40Ii8+PHBhdGggZD0iTTE2OCAxNzIgUTE3NCAxMzYgMTc2IDEwNCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9nPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiIGZpbGw9IiNDNkI5OEEiPjxlbGxpcHNlIGN4PSIzMCIgY3k9Ijg2IiByeD0iNyIgcnk9IjE0Ii8+PGVsbGlwc2UgY3g9IjUyIiBjeT0iOTAiIHJ4PSI2IiByeT0iMTMiLz48ZWxsaXBzZSBjeD0iNzAiIGN5PSI4MCIgcng9IjciIHJ5PSIxNCIvPjxlbGxpcHNlIGN4PSI5MiIgY3k9Ijg2IiByeD0iNiIgcnk9IjEzIi8+PGVsbGlwc2UgY3g9IjExMiIgY3k9IjgyIiByeD0iNyIgcnk9IjE0Ii8+PGVsbGlwc2UgY3g9IjEzNiIgY3k9IjkwIiByeD0iNiIgcnk9IjEzIi8+PGVsbGlwc2UgY3g9IjE1OCIgY3k9Ijg2IiByeD0iNyIgcnk9IjE0Ii8+PGVsbGlwc2UgY3g9IjE3NiIgY3k9Ijk4IiByeD0iNSIgcnk9IjExIi8+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+  bar:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JhaW4iIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIuNTUiIGZpbGw9IiM1QjhGQTgiIG9wYWNpdHk9Ii4xIi8+PGNpcmNsZSBjeD0iMyIgY3k9IjMiIHI9Ii40IiBmaWxsPSIjMkIyQjJCIiBvcGFjaXR5PSIuMDciLz48L3BhdHRlcm4+PGZpbHRlciBpZD0icm91Z2giPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuOSIgbnVtT2N0YXZlcz0iMiIvPjxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgc2NhbGU9IjEuNCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0YyRUJEQyIvPjxnIGZpbHRlcj0idXJsKCNyb3VnaCkiPjxwYXRoIGQ9Ik04IDg2IFExMDAgNzggMTkyIDg2IEwxOTIgMTE0IFExMDAgMTIyIDggMTE0IFoiIGZpbGw9IiNBOUM2RDQiIG9wYWNpdHk9Ii44NSIvPjxwYXRoIGQ9Ik01NiAxMDggUTcwIDkyIDEwMCA5MiBRMTMwIDkyIDE0NCAxMDggUTEzMCAxMTYgMTAwIDExNiBRNzAgMTE2IDU2IDEwOCBaIiBmaWxsPSIjQzhCRjlFIi8+PHBhdGggZD0iTTU2IDEwOCBRNzAgOTIgMTAwIDkyIFExMzAgOTIgMTQ0IDEwOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOUM4RTVFIiBzdHJva2Utd2lkdGg9IjEuOCIvPjxnIHN0cm9rZT0iIzdFODE1OCIgc3Ryb2tlLXdpZHRoPSIxLjYiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTc2IDEwNCBRNzYgOTYgNzggOTAiLz48cGF0aCBkPSJNOTIgMTAyIFE5MiA5MiA5NiA4NiIvPjxwYXRoIGQ9Ik0xMDggMTA0IFExMTAgOTQgMTEyIDkwIi8+PHBhdGggZD0iTTEyNCAxMDYgUTEyNiA5OCAxMjggOTQiLz48L2c+PC9nPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2dyYWluKSIvPjwvc3ZnPg==',
+};
+
+/* ============================================================
+   小小河工 · 融合版
+   L0 上岗考核（抽题） → L1 到岸签到 → L2 四宫格 → L3 现场记录 → L4 守点
+   内容来自 demo 十闸库；记录为统一 8 字段对象，单向追加
+   ============================================================ */
+
+/* ---------------- 四宫格内容（按点位） ---------------- */
+const HUNTS={"1": {"name": "清0 起点 · 四宫格", "sub": "在 清0 起点 走一圈，这四样东西应该还在。", "cells": [{"id": "stone", "motif": "stone", "nm": "「清0」石碑", "hint": "闸的南北两端各立一块", "badge": "碑"}, {"id": "door", "motif": "gate", "nm": "双孔钢闸门", "hint": "两台卷扬式启闭机在上面", "badge": "闸"}, {"id": "slope", "motif": "slope", "nm": "生态岸坡", "hint": "草坡入水，不是水泥直墙", "badge": "坡"}, {"id": "egret", "motif": "egret", "nm": "白鹭", "hint": "浅水里静立，别靠太近", "badge": "鹭"}]}, "2": {"name": "彩虹桥 · 四宫格", "sub": "在 彩虹桥 走一圈，这四样东西应该还在。", "cells": [{"id": "rainbow", "motif": "rainbow", "nm": "彩虹桥", "hint": "七彩的那座拱桥", "badge": "桥"}, {"id": "curve", "motif": "curve", "nm": "曲折河道", "hint": "弯得能看见两个方向的水", "badge": "弯"}, {"id": "willow", "motif": "willow", "nm": "垂柳", "hint": "枝条贴着水面", "badge": "柳"}, {"id": "step", "motif": "step", "nm": "石砌硬岸", "hint": "整齐的护砌，还没软化", "badge": "岸"}]}, "3": {"name": "清河之洲 · 四宫格", "sub": "在 清河之洲 走一圈，这四样东西应该还在。", "cells": [{"id": "swan", "motif": "swan", "nm": "黑天鹅", "hint": "浅水区和芦苇边，成对出现", "badge": "黑"}, {"id": "bridge", "motif": "bridge", "nm": "汇芳桥", "hint": "木拱的那座桥，横过水面", "badge": "桥"}, {"id": "reed", "motif": "reed", "nm": "白芦苇", "hint": "成片的、穗子已经发白", "badge": "苇"}, {"id": "gate", "motif": "gate", "nm": "树村闸", "hint": "闸上带楼，闸桥一体", "badge": "闸"}]}, "4": {"name": "四线交汇 · 四宫格", "sub": "在 四线交汇 走一圈，这四样东西应该还在。", "cells": [{"id": "rail", "motif": "rail", "nm": "京包铁路桥", "hint": "铁轨横过河面", "badge": "铁"}, {"id": "huit", "motif": "huit", "nm": "汇芳残雪题诗", "hint": "桥头有乾隆的句子", "badge": "诗"}, {"id": "wan", "motif": "wan", "nm": "万泉河口", "hint": "另一条水在这里进来", "badge": "汇"}, {"id": "pillar", "motif": "weir", "nm": "闸墩", "hint": "立在河中间那道墙", "badge": "墩"}]}, "5": {"name": "古城段 · 四宫格", "sub": "在 古城段 走一圈，这四样东西应该还在。", "cells": [{"id": "bridge", "motif": "bridge", "nm": "广济桥", "hint": "明代那座石桥", "badge": "桥"}, {"id": "mosque", "motif": "wall", "nm": "古清真寺", "hint": "河边的老寺", "badge": "寺"}, {"id": "moon", "motif": "wan", "nm": "小月河口", "hint": "支流在这里汇进清河", "badge": "汇"}, {"id": "color", "motif": "color", "nm": "水色", "hint": "看它更接近蓝还是绿", "badge": "水"}]}, "6": {"name": "奥森北墙 · 四宫格", "sub": "在 奥森北墙 走一圈，这四样东西应该还在。", "cells": [{"id": "wall", "motif": "wall", "nm": "奥森北墙", "hint": "公园的围墙就在北边", "badge": "墙"}, {"id": "slope", "motif": "slope", "nm": "土坡岸线", "hint": "不再是水泥直墙", "badge": "坡"}, {"id": "path", "motif": "path", "nm": "骑行道", "hint": "只走人和车，不走机动车", "badge": "道"}, {"id": "grass", "motif": "grass", "nm": "岸边野草", "hint": "不修剪的那一种", "badge": "草"}]}, "7": {"name": "土坡之始 · 四宫格", "sub": "在 土坡之始 走一圈，这四样东西应该还在。", "cells": [{"id": "slope", "motif": "slope", "nm": "自然土坡", "hint": "草和灌木长到水边", "badge": "坡"}, {"id": "sound", "motif": "sound", "nm": "安静的水声", "hint": "闭眼听十秒", "badge": "声"}, {"id": "qingyang", "motif": "trib", "nm": "清洋河口", "hint": "奥森龙形水系退水进来", "badge": "汇"}, {"id": "bridge", "motif": "bridge", "nm": "立水桥", "hint": "西南六百米", "badge": "桥"}]}, "8": {"name": "跌水 · 四宫格", "sub": "在 跌水 走一圈，这四样东西应该还在。", "cells": [{"id": "weir", "motif": "weir", "nm": "跌水坝", "hint": "水从坝上翻下来", "badge": "坝"}, {"id": "foam", "motif": "foam", "nm": "白色水花", "hint": "落差处翻起的白", "badge": "花"}, {"id": "metro", "motif": "metro", "nm": "地铁斜拉桥", "hint": "立水桥旁边那座", "badge": "铁"}, {"id": "sound", "motif": "sound", "nm": "水声", "hint": "十座闸里最响的一处", "badge": "声"}]}, "9": {"name": "温榆河公园 · 四宫格", "sub": "在 温榆河公园 走一圈，这四样东西应该还在。", "cells": [{"id": "park", "motif": "park", "nm": "温榆河公园", "hint": "公园西部边界", "badge": "园"}, {"id": "path", "motif": "path", "nm": "滨水慢行道", "hint": "十七公里只走人", "badge": "道"}, {"id": "trib", "motif": "trib", "nm": "支流汇口", "hint": "一条水在这里进来", "badge": "汇"}, {"id": "bird", "motif": "bird", "nm": "水鸟", "hint": "这一段人少，鸟多", "badge": "鸟"}]}, "10": {"name": "尾闾 · 四宫格", "sub": "在 尾闾 走一圈，这四样东西应该还在。", "cells": [{"id": "flap", "motif": "flap", "nm": "翻板闸门", "hint": "全开时平卧河底，能当桥走", "badge": "板"}, {"id": "mouth", "motif": "wan", "nm": "温榆河汇口", "hint": "两条河在这里交接", "badge": "汇"}, {"id": "marsh", "motif": "marsh", "nm": "芦苇荡", "hint": "比上游更密、更高", "badge": "荡"}, {"id": "bar", "motif": "bar", "nm": "河中沙洲", "hint": "水中间露出来的那块", "badge": "洲"}]}};
+const LV=[
+  {n:'见习河工',min:0,next:100,d:'刚拿到护照。先去河边走一趟。'},
+  {n:'巡河员',min:100,next:250,d:'你已经来过河边了。这条河开始认得你。'},
+  {n:'河段长',min:250,next:500,d:'你负责的这段河，有你的章。'},
+  {n:'民间河长',min:500,next:null,d:'十站走完，护照上都是章。你记下的这些，已经进了清河的健康地图。'}
+];
+
+const KEY='xxhg_v4';
+const TYPES={'水文观测':'#5B8FA8','物种观察':'#3E8E6E','岸线观察':'#9A7A2E','异常通报':'#B5432F','寻宝':'#7A6A9A','签到':'#C9A24B','笔记':'#6E9498'};
+
+/* ---------------- 状态 ---------------- */
+let S={
+  name:'', no:'', pts:0,
+  quiz:{done:false, right:0, seen:[]},
+  ck:{dates:[], streak:0, total:0, km:0, lastGate:null},
+  hunt:{},          // {gateId: {cellId:{photo,ts}}}
+  notes:[],         // 自然笔记 {n,tag,photo,ts}
+  cards:[],         // 已收录知识卡 gateId 列表
+  recs:[],          // 统一记录流（含 seed）
+  loc:{state:'away', gate:null, km:null, demo:false},
+  claim:null
+};
+
+let QI=0, qLock=false, qFirst=true, qCombo=0, QSET=[];
+let SH={photo:null}, FD={pick:-1, photo:null}, EX={photo:null, state:'idle'};
+
+const $=id=>document.getElementById(id);
+const $$=s=>[...document.querySelectorAll(s)];
+
+function show(id){
+  $$('.screen').forEach(e=>e.classList.remove('on'));
+  const el=$(id); if(el){ el.classList.add('on'); el.scrollTop=0; }
+  const sc=el&&el.querySelector('.scroll'); if(sc) sc.scrollTop=0;
+}
+function toast(m){
+  const t=$('toast'); t.textContent=m; t.classList.add('on');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'),2000);
+}
+function vibrate(ms){ if(navigator.vibrate) try{navigator.vibrate(ms);}catch(e){} }
+
+/* ---------------- 记录：统一 8 字段 ---------------- */
+let seq=0;
+function mkRec(o){
+  // 统一对象：点位/时间/类型/观测/证据/环境/观察者/许可 + source
+  const r={
+    id:'r'+(Date.now().toString(36))+(seq++),
+    gateId: o.gateId!=null? o.gateId : null,
+    ts: o.ts || Date.now(),
+    type: o.type || '水文观测',
+    obs: o.obs || null,                    // {key,value,unit,txt} 或数组
+    evidence: o.evidence || {has:false,photo:null},
+    env: o.env || null,
+    observer: {no: S.no||'NO.0000', rank: rankName()},
+    license: 'CC BY-NC 4.0 · 匿名',
+    source: o.source || 'field',
+    label: o.label || '',
+    note: o.note || '',
+    pts: o.pts || 0,
+    seed: !!o.seed
+  };
+  return r;
+}
+function addRec(o){
+  const r=mkRec(o);
+  S.recs.unshift(r);
+  if(S.recs.length>120) S.recs.length=120;
+  save();
+  return r;
+}
+function recsOf(gateId){
+  return S.recs.filter(r=>r.gateId===gateId && !r.seed);
+}
+function allRecs(){ return S.recs; }
+function fieldRecs(){ return S.recs.filter(r=>r.source==='field' && !r.seed); }
+function myRecords(){ return S.recs.filter(r=>!r.seed && (r.source==='field'||r.source==='explore')); }
+function gateById(id){ return GATES.find(g=>g.id===id); }
+
+/* 观测值展示 */
+function obsText(obs){
+  if(!obs) return '';
+  if(Array.isArray(obs)) return obs.map(o=>o.key+' '+o.txt).join('；');
+  return obs.key+' · '+obs.txt;
+}
+function obsNum(obs){
+  if(!obs) return null;
+  const a=Array.isArray(obs)?obs:[obs];
+  const withNum=a.find(o=>o.num!=null);
+  return withNum?withNum.num:null;
+}
+function gradeOf(r){ return (r.evidence && r.evidence.has) ? 'A' : 'B'; }
+
+/* ---------------- 存档 ---------------- */
+function save(){
+  try{
+    localStorage.setItem(KEY, JSON.stringify({
+      name:S.name,no:S.no,pts:S.pts,quiz:S.quiz,ck:S.ck,hunt:S.hunt,
+      notes:S.notes.slice(0,30),
+      cards:S.cards||[],
+      recs:S.recs.slice(0,120).map(r=>{
+        // 照片不入 localStorage（体积），只留标记
+        const c=JSON.parse(JSON.stringify(r));
+        if(c.evidence&&c.evidence.photo) c.evidence.photo=null;
+        return c;
+      }),
+      claim:S.claim, ts:Date.now()
+    }));
+  }catch(e){}
+}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(!d||!d.no) return false;
+    S.name=d.name||''; S.no=d.no||''; S.pts=d.pts||0;
+    S.quiz=d.quiz||{done:false,right:0,seen:[]};
+    S.ck=d.ck||{dates:[],streak:0,total:0,km:0,lastGate:null};
+    S.hunt=d.hunt||{};
+    S.notes=d.notes||[];
+    S.cards=d.cards||[];
+    S.recs=d.recs||[];
+    S.claim=d.claim||null;
+    S.loc={state:'away',gate:null,km:null,demo:false};
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ---------------- 种子数据（转成统一记录） ---------------- */
+function seedRecords(){
+  const year=new Date().getFullYear();
+  return SEED.map((s,i)=>{
+    const d=new Date(year,s.mo-1,s.d,s.hh,s.mm);
+    return {
+      id:'seed'+i,
+      gateId:s.gateId,
+      ts:d.getTime(),
+      type:s.type,
+      obs:{key:s.v.split(' · ')[0], value:null, unit:'', txt:s.v.split(' · ')[1]||''},
+      evidence:{has:false,photo:null},
+      env:null,
+      observer:{no:s.uid, rank:'巡河员'},
+      license:'CC BY-NC 4.0 · 匿名',
+      source:'field',
+      label:s.v,
+      note:s.note,
+      pts:0,
+      seed:true
+    };
+  });
+}
+
+/* ---------------- 定位 ---------------- */
+function distKm(a,b,c,d){
+  const R=6371, dLat=(c-a)*Math.PI/180, dLng=(d-b)*Math.PI/180;
+  const x=Math.sin(dLat/2)**2 + Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.min(1,Math.sqrt(x)));
+}
+function nearestGate(lat,lng){
+  let best=null,bd=1e9;
+  GATES.forEach(g=>{
+    const d=distKm(lat,lng,g.lat,g.lng);
+    if(d<bd){ bd=d; best=g; }
+  });
+  return {gate:best, km:bd};
+}
+function locate(){
+  S.loc={state:'unknown',gate:null,km:null,demo:false};
+  renderHome();
+  if(!navigator.geolocation){ S.loc.state='unsupported'; renderHome(); return; }
+  let done=false;
+  const fail=()=>{ if(done)return; done=true; S.loc.state='denied'; renderHome(); };
+  try{
+    navigator.geolocation.getCurrentPosition(
+      p=>{
+        if(done) return; done=true;
+        const r=nearestGate(p.coords.latitude,p.coords.longitude);
+        S.loc={state:r.km<=1.0?'here':'away', gate:r.gate, km:r.km, demo:false};
+        save(); renderHome();
+      }, fail,
+      {enableHighAccuracy:true, timeout:8000, maximumAge:60000}
+    );
+    setTimeout(()=>{ if(!done) fail(); },9000);
+  }catch(e){ fail(); }
+}
+function demoHere(){
+  S.loc={state:'here', gate: gateById(S.ck.lastGate)||GATES[2], km:0.05, demo:true};
+  renderHome(); toast('演示模式 · 已模拟在河边');
+}
+function isHere(){ return S.loc.state==='here'; }
+function hereGate(){ return S.loc.gate || GATES[2]; }
+
+/* ---------------- 知识卡收藏 ---------------- */
+function collectCard(gid){
+  if(!S.cards) S.cards=[];
+  if(!S.cards.includes(gid)){
+    S.cards.push(gid);
+    save();
+  }
+}
+function hasCard(gid){ return (S.cards||[]).includes(gid); }
+
+/* ---------------- 等级 ---------------- */
+function lvIdx(){
+  let idx=0; LV.forEach((l,i)=>{ if(S.pts>=l.min) idx=i; });
+  return idx;
+}
+function rankName(){ return LV[lvIdx()].n; }
+function addPts(n){
+  const before=rankName();
+  S.pts+=n;
+  const after=rankName();
+  if(before!==after){
+    $('up-t').textContent=after;
+    $('up-d').textContent=LV[lvIdx()].d;
+    $('up').classList.add('on');
+  }
+  save(); return n;
+}
+
+/* ---------------- 日期 ---------------- */
+function dkey(d){
+  d=d||new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+function yesterdayKey(){
+  const d=new Date(); d.setDate(d.getDate()-1); return dkey(d);
+}
+function fmtTime(ts){
+  const d=new Date(ts);
+  const p=n=>String(n).padStart(2,'0');
+  return p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function fmtShort(ts){
+  const d=new Date(ts); const p=n=>String(n).padStart(2,'0');
+  return p(d.getMonth()+1)+'-'+p(d.getDate());
+}
+
+/* ============================================================
+   启动
+   ============================================================ */
+function boot(){
+  S.recs=seedRecords().concat(S.recs);
+  if(S.no){ locate(); show('s-home'); renderHome(); }
+  else show('s-boot');
+}
+
+$('btn-boot').onclick=()=>{
+  if(S.no){ locate(); show('s-home'); renderHome(); }
+  else show('s-register');
+};
+
+const inName=$('in-name'), agree=$('agree'), btnMake=$('btn-make');
+function chkReg(){
+  btnMake.disabled=!(inName.value.trim().length>=1 && agree.classList.contains('sel'));
+}
+inName.addEventListener('input',chkReg);
+agree.onclick=()=>{ agree.classList.toggle('sel'); chkReg(); };
+btnMake.onclick=()=>{
+  const n=inName.value.trim().slice(0,8); if(!n) return;
+  S.name=n;
+  S.no='NO.'+String(Math.floor(Math.random()*9000)+1000);
+  save(); show('s-intro');
+};
+
+/* ============================================================
+   L0 上岗考核 —— 从 10 题抽 6
+   ============================================================ */
+function shuffle(a){
+  const arr=a.slice();
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+/* 抽 6 题：优先没答过的；不够 6 道时用答过的补齐，不重置进度 */
+function pickQuiz(){
+  const seen=S.quiz.seen||[];
+  const fresh=shuffle(GATES.filter(g=>!seen.includes(g.id)));
+  const old=shuffle(GATES.filter(g=>seen.includes(g.id)));
+  const arr=fresh.concat(old);
+  return arr.slice(0,6);
+}
+
+$('btn-intro-go').onclick=()=>{
+  QSET=pickQuiz(); QI=0; qCombo=0;
+  if(!S.quiz.done) S.quiz.right=0;
+  $('q-pts').textContent=S.pts;
+  show('s-quiz'); renderQ();
+};
+
+function renderQ(){
+  const q=QSET[QI];
+  qLock=false; qFirst=true;
+
+  $('q-step').textContent=`第 ${QI+1} 题　/　共 ${QSET.length} 题`;
+  $('q-pts').textContent=S.pts;
+  // 注意：闸名与 story 都含答案线索，绝不能出现在题干区
+  $('q-text').innerHTML=`${q.q}`;
+
+  const nd=$('q-nodes'); nd.innerHTML='';
+  QSET.forEach((_,k)=>{
+    const i=document.createElement('i');
+    if(k<QI) i.className='done'; else if(k===QI) i.className='now';
+    nd.appendChild(i);
+  });
+
+  const box=$('q-opts'); box.innerHTML='';
+  q.opts.forEach((t,k)=>{
+    const d=document.createElement('div');
+    d.className='opt';
+    d.innerHTML=`<span class="k">${'ABCD'[k]}</span><span class="t">${t}</span>`;
+    d.onclick=()=>pickQ(k,d);
+    box.appendChild(d);
+  });
+
+  $('q-tip').className='tip';
+  $('q-know').className='know';
+  $('btn-next').disabled=true;
+  $('btn-next').textContent=QI>=QSET.length-1?'交卷':'下一题';
+  document.querySelector('.qz-body').scrollTop=0;
+  updCombo();
+}
+
+function updCombo(){
+  const c=$('combo');
+  if(qCombo>=2){ c.classList.add('on'); c.querySelector('.n').textContent='×'+qCombo; }
+  else c.classList.remove('on');
+}
+
+function pickQ(k,el){
+  const q=QSET[QI];
+  if(qLock) return;
+
+  if(k===q.ans){
+    qLock=true;
+    const all=$$('#q-opts .opt');
+    all.forEach(o=>o.classList.add('dead'));
+    el.classList.remove('dead'); el.classList.add('ok');
+
+    qCombo++;
+    let gain=20, note='积分已计入护照';
+    if(qFirst){ gain+=10; note='一次答对　·　额外 +10'; }
+    if(qCombo>=3){ gain+=10; note='连击 ×'+qCombo+'　·　额外 +10'; }
+    addPts(gain);
+    if(qFirst) S.quiz.right++;
+    if(!S.quiz.seen.includes(q.id)) S.quiz.seen.push(q.id);
+
+    $('q-pts').textContent=S.pts;
+    $('q-gain').textContent='+'+gain;
+    $('q-gain-l').textContent=note;
+    $('q-rw').textContent=q.reward? '　·　获得 '+q.reward : '';
+    $('q-kt').innerHTML=q.story;
+    collectCard(q.id);
+    $('q-know').classList.add('on');
+    $('q-tip').className='tip';
+    $('btn-next').disabled=false;
+    floatPt(gain); updCombo(); vibrate(14);
+    save();
+    setTimeout(()=>{ const b=document.querySelector('.qz-body'); b.scrollTop=b.scrollHeight; },120);
+  }else{
+    el.classList.add('no','dead');
+    qFirst=false; qCombo=0; updCombo();
+    const t=$('q-tip');
+    t.innerHTML=`<b>老周说</b>　${q.hint}<br>再试试，答错不扣分。`;
+    t.classList.add('on');
+    setTimeout(()=>{ const b=document.querySelector('.qz-body'); b.scrollTop=b.scrollHeight; },80);
+  }
+}
+
+function floatPt(n){
+  const r=document.querySelector('.qz-pts').getBoundingClientRect();
+  const d=document.createElement('div');
+  d.className='float-pt'; d.textContent='+'+n;
+  d.style.left=(r.left-30)+'px'; d.style.top=(r.top-6)+'px';
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),1000);
+}
+
+$('btn-next').onclick=()=>{
+  QI++;
+  if(QI>=QSET.length) finishQuiz();
+  else renderQ();
+};
+
+/* 十闸通：答过全部 10 道题 */
+function isGatesMaster(){ return (S.quiz.seen||[]).length>=GATES.length; }
+
+function finishQuiz(){
+  const r=S.quiz.right;
+  const pass=r>=4;
+
+  if(!pass){
+    // 未过关
+    save();
+    $('gr-k').textContent='还 差 一 点';
+    $('gr-medal-in').innerHTML='再<br>来';
+    $('gr-t').innerHTML='答对 4 题才算过关。<br><em>再来一轮。</em>';
+    $('gr-pts-line').innerHTML='这一轮答对 <b>'+r+'</b> 题';
+    $('gr-prog').style.display='none';
+    $('gr-note').innerHTML='老周会换几道题问你。答错不要紧，提示都写在题下面。';
+    const more=$('gr-more'); more.style.display='none';
+    const go=$('gr-go');
+    go.textContent='再来一轮';
+    go.onclick=()=>{ $('grant').classList.remove('on'); $('btn-intro-go').click(); };
+    $('grant').classList.add('on');
+    return;
+  }
+
+  S.quiz.done=true;
+  save();
+
+  const seen=(S.quiz.seen||[]).length;
+  const master=isGatesMaster();
+  const left=Math.max(0,GATES.length-seen);
+
+  // ---- 头部 ----
+  if(master){
+    $('gr-k').textContent='十　闸　通';
+    $('gr-t').innerHTML='十座闸，你都认过了。<br><em>这本护照转正了。</em>';
+    $('gr-medal-in').innerHTML='十闸<br>通';
+    $('gr-pts-line').innerHTML='护照编号 <b>'+S.no+'</b>';
+  }else if(r>=6){
+    $('gr-k').textContent='上　岗　考　核　通　过';
+    $('gr-t').innerHTML='全对。<br><em>老周说你上手最快。</em>';
+    $('gr-medal-in').innerHTML='满分<br>过关';
+    $('gr-pts-line').innerHTML='护照已签发　·　积分 <b>'+S.pts+'</b>';
+  }else{
+    $('gr-k').textContent='上　岗　考　核　通　过';
+    $('gr-t').innerHTML='欢迎上工，<br><em>小小河工。</em>';
+    $('gr-medal-in').innerHTML='见习<br>河工';
+    $('gr-pts-line').innerHTML='护照已签发　·　积分 <b>'+S.pts+'</b>';
+  }
+
+  // ---- 十闸通进度 ----
+  const prog=$('gr-prog');
+  prog.style.display='block';
+  $('gr-prog-n').textContent=seen+' / 10';
+  setTimeout(()=>{ $('gr-prog-fill').style.width=(seen/10*100)+'%'; },320);
+
+  if(master){
+    $('gr-prog-d').innerHTML='<b>十道全过。</b>十座闸的名字、年份、闸型，你都记住了。'+
+      '<br>接下来去河边，那些东西才真正变成你的。';
+  }else{
+    $('gr-prog-d').innerHTML='再答对 <b>'+left+' 道没见过的题</b>，这本护照转正，'+
+      '还能拿到「十闸通」——这是老周给的最高的章。';
+  }
+
+  // ---- 结语 ----
+  if(master){
+    $('gr-note').innerHTML='你已经可以在河边独立干活了。<br><b>去签到，然后做第一次现场观察。</b>';
+  }else if(r>=6){
+    $('gr-note').innerHTML='接下来去河边——签到、抽一张四宫格、做一次观察。<br>'+
+      '<b>不过老周还留了 '+left+' 道题没问你。</b>';
+  }else{
+    $('gr-note').innerHTML='答错的那几道，下次还会问你。<br><b>先去河边走走，比背下来有用。</b>';
+  }
+
+  // ---- 双按钮 ----
+  const more=$('gr-more');
+  const go=$('gr-go');
+
+  if(master){
+    more.style.display='none';
+    go.className='btn btn-gold';
+    go.textContent='进我的护照';
+    go.onclick=goHome;
+  }else{
+    // 主按钮 = 继续答（金色），次按钮 = 先去看护照（描边）
+    more.style.display='block';
+    more.className='btn btn-gold';
+    more.textContent='再答一轮 · 还剩 '+left+' 道';
+    more.onclick=()=>{
+      $('grant').classList.remove('on');
+      QSET=pickQuiz(); QI=0; qCombo=0; S.quiz.right=0;
+      $('q-pts').textContent=S.pts;
+      show('s-quiz'); renderQ();
+    };
+    go.className='btn btn-line on-dark';
+    go.textContent='先去看我的护照';
+    go.onclick=goHome;
+  }
+
+  $('grant').classList.add('on');
+  vibrate([14,60,24]);
+}
+
+function goHome(){
+  $('grant').classList.remove('on');
+  locate(); show('s-home'); renderHome();
+}
+$('gr-go').onclick=goHome;
+
+/* ============================================================
+   护照主页
+   ============================================================ */
+let TAB='home';
+
+function switchTab(t){
+  TAB=t;
+  $$('#tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.tab===t));
+  $$('.tabpage').forEach(p=>p.classList.remove('on'));
+  const el=$('tab-'+t); if(el) el.classList.add('on');
+  const sc=$('hm-scroll'); if(sc) sc.scrollTop=0;
+  renderHome();
+}
+
+function renderHome(){
+  $('hp-name').textContent=S.name||'—';
+  $('hp-no').textContent=S.no||'NO.0000';
+  $('hp-rank').textContent=rankName();
+  $('hp-pts').textContent=S.pts;
+
+  const i=lvIdx(), cur=LV[i];
+  if(cur.next===null){
+    $('hp-prog-lb').textContent='已是最高职级';
+    $('hp-prog-v').textContent=S.pts+' 分';
+    $('hp-fill').style.width='100%';
+  }else{
+    const base=cur.min, span=cur.next-cur.min;
+    const p=Math.max(0,Math.min(1,(S.pts-base)/span));
+    $('hp-prog-lb').textContent='距「'+LV[i+1].n+'」';
+    $('hp-prog-v').textContent=(cur.next-S.pts)+' 分';
+    $('hp-fill').style.width=(p*100).toFixed(1)+'%';
+  }
+
+  const st=$('hp-stamps'); st.innerHTML='';
+  for(let k=0;k<10;k++){
+    const d=document.createElement('i');
+    if(recsOf(k+1).length>0) d.className='on';
+    d.title=GATES[k].name;
+    d.onclick=()=>openStation(k+1);
+    st.appendChild(d);
+  }
+  const lb=document.createElement('span');
+  lb.className='lb';
+  const cnt=GATES.filter(g=>recsOf(g.id).length>0).length;
+  lb.textContent=cnt+' / 10 点位';
+  st.appendChild(lb);
+
+  renderLocPill();
+  const fb=$('tabbar') && $('tabbar').querySelector('[data-tab="field"]');
+  if(fb) fb.classList.toggle('here', isHere());
+  renderTodayMod();
+  renderCheckinMod();
+  renderHuntMod();
+  renderFieldMod();
+  renderGuardMod();
+  renderQuizMod();
+  renderGatesMod();
+  renderExploreMod();
+  renderLevelsMod();
+  renderStatsMod();
+  renderCardsMod();
+  renderFeedMod();
+  renderMyRecsMod();
+  renderMyNotesMod();
+  renderMyRecs();
+  renderDemoBar();
+  renderFieldNote();
+}
+
+/* 「今天可以做什么」——按位置给一件事 */
+function renderTodayMod(){
+  const box=$('mod-next');
+  if(!(box||el)) return;
+  let ic,t,s,d,act,arrow,cls='act';
+  const todayRec=fieldRecs().filter(r=>dkey(new Date(r.ts))===dkey()).length;
+
+  if(!S.quiz.done){
+    ic='考'; t='先考个证';
+    s='上岗考核还没过。十座闸里抽 6 道，答对 4 道就发护照。';
+    d='不用出门，两分钟。考完才能去河边干活。';
+    act='nx-quiz'; arrow='去考核 ›';
+    $('hm-r-today').innerHTML='<span class="pill lock"><span class="dt"></span>待完成</span>';
+  }else if(!isHere()){
+    ic='考'; t='把十座闸答全';
+    s=`题库已答 ${(S.quiz.seen||[]).length} / 10 道。答全拿「十闸通」。`;
+    d='答过的题不会再出现。这一件在任何地方都能做。';
+    act='nx-quiz'; arrow='继续答 ›';
+    $('hm-r-today').innerHTML='<span class="pill away"><span class="dt"></span>不在河边</span>';
+  }else if(!S.ck.dates.includes(dkey())){
+    ic='到'; t='先去签到';
+    s='你已经到河边了。点一下就算到，+30 分。';
+    d='签到会解锁四宫格和现场观察。';
+    act='nx-ck'; arrow='签到 ›';
+    $('hm-r-today').innerHTML='<span class="pill here"><span class="dt"></span>你在河边</span>';
+  }else if(todayRec===0){
+    const g=hereGate();
+    ic='记'; t='做一次现场观察';
+    s=g.task.q;
+    d='这是唯一能进数据集的一层。带点位、带时间、带观测值。';
+    act='nx-field'; arrow='去记一条 ›';
+    $('hm-r-today').innerHTML='<span class="pill here"><span class="dt"></span>还没记</span>';
+  }else{
+    ic='寻'; t='把四宫格拍齐';
+    const got=Object.keys(S.hunt[hereGate().id]||{}).length;
+    s=got>=4?'这张已经集齐了。换个季节再来会变。':`已找到 ${got} / 4 样。`;
+    d='不是找景点，是找「这个季节还在这里的东西」。';
+    act=got>=4?'nx-trail':'nx-hunt'; arrow=got>=4?'看足迹 ›':'去拍 ›';
+    $('hm-r-today').innerHTML='<span class="pill here"><span class="dt"></span>今天已记</span>';
+  }
+
+  box.innerHTML=modCard({ic,t,s,d,cls,act,arrow});
+  const b=$(act);
+  if(b) b.onclick=()=>{
+    if(act==='nx-quiz'){ QSET=pickQuiz(); QI=0; qCombo=0; S.quiz.right=0;
+      $('q-pts').textContent=S.pts; show('s-quiz'); renderQ(); }
+    else if(act==='nx-ck') openCheckin();
+    else if(act==='nx-field') openField(hereGate().id);
+    else if(act==='nx-hunt') openHunt();
+    else if(act==='nx-trail') openTrail();
+  };
+}
+
+function renderFieldNote(){
+  const el=$('field-note');
+  if(!el) return;
+  if(isHere()){
+    el.innerHTML='你已经在 <b>'+hereGate().name+'</b> 附近了。下面四件事都能做。';
+    el.style.background='#EAF3DE';
+    el.style.color='#3B6D11';
+  }else if(S.loc.state==='denied'||S.loc.state==='unsupported'){
+    el.innerHTML='拿不到定位。点「今日」页里的<b>模拟到场</b>，可以看到在河边时的完整界面。';
+    el.style.background='#F4F1E6';
+    el.style.color='#8A7A52';
+  }else{
+    el.innerHTML='这一页需要走到清河边（1 公里内）才会解锁。'+
+      '<b>不用出门的部分在「随便学」。</b>';
+    el.style.background='#F4F1E6';
+    el.style.color='#8A7A52';
+  }
+}
+
+/* 十座闸列表（不用到场） */
+function renderGatesMod(){
+  const box=$('mod-gates');
+  if(!box) return;
+  box.innerHTML=GATES.map(g=>{
+    const n=recsOf(g.id).length;
+    const seen=(S.quiz.seen||[]).includes(g.id);
+    return `<div class="act-row" onclick="openStation(${g.id})">
+      <div class="ic" style="${n>0?'background:#EAF3DE;color:#3B6D11;border-color:#C0DD97':''}">${String(g.id).padStart(2,'0')}</div>
+      <div class="tx">
+        <div class="t">${g.name}${seen?' <span style="font-size:9px;color:#8B9998;font-weight:400">· 已考过</span>':''}</div>
+        <div class="s">${g.type}　·　${g.seg}　·　${n>0?n+' 条记录':'未到场'}</div>
+      </div>
+      <div class="ar">看 ›</div>
+    </div>`;
+  }).join('');
+}
+
+/* 等级 */
+function renderLevelsMod(){
+  const box=$('mod-levels');
+  if(!box) return;
+  const i=lvIdx();
+  box.innerHTML=LV.map((l,k)=>{
+    const done=k<i, cur=k===i;
+    return `<div class="lvl-row${done?' done':''}${cur?' cur':''}">
+      <div class="lvl-dot">${done?'✓':(cur?'●':'')}</div>
+      <div class="lvl-b">
+        <div class="lvl-n">${l.n}</div>
+        <div class="lvl-d">${l.d}</div>
+      </div>
+      <div class="lvl-p">${l.min}+</div>
+    </div>`;
+  }).join('');
+}
+
+/* 统计 */
+function renderStatsMod(){
+  const box=$('mod-stats');
+  if(!box) return;
+  const fr=fieldRecs();
+  const gradeA=fr.filter(r=>r.evidence&&r.evidence.has).length;
+  box.innerHTML=`<div class="stat-grid">
+    <div><div class="v">${S.ck.total}<small>次</small></div><div class="k">到岸</div></div>
+    <div><div class="v">${GATES.filter(g=>recsOf(g.id).length>0).length}<small>/10</small></div><div class="k">点亮点位</div></div>
+    <div><div class="v">${fr.length}<small>条</small></div><div class="k">现场记录</div></div>
+    <div><div class="v">${gradeA}<small>/${fr.length||0}</small></div><div class="k">A 级记录</div></div>
+    <div><div class="v">${S.notes.length}<small>张</small></div><div class="k">自然笔记</div></div>
+    <div><div class="v">${(S.quiz.seen||[]).length}<small>/10</small></div><div class="k">题库已答</div></div>
+  </div>`;
+}
+
+/* 已收录的知识卡 */
+function renderCardsMod(){
+  const box=$('mod-cards');
+  if(!box) return;
+  const cs=(S.cards||[]);
+  const rb=$('hm-r-cards');
+  if(rb) rb.innerHTML=cs.length?'<span class="pill here"><span class="dt"></span>'+cs.length+' / 10</span>':'';
+  if(!cs.length){
+    box.innerHTML='<div class="empty">还没有收录。<br>答对一道题，就会收藏一张。</div>';
+    return;
+  }
+  box.innerHTML=cs.map(id=>{
+    const g=gateById(id); if(!g) return '';
+    return `<div class="card-row" onclick="openCard(${id})">
+      <div class="cd-s">${String(id).padStart(2,'0')}</div>
+      <div class="cd-b">
+        <div class="cd-t">${g.name}</div>
+        <div class="cd-d">${g.k.slice(0,26)}…</div>
+      </div>
+      <div class="cd-a">看 ›</div>
+    </div>`;
+  }).join('');
+}
+
+function openCard(id){
+  const g=gateById(id); if(!g) return;
+  const r=S.recs.find(x=>x.gateId===id && x.seed);
+  $('dt-body').innerHTML=`
+    <div class="kv"><div class="k">点位</div>
+      <div class="v">${g.name} · 点位 ${String(g.id).padStart(2,'0')}　${g.seg}</div></div>
+    <div class="kv"><div class="k">类型</div><div class="v">${g.type}　·　任务来源 ${g.src}</div></div>
+    <div class="kv"><div class="k">累计</div><div class="v">${g.km.toFixed(1)} km</div></div>
+    <div class="dt-note" style="border-left-color:#C9A24B">${g.story}</div>
+    <div class="dt-sec">知识卡</div>
+    <div style="font-size:12.5px;line-height:1.9;color:#4A5A59;padding:4px 0 10px">${g.k}</div>
+    <div class="dt-sec">在这个点位记过的</div>
+    ${S.recs.filter(x=>x.gateId===id).length
+      ? S.recs.filter(x=>x.gateId===id).slice(0,6).map(x=>`<div class="same-row">
+          <div class="tm">${fmtShort(x.ts)}</div>
+          <div class="v">${obsText(x.obs)||x.label}</div>
+          <div class="who">${x.observer.no}</div></div>`).join('')
+      : '<div class="empty" style="text-align:left">还没有记录。</div>'}
+  `;
+  show('s-detail');
+}
+
+/* 河边正在发生（别人的记录） */
+function renderFeedMod(){
+  const box=$('mod-feed');
+  if(!box) return;
+  const feeds=S.recs.filter(r=>r.seed).sort((a,b)=>b.ts-a.ts).slice(0,5);
+  const rb=$('hm-r-feed');
+  if(rb) rb.innerHTML=feeds.length?'<span class="pill away"><span class="dt"></span>'+feeds.length+' 条</span>':'';
+  if(!feeds.length){
+    box.innerHTML='<div class="empty">这条河还没有别人的记录。</div>';
+    return;
+  }
+  box.innerHTML=feeds.map(r=>{
+    const g=gateById(r.gateId);
+    return `<div class="rec-item" onclick="openDetail('${r.id}')">
+      <div class="rec-dot" style="background:${TYPES[r.type]||'#9AA'}"></div>
+      <div class="rec-b">
+        <div class="rec-t">${g?g.name:'—'} · ${obsText(r.obs)||r.label}
+          <span class="gr grade-b">历史</span></div>
+        <div class="rec-s">${r.note||r.type}</div>
+      </div>
+      <div class="rec-meta"><div class="d">${fmtShort(r.ts)}</div></div>
+    </div>`;
+  }).join('');
+}
+
+/* 我的记录 */
+function renderMyRecsMod(){
+  const box=$('mod-myrecs');
+  if(!box) return;
+  const rs=myRecords().slice(0,8);
+  if(!rs.length){
+    box.innerHTML='<div class="empty">还没有记录。<br>去河边走一趟，或者先答几道题。</div>';
+    return;
+  }
+  box.innerHTML=rs.map(r=>{
+    const g=r.gateId?gateById(r.gateId):null;
+    const gr=gradeOf(r);
+    return `<div class="rec-item" onclick="openDetail('${r.id}')">
+      <div class="rec-dot" style="background:${TYPES[r.type]||'#9AA'}"></div>
+      <div class="rec-b">
+        <div class="rec-t">${g?g.name:'—'} · ${obsText(r.obs)||r.label}
+          <span class="gr grade-${gr.toLowerCase()}">${gr}</span></div>
+        <div class="rec-s">${r.note||r.type}</div>
+      </div>
+      <div class="rec-meta"><div class="d">${fmtShort(r.ts)}</div><div class="p">+${r.pts}</div></div>
+    </div>`;
+  }).join('');
+}
+
+/* 我的笔记 */
+function renderMyNotesMod(){
+  const box=$('mod-mynotes');
+  if(!box) return;
+  if(!S.notes.length){
+    box.innerHTML='<div class="empty">还没有自然笔记。<br>「随便学」里可以随手拍一张。</div>';
+    return;
+  }
+  box.innerHTML=S.notes.slice(0,6).map(n=>`<div class="rec-item">
+    <div class="rec-dot" style="background:#6E9498"></div>
+    <div class="rec-b">
+      <div class="rec-t">${n.n}</div>
+      <div class="rec-s">${n.tag}</div>
+    </div>
+    <div class="rec-meta"><div class="d">${fmtShort(n.ts)}</div></div>
+  </div>`).join('');
+}
+
+function renderLocPill(){
+  const el=$('hm-loc');
+  if(S.loc.state==='here'){
+    el.innerHTML='<span class="pill here"><span class="dt"></span>'+
+      (S.loc.demo?'演示 · ':'')+hereGate().name+'</span>';
+  }else if(S.loc.state==='unknown'){
+    el.innerHTML='<span class="pill away"><span class="dt"></span>正在定位</span>';
+  }else if(S.loc.state==='denied'||S.loc.state==='unsupported'){
+    el.innerHTML='<span class="pill away"><span class="dt"></span>未获取定位</span>';
+  }else{
+    const km=S.loc.km;
+    el.innerHTML='<span class="pill away"><span class="dt"></span>'+
+      (km!=null&&km<100?'距河边约 '+km.toFixed(0)+' km':'不在河边')+'</span>';
+  }
+}
+
+function renderDemoBar(){
+  const box=$('hm-demo');
+  if(!box) return;
+  if(isHere()){ box.innerHTML=''; return; }
+  const why = S.loc.state==='denied' ? '浏览器拒绝或无法获取定位。'
+    : S.loc.state==='unsupported' ? '这台设备不支持定位。'
+    : S.loc.state==='unknown' ? '正在定位…'
+    : '你当前不在清河沿线（1 公里内）。';
+  box.innerHTML=`<div class="demo-bar">
+    <div class="tx">${why}<br>下面演示「在河边」时的完整界面。</div>
+    <button id="db-here">模拟到场</button>
+  </div>`;
+  const b=$('db-here'); if(b) b.onclick=demoHere;
+}
+
+function modCard(o){
+  return `<div class="mod ${o.cls||''}" ${o.act?'id="'+o.act+'"':''}>
+    <div class="mod-h">
+      <div class="mod-ic">${o.ic}</div>
+      <div class="mod-tt">
+        <div class="mod-t">${o.t}</div>
+        <div class="mod-s">${o.s}</div>
+      </div>
+      <div class="mod-tag">${o.tag||''}</div>
+    </div>
+    ${o.d?'<div class="mod-d">'+o.d+'</div>':''}
+    ${o.arrow?'<div class="mod-arrow">'+o.arrow+'</div>':''}
+  </div>`;
+}
+
+function renderQuizMod(){
+  const done=S.quiz.done;
+  $('hm-r1').innerHTML=done
+    ? '<span class="pill here"><span class="dt"></span>已通过</span>'
+    : '<span class="pill lock"><span class="dt"></span>待完成</span>';
+  const seen=(S.quiz.seen||[]).length;
+  const master=seen>=GATES.length;
+  const left=Math.max(0,GATES.length-seen);
+  $('mod-quiz').innerHTML=modCard({
+    ic:'考',
+    t: master?'上岗考核 · 十闸通':(done?'上岗考核 · 已通过':'上岗考核'),
+    s: master? '十座闸全认过了。这是最高的一个章。'
+       : (done? `题库已答 ${seen} / 10 道　·　还差 ${left} 道到「十闸通」`
+       : '从十座闸里抽 6 道问你。答对 4 道过关，拿到护照。'),
+    d: master? '接下来去河边——那些知识要变成你的观察才算数。'
+       : (done? '答过的题不再出现。每轮抽到新的，就是往「十闸通」走一步。'
+       : '这是所有孩子的共同起点——不管你在不在河边。'),
+    tag: master?'<span class="pill here"><span class="dt"></span>十闸通</span>':'',
+    cls:'act', act:'go-quiz',
+    arrow: master?'重看知识卡 ›':(done?`再答一轮 ›`:'开始 ›')
+  });
+  const b=$('go-quiz');
+  if(b) b.onclick=()=>{
+    QSET=pickQuiz(); QI=0; qCombo=0;
+    S.quiz.right=0;
+    $('q-pts').textContent=S.pts;
+    show('s-quiz'); renderQ();
+  };
+}
+
+function renderCheckinMod(){
+  const today=dkey();
+  const doneToday=S.ck.dates.includes(today);
+  $('hm-r2').innerHTML = isHere()
+    ? '<span class="pill here"><span class="dt"></span>你在河边</span>'
+    : '<span class="pill lock"><span class="dt"></span>需到场</span>';
+  $('mod-checkin').innerHTML=modCard({
+    ic:'到', t:'到岸签到',
+    s: doneToday ? '今天已经签过了。明天再来。'
+       : (isHere() ? '你已经在河边了，点一下就算到。' : '走到清河边，1 公里内即可签到。'),
+    d:'走出家门本身就是公益。签一次 +30 分，连续每天再加 5。',
+    tag: doneToday ? '<span class="pill here"><span class="dt"></span>已签</span>'
+        : (isHere()?'':'<span class="pill lock"><span class="dt"></span>未到场</span>'),
+    cls: isHere()&&!doneToday?'act':(doneToday?'dim':'dis'),
+    act: isHere()&&!doneToday?'go-ck':null,
+    arrow: isHere()&&!doneToday?'签到 ›':''
+  });
+  const b=$('go-ck'); if(b) b.onclick=openCheckin;
+}
+
+function renderHuntMod(){
+  const g=hereGate();
+  const set=HUNTS[g.id]||HUNTS[3];
+  const got=(S.hunt[g.id]||{});
+  const n=Object.keys(got).length;
+  $('mod-hunt').innerHTML=modCard({
+    ic:'寻', t:set.name,
+    s: n>=4 ? '这一张已经集齐了。'
+       : (n>0 ? `已找到 ${n} / 4　·　还差 ${4-n} 样` : '拍齐四样，格子填满就算完成。'),
+    d: n>=4 ? '整张图会存进护照。换个季节来，这四样东西会变。'
+       : '不是找景点，是找「这个季节还在这里的东西」。拍一张，答出它是什么。',
+    tag: n>=4 ? '<span class="pill here"><span class="dt"></span>已集齐</span>'
+        : (isHere()?'':'<span class="pill lock"><span class="dt"></span>需到场</span>'),
+    cls: isHere()?'act':'dis',
+    act: isHere()?'go-hunt':null,
+    arrow: isHere()?(n>=4?'查看 ›':'开始 ›'):''
+  });
+  const b=$('go-hunt'); if(b) b.onclick=openHunt;
+}
+
+function renderFieldMod(){
+  const g=hereGate();
+  const mine=recsOf(g.id).filter(r=>r.source==='field');
+  const todayRec=mine.filter(r=>dkey(new Date(r.ts))===dkey()).length;
+  $('mod-field').innerHTML=modCard({
+    ic:'记', t:'现场观察 · '+g.name,
+    s: todayRec>0 ? `今天在这里记了 ${todayRec} 条。`
+       : (mine.length>0 ? `这个点位共 ${mine.length} 条记录。今天还没记。` : '这一站有一个任务：'+g.task.q),
+    d: todayRec>0? '同一天可以记多条，每次来看到的不一样。'
+       : '这是唯一能进数据集的层。带点位、带时间、带观测值。',
+    tag: isHere()?'':'<span class="pill lock"><span class="dt"></span>需到场</span>',
+    cls: isHere()?'act':'dis',
+    act: isHere()?'go-field':null,
+    arrow: isHere()?'去记一条 ›':''
+  });
+  const b=$('go-field'); if(b) b.onclick=()=>openField(g.id);
+}
+
+function renderGuardMod(){
+  const r3=$('hm-r3');
+  if(r3) r3.innerHTML='<span class="pill lock"><span class="dt"></span>P1</span>';
+  const ck=S.ck.total>0;
+  $('mod-guard').innerHTML=modCard({
+    ic:'守', t:'认领点位 · 双周复访',
+    s:'留在同一段河边，让观察变成时间序列。',
+    d:ck?'你已经来过了。这一层需要正式版账号，路线图 P1。'
+       :'需要先到岸签到一次，并且要有正式版账号。',
+    tag:'<span class="pill lock"><span class="dt"></span>未开放</span>',
+    cls:'act dim', act:'go-guard', arrow:'看看能做什么 ›'
+  });
+  const b=$('go-guard'); if(b) b.onclick=openGuard;
+}
+
+function renderRecordsMod(){
+  // 已并入 renderFeedMod（探索页的「河边正在发生」）
+}
+
+
+
+function renderExploreMod(){
+  $('mod-explore').innerHTML=modCard({
+    ic:'野', t:'随手拍 · 自然笔记',
+    s:'不需要定位。拍一张，告诉你它在滨水系统里是什么角色。',
+    d:'芦苇、香蒲、垂柳、白鹭……八种最常遇见的。笔记不进数据集，但进护照。',
+    cls:'act', act:'go-explore', arrow:'拍一张 ›'
+  });
+  const b=$('go-explore'); if(b) b.onclick=openExplore;
+}
+
+function renderTrailMod(){
+  const box=$('mod-trail'); if(!box) return;
+  box.innerHTML=modCard({
+    ic:'迹', t:'足迹图',
+    s:'十座闸排成一条河。你做过的站点亮。',
+    d:'不是进度条，是足迹。稀疏是正常的——这条河有 23.6 公里。',
+    cls:'act', act:'go-trail', arrow:'看全河 ›'
+  });
+  const b=$('go-trail'); if(b) b.onclick=openTrail;
+}
+
+function renderMyRecs(){
+  const box=$('hm-recs');
+  if(!box) return;
+  const rs=myRecords().slice(0,5);
+  if(!rs.length){
+    box.innerHTML='<div class="empty">还没有现场记录。<br>去河边走一趟，这里就会开始有东西。</div>';
+    return;
+  }
+  box.innerHTML=rs.map(r=>{
+    const g=r.gateId?gateById(r.gateId):null;
+    const gr=gradeOf(r);
+    return `<div class="rec-item" onclick="openDetail('${r.id}')">
+      <div class="rec-dot" style="background:${TYPES[r.type]||'#9AA'}"></div>
+      <div class="rec-b">
+        <div class="rec-t">${g?g.name:'—'} · ${obsText(r.obs)||r.label}
+          <span class="gr grade-${gr.toLowerCase()}">${gr}</span></div>
+        <div class="rec-s">${r.note||r.type}</div>
+      </div>
+      <div class="rec-meta">
+        <div class="d">${fmtShort(r.ts)}</div>
+        <div class="p">+${r.pts}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ============================================================
+   L1 到岸签到
+   ============================================================ */
+function openCheckin(){
+  const g=hereGate();
+  $('ck-place').textContent=g.name+' · 点位 '+String(g.id).padStart(2,'0')+'　'+g.seg;
+  $('ck-dist').innerHTML='<span>'+(S.loc.demo?'演示模式 · 已模拟到场':'已确认在河边 · 1 公里内')+'</span>';
+
+  const done=S.ck.dates.includes(dkey());
+  $('ck-total').textContent=S.ck.total;
+  $('ck-streak').innerHTML=S.ck.streak+'<small>天</small>';
+  $('ck-km').innerHTML=S.ck.km.toFixed(1)+'<small>km</small>';
+
+  const btn=$('btn-checkin');
+  if(done){
+    $('ck-t').innerHTML='今天<em>已经签过</em>了。';
+    $('ck-note').innerHTML='明天再来。这条河不会跑。<br><b>能来第二次的人，比来一次就走的珍贵得多。</b>';
+    btn.textContent='回护照'; btn.onclick=()=>{ show('s-home'); renderHome(); };
+  }else{
+    $('ck-t').innerHTML='你<em>到了</em>。';
+    $('ck-note').innerHTML='你来这一趟，本身就是公益。<br><b>不是因为记下了什么，是因为这条河边多了一个人。</b>';
+    btn.textContent='签到'; btn.onclick=doCheckin;
+  }
+  show('s-checkin');
+}
+
+function doCheckin(){
+  const g=hereGate();
+  const today=dkey();
+  if(S.ck.dates.includes(today)){ toast('今天已经签过了'); return; }
+
+  if(S.ck.dates.includes(yesterdayKey())) S.ck.streak++;
+  else S.ck.streak=1;
+
+  S.ck.dates.push(today);
+  if(S.ck.dates.length>90) S.ck.dates=S.ck.dates.slice(-90);
+  S.ck.total++;
+  S.ck.km=Math.min(23.6,+(S.ck.km+0.6).toFixed(1));
+  S.ck.lastGate=g.id;
+
+  const bonus=Math.min(25,(S.ck.streak-1)*5);
+  const gain=30+bonus;
+  addPts(gain);
+
+  addRec({gateId:g.id, type:'签到', source:'field',
+    obs:{key:'到岸', value:1, unit:'次', txt:'第 '+S.ck.total+' 次'},
+    label:'到岸签到', note:'连续第 '+S.ck.streak+' 天', pts:gain});
+
+  toast('签到成功　·　+'+gain+' 分'+(bonus?`（连续 ${S.ck.streak} 天，额外 +${bonus}）`:''));
+  sealStamp('到');
+  vibrate(20);
+  setTimeout(()=>{ show('s-home'); renderHome(); },760);
+}
+
+function sealStamp(txt){
+  const s=$('seal'); s.textContent=txt;
+  s.classList.remove('on'); void s.offsetWidth; s.classList.add('on');
+}
+
+/* ============================================================
+   L2 四宫格
+   ============================================================ */
+function openHunt(){
+  if(!isHere()){ toast('需要先到河边'); return; }
+  renderHunt(); show('s-hunt');
+}
+
+function renderHunt(){
+  const g=hereGate();
+  const set=HUNTS[g.id]||HUNTS[3];
+  const got=S.hunt[g.id]||{};
+
+  $('ht-h').textContent=set.name;
+  $('ht-sub').textContent=set.sub+'　·　'+g.name;
+  $('ht-n').textContent=Object.keys(got).length;
+  $('ht-tip').innerHTML='<b>怎么玩</b>　不用点格子。直接<b>拍一张</b>，系统会问你这张照片拍的是什么——答对了，格子就自动填上。';
+
+  const grid=$('ht-grid'); grid.innerHTML='';
+  set.cells.forEach((c,i)=>{
+    const hit=got[c.id];
+    const d=document.createElement('div');
+    d.className='cell'+(hit?' got':'');
+    const motif = MOTIF[c.motif]||MOTIF.stone;
+    d.innerHTML=`
+      <div class="motif" style="background-image:url('${motif}')"></div>
+      <div class="shot" ${hit&&hit.photo?'style="background-image:url('+hit.photo+')"':''}></div>
+      <div class="sealmark">${c.badge}</div>
+      <div class="idx">0${i+1}</div>
+      <div class="nm">${c.nm}</div>
+      <div class="hint">${hit?(hit.photo?'已拍下':'已记录 · 无照片'):c.hint}</div>`;
+    d.onclick=()=>{ if(hit){ toast('这一格已经拍到了'); return; } toast('提示：'+c.hint); };
+    grid.appendChild(d);
+  });
+
+  const all=Object.keys(got).length>=4;
+  const btn=$('btn-shot');
+  btn.textContent=all?'四样都找到了':'拍一张';
+  btn.onclick=()=>{ if(all){ toast('这张已集齐，换季再来会有新的'); return; } openShot(); };
+}
+
+/* ---- 拍照识别流程 ---- */
+function openShot(){
+  SH={photo:null};
+  $('sh-step').textContent='第 一 步　·　拍 一 张';
+  $('sh-h').innerHTML='你在河边，<br>看见什么就拍什么。';
+  $('sh-sub').textContent='不必刻意找。这张图里有的东西，多半就在你眼前。';
+  $('sh-frame').innerHTML=`<div class="ic">◉</div>
+    <div class="lb">拍照 / 从相册选</div>
+    <div class="sub">照片只存在这台设备上</div>
+    <input type="file" accept="image/*" capture="environment" hidden id="sh-file">`;
+  $('sh-frame').onclick=()=>$('sh-file').click();
+  $('sh-file').onchange=onPhoto;
+  $('sh-pick').style.display='none';
+  $('sh-fb').className='sh-feedback';
+  const b=$('btn-sh-ok'); b.disabled=true; b.textContent='确认';
+  b.onclick=()=>{};
+  show('s-shot');
+}
+
+function onPhoto(e){
+  const f=e.target.files[0]; if(!f) return;
+  if(f.size>6*1024*1024){ toast('这张太大了，换一张小点的'); return; }
+  const r=new FileReader();
+  r.onload=ev=>{
+    SH.photo=ev.target.result;
+    const fr=$('sh-frame');
+    fr.innerHTML='<img src="'+SH.photo+'" alt="">';
+    fr.onclick=()=>{ const i=$('sh-file'); if(i) i.click(); };
+    askWhat();
+  };
+  r.readAsDataURL(f);
+}
+
+function askWhat(){
+  const g=hereGate();
+  const set=HUNTS[g.id]||HUNTS[3];
+  const got=S.hunt[g.id]||{};
+
+  $('sh-step').textContent='第 二 步　·　这 是 什 么';
+  $('sh-h').innerHTML='这张照片里，<br>最主要的是哪一样？';
+  $('sh-sub').textContent='答错不要紧，可以重拍。答对了，那一格就自动填上。';
+  $('sh-pick').style.display='block';
+
+  const box=$('sh-opts'); box.innerHTML='';
+  set.cells.forEach((c,i)=>{
+    const isGot=!!got[c.id];
+    const d=document.createElement('div');
+    d.className='kopt'+(isGot?' no':'');
+    d.innerHTML=`<span class="k">${'ABCD'[i]}</span><span class="t">${c.nm}${isGot?'　（已拍到）':''}</span>`;
+    if(!isGot) d.onclick=()=>answerShot(c,d);
+    box.appendChild(d);
+  });
+
+  const none=document.createElement('div');
+  none.className='kopt';
+  none.innerHTML='<span class="k">·</span><span class="t">都不是，我再拍一张</span>';
+  none.onclick=()=>{
+    const fb=$('sh-fb');
+    fb.className='sh-feedback bad on';
+    fb.innerHTML='<b>好，重来。</b>　往这四个东西上再找一个角度。';
+    setTimeout(openShot,900);
+  };
+  box.appendChild(none);
+}
+
+function answerShot(cell,el){
+  const g=hereGate();
+  el.classList.add('ok');
+  $$('#sh-opts .kopt').forEach(o=>{ if(o!==el) o.style.pointerEvents='none'; });
+
+  if(!S.hunt[g.id]) S.hunt[g.id]={};
+  S.hunt[g.id][cell.id]={photo:SH.photo,ts:Date.now()};
+
+  const gain=15;
+  addPts(gain);
+  const n=Object.keys(S.hunt[g.id]).length;
+
+  addRec({gateId:g.id, type:'寻宝', source:'field',
+    obs:{key:'寻宝', value:n, unit:'格', txt:cell.nm},
+    label:'四宫格 · '+cell.nm, note:'第 '+n+' / 4 格',
+    evidence:{has:!!SH.photo, photo:SH.photo}, pts:gain});
+
+  const fb=$('sh-fb');
+  fb.className='sh-feedback good on';
+  if(n>=4){
+    addPts(40);
+    addRec({gateId:g.id, type:'寻宝', source:'field',
+      obs:{key:'寻宝', value:4, unit:'格', txt:'集齐'},
+      label:'四宫格集齐', note:'四样全部匹配', pts:40});
+    fb.innerHTML='<b>四样都找到了。</b>　整张图会存进护照。<br>+15 分，集齐额外 +40 分。';
+  }else{
+    fb.innerHTML='<b>对上了。</b>　'+cell.nm+'　已填进第 '+n+' 格。<br>+15 分';
+  }
+
+  save(); vibrate(18);
+  $('sh-step').textContent='已 记 录';
+  $('sh-h').innerHTML='这一格，<br>填上了。';
+  $('sh-sub').textContent='照片会跟着点位和时间一起存着。下次来，它还在。';
+  $('sh-pick').style.display='none';
+
+  const b=$('btn-sh-ok');
+  b.disabled=false;
+  b.textContent = n>=4?'看我的四宫格':'回到四宫格';
+  b.onclick=()=>{ renderHunt(); show('s-hunt'); };
+}
+
+/* ============================================================
+   L3 现场记录（迁自 demo 的 task）
+   ============================================================ */
+function openField(gateId){
+  const g=gateById(gateId)||hereGate();
+  if(!isHere()){ toast('需要先到河边'); return; }
+  FD={pick:-1, photo:null, gateId:g.id};
+
+  $('fd-pill-gate').textContent=g.name+' · '+String(g.id).padStart(2,'0');
+  $('fd-pill-type').textContent=g.type;
+  $('fd-h').textContent='这一站的任务';
+  $('fd-sub').textContent='任务来自 '+g.src+'　·　完成后计入护照与公开记录';
+  $('fd-q').textContent=g.task.q;
+  $('fd-qsub').textContent=g.task.sub;
+
+  const box=$('fd-opts'); box.innerHTML='';
+  g.task.opts.forEach((o,k)=>{
+    const d=document.createElement('div');
+    d.className='fopt';
+    const ov=o.obs.map(x=>x.key+' '+(x.num!=null?x.num:'—')+' '+x.unit).join('　');
+    d.innerHTML=`<span class="k">${k+1}</span>
+      <span class="tx"><div class="t">${o.t}</div><div class="o">${ov}</div></span>`;
+    d.onclick=()=>pickField(k,d);
+    box.appendChild(d);
+  });
+
+  $('fd-reply').className='fd-reply';
+  $('fd-extra').style.display='none';
+  $('fd-note').value='';
+  $('fd-ph').innerHTML='＋ 拍照<input type="file" accept="image/*" capture="environment" hidden id="fd-file">';
+  $('fd-ph').onclick=()=>$('fd-file').click();
+  const btn=$('btn-field-ok'); btn.disabled=true; btn.textContent='提交这条记录';
+  show('s-field');
+}
+
+function pickField(k,el){
+  const g=gateById(FD.gateId);
+  FD.pick=k;
+  $$('#fd-opts .fopt').forEach((o,i)=>{
+    o.classList.remove('pick','dead');
+    if(i===k) o.classList.add('pick'); else o.classList.add('dead');
+  });
+  $('fd-reply').textContent=g.task.opts[k].r;
+  $('fd-reply').classList.add('on');
+  $('fd-extra').style.display='block';
+  $('btn-field-ok').disabled=false;
+
+  const f=$('fd-file');
+  if(f) f.onchange=ev=>{
+    const file=ev.target.files[0]; if(!file) return;
+    if(file.size>6*1024*1024){ toast('这张太大了，换一张小点的'); return; }
+    const r=new FileReader();
+    r.onload=e2=>{
+      FD.photo=e2.target.result;
+      $('fd-ph').innerHTML='<img src="'+FD.photo+'" alt="">';
+      $('fd-ph-tip').innerHTML='<b>这张记录会是 A 级。</b><br>有照片，研究机构会优先采用。';
+    };
+    r.readAsDataURL(file);
+  };
+}
+
+$('btn-field-ok').onclick=()=>{
+  if(FD.pick<0) return;
+  const g=gateById(FD.gateId);
+  const o=g.task.opts[FD.pick];
+  const note=($('fd-note').value||'').trim();
+  const hasPhoto=!!FD.photo;
+
+  const gain = hasPhoto? 30 : 25;
+  addPts(gain);
+
+  addRec({gateId:g.id, type:g.type, source:'field',
+    obs:o.obs, label:o.t, note:note,
+    evidence:{has:hasPhoto, photo:FD.photo},
+    env:{weather:'—', rain48:'—'}, pts:gain});
+
+  sealStamp('记'); vibrate(24);
+  toast((hasPhoto?'已记录 · A 级':'已记录 · B 级')+'　+'+gain+' 分');
+
+  setTimeout(()=>{ show('s-home'); renderHome(); },760);
+};
+
+/* ============================================================
+   足迹图
+   ============================================================ */
+function openTrail(){
+  renderTrail(); show('s-trail');
+}
+function renderTrail(){
+  const rows=$('tr-rows');
+  rows.querySelectorAll('.tstan').forEach(e=>e.remove());
+
+  const doneCnt=GATES.filter(g=>recsOf(g.id).length>0).length;
+  const kmMax=19.1;
+  const kmNow=GATES.filter(g=>recsOf(g.id).length>0).reduce((m,g)=>Math.max(m,g.km),0);
+  $('tr-km').innerHTML=kmNow.toFixed(1)+'<small>km</small>';
+  $('tr-stamp').innerHTML=doneCnt+'<small>/10</small>';
+  $('tr-rec').innerHTML=fieldRecs().length+'<small>条</small>';
+
+  const hg=S.loc.state==='here'?hereGate().id:null;
+  const y0=8+30, stepY=68;
+
+  GATES.forEach((g,i)=>{
+    const n=recsOf(g.id).length;
+    const d=document.createElement('div');
+    d.className='tstan'+(n>0?' done':'')+(g.id===hg?' here':'');
+    const last=n>0?recsOf(g.id)[0]:null;
+    d.innerHTML=`
+      <div class="nd">${String(g.id).padStart(2,'0')}</div>
+      <div class="info">
+        <div class="nm">${g.name}</div>
+        <div class="meta">${g.type}　·　${g.seg}</div>
+      </div>
+      ${g.id===hg?'<span class="chip">你在</span>':
+        (n>0?`<span class="cnt">${n} 条</span>`:'<span class="cnt">未记</span>')}`;
+    d.onclick=()=>openStation(g.id);
+    rows.appendChild(d);
+  });
+
+  drawRiver(y0,stepY);
+}
+
+function drawRiver(y0,stepY){
+  const n=GATES.length;
+  const H=8+n*stepY+14;
+  const pts=[];
+  for(let i=0;i<n;i++){
+    const x=38+Math.sin(i*1.15)*7;
+    pts.push([x, y0+i*stepY]);
+  }
+  let d=`M ${pts[0][0]} ${pts[0][1]-24}`;
+  d+=` L ${pts[0][0]} ${pts[0][1]}`;
+  for(let i=0;i<n-1;i++){
+    const [x1,y1]=pts[i], [x2,y2]=pts[i+1];
+    const mx=(x1+x2)/2, my=(y1+y2)/2;
+    d+=` Q ${x1} ${my}, ${mx} ${my}`;
+    if(i===n-2) d+=` Q ${x2} ${my}, ${x2} ${y2+24}`;
+  }
+  $('tr-river').outerHTML=`<svg class="tr-river" id="tr-river" width="430" height="${H}" viewBox="0 0 430 ${H}">
+    <path d="${d}" fill="none" stroke="#BFD9E4" stroke-width="22" stroke-opacity=".55" stroke-linecap="round"/>
+    <path d="${d}" fill="none" stroke="#7FAEC4" stroke-width="9" stroke-opacity=".5" stroke-linecap="round"/>
+  </svg>`;
+  $('tr-river').style.cssText='position:absolute;left:0;top:0;pointer-events:none;z-index:0;';
+  $('tr-rows').style.minHeight=H+'px';
+}
+
+/* ============================================================
+   站点详情
+   ============================================================ */
+function openStation(id){
+  const g=gateById(id); if(!g) return;
+  $('st-no').textContent=`第 ${String(g.id).padStart(2,'0')} 站　·　共 10 站　·　${g.seg}`;
+  $('st-nm').textContent=g.name;
+  $('st-meta').textContent=g.type+'　·　任务来源 '+g.src+'　·　累计 '+g.km.toFixed(1)+' km';
+  $('st-story').textContent=g.story;
+  $('st-know').innerHTML=g.k;
+
+  const isHereGate = S.loc.state==='here' && hereGate().id===g.id;
+  const acts=$('st-actions'); acts.innerHTML='';
+
+  // 现场观察
+  const a1=document.createElement('div');
+  a1.className='act-row'+(isHereGate?'':' dis');
+  a1.innerHTML=`<div class="ic">记</div>
+    <div class="tx"><div class="t">现场观察</div>
+      <div class="s">${isHereGate?'可以现在做':'需要到这一站才能做'}</div></div>
+    <div class="ar">${isHereGate?'去记一条 ›':''}</div>`;
+  if(isHereGate) a1.onclick=()=>openField(g.id);
+  acts.appendChild(a1);
+
+  // 四宫格
+  const got=S.hunt[g.id]||{};
+  const a2=document.createElement('div');
+  a2.className='act-row'+(isHereGate?'':' dis');
+  a2.innerHTML=`<div class="ic">寻</div>
+    <div class="tx"><div class="t">四宫格</div>
+      <div class="s">${Object.keys(got).length}/4 格　·　${isHereGate?'可以现在拍':'需要到这一站'}</div></div>
+    <div class="ar">${isHereGate?'去拍 ›':''}</div>`;
+  if(isHereGate) a2.onclick=()=>openHunt();
+  acts.appendChild(a2);
+
+  // 记录
+  const rs=S.recs.filter(r=>r.gateId===g.id);
+  const box=$('st-recs');
+  if(!rs.length){
+    box.innerHTML='<div class="empty">这个点位还没有记录。<br>下一位到这里的河工，会看到你写的第一条。</div>';
+  }else{
+    box.innerHTML=rs.slice(0,8).map(r=>{
+      const gr=gradeOf(r);
+      return `<div class="rec-card" onclick="openDetail('${r.id}')">
+        <div class="d2" style="background:${TYPES[r.type]||'#9AA'}"></div>
+        <div class="bd">
+          <div class="top"><span class="pt">${r.type}</span><span class="tm">${fmtTime(r.ts)}</span></div>
+          <div class="vl">${obsText(r.obs)||r.label}</div>
+          ${r.note?`<div class="nt">“${r.note}”</div>`:''}
+          <div class="who">${r.observer.no}${r.seed?' · 历史':''}　<span class="gr grade-${gr.toLowerCase()}">${gr}</span></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  show('s-station');
+}
+
+/* ============================================================
+   记录流
+   ============================================================ */
+let RCRTAB='point', RCPOINT=null;
+
+function openRecords(){
+  RCRTAB='point'; RCPOINT=null;
+  renderRecords(); show('s-records');
+}
+
+function renderRecords(){
+  $$('#rc-tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab===RCRTAB));
+  const body=$('rc-body');
+  const all=S.recs;
+
+  if(RCRTAB==='point' && RCPOINT==null){
+    $('rc-h').textContent='点位';
+    $('rc-total').textContent=all.filter(r=>r.gateId).length;
+    body.innerHTML=GATES.map(g=>{
+      const rs=all.filter(r=>r.gateId===g.id);
+      const first=rs[0];
+      return `<div class="point-row${rs.length?' has':''}" onclick="openPoint(${g.id})">
+        <div class="d2"></div>
+        <div class="bd">
+          <div class="top"><span class="pt">${g.name}</span>
+            <span class="tm">${rs.length?rs.length+' 条':'暂无'}</span></div>
+          <div class="vl">${rs.length?obsText(first.obs)||first.label:'还没有记录——第一条等你来写'}</div>
+          <div class="who">点位 ${String(g.id).padStart(2,'0')}　${g.type}　${g.seg}</div>
+        </div>
+      </div>`;
+    }).join('');
+    $('rc-all').style.display='none';
+    return;
+  }
+
+  let list=all.slice();
+  if(RCRTAB==='point' && RCPOINT!=null){
+    const g=gateById(RCPOINT);
+    $('rc-h').textContent=g.name;
+    list=list.filter(r=>r.gateId===RCPOINT);
+    $('rc-all').style.display='block';
+    $('rc-all').textContent='‹ 返回全部点位';
+    $('rc-all').onclick=()=>{ RCPOINT=null; renderRecords(); };
+  }else if(RCRTAB==='time'){
+    $('rc-h').textContent='按时间';
+    list.sort((a,b)=>b.ts-a.ts);
+    $('rc-all').style.display='none';
+  }else if(RCRTAB==='mine'){
+    $('rc-h').textContent='我的';
+    list=list.filter(r=>!r.seed);
+    $('rc-all').style.display='none';
+  }
+  $('rc-total').textContent=list.length;
+
+  if(!list.length){
+    body.innerHTML='<div class="empty">这里还是空的。<br>去河边记一条，它就会出现在这里。</div>';
+    return;
+  }
+  body.innerHTML=list.map(r=>{
+    const g=r.gateId?gateById(r.gateId):null;
+    const gr=gradeOf(r);
+    return `<div class="rec-card" onclick="openDetail('${r.id}')">
+      <div class="d2" style="background:${TYPES[r.type]||'#9AA'}"></div>
+      <div class="bd">
+        <div class="top"><span class="pt">${g?g.name+' · '+String(g.id).padStart(2,'0'):'自然笔记'}</span>
+          <span class="tm">${fmtTime(r.ts)}</span></div>
+        <div class="vl">${obsText(r.obs)||r.label}</div>
+        ${r.note?`<div class="nt">“${r.note}”</div>`:''}
+        <div class="who">${r.observer.no}${r.seed?' · 历史':''}${r.source==='explore'?' · 探索':''}　<span class="gr grade-${gr.toLowerCase()}">${gr}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openPoint(id){ RCPOINT=id; renderRecords(); }
+
+$$('#rc-tabs button').forEach(b=>{
+  b.onclick=()=>{ RCRTAB=b.dataset.tab; RCPOINT=null; renderRecords(); };
+});
+
+$('rc-back').onclick=()=>{ show('s-home'); renderHome(); };
+
+/* ============================================================
+   记录详情
+   ============================================================ */
+function openDetail(id){
+  const r=S.recs.find(x=>x.id===id);
+  if(!r) return;
+  const g=r.gateId?gateById(r.gateId):null;
+
+  const same=S.recs.filter(x=>x.gateId===r.gateId && x.id!==r.id && x.obs && r.obs &&
+    ((Array.isArray(x.obs)?x.obs[0].key:x.obs.key)===(Array.isArray(r.obs)?r.obs[0].key:r.obs.key)))
+    .sort((a,b)=>b.ts-a.ts).slice(0,6);
+
+  const obsArr=Array.isArray(r.obs)?r.obs:(r.obs?[r.obs]:[]);
+  const gr=gradeOf(r);
+
+  $('dt-body').innerHTML=`
+    <div class="kv"><div class="k">点位</div>
+      <div class="v">${g?g.name+' · 点位 '+String(g.id).padStart(2,'0'):'—'}</div></div>
+    <div class="kv"><div class="k">时间</div><div class="v">${fmtTime(r.ts)}</div></div>
+    <div class="kv"><div class="k">类型</div><div class="v">${r.type}</div></div>
+    <div class="kv"><div class="k">观测</div>
+      <div class="v">${obsArr.map(o=>o.key+'：'+o.txt+(o.num!=null?'<span class="unit">（'+o.num+' '+o.unit+'）</span>':'')).join('<br>')||r.label}</div></div>
+    <div class="kv"><div class="k">证据</div>
+      <div class="v">${r.evidence.has?'照片 1 张（已剥离位置）':'无照片 · B 级'}</div></div>
+    <div class="kv"><div class="k">环境</div>
+      <div class="v">${r.env?(r.env.weather+' · 前 48 小时 '+r.env.rain48):'未记录'}</div></div>
+    <div class="kv"><div class="k">观察者</div>
+      <div class="v">${r.observer.no} · ${r.observer.rank}${r.seed?'　<span style="color:#8B9998">（历史记录）</span>':''}</div></div>
+    <div class="kv"><div class="k">许可</div><div class="v">${r.license}</div></div>
+    <div class="kv"><div class="k">来源</div>
+      <div class="v">${r.source==='explore'?'自由探索（不进数据集）':'现场出勤（进数据集）'}</div></div>
+    <div class="kv"><div class="k">数据等级</div>
+      <div class="v"><span class="gr grade-${gr.toLowerCase()}">${gr} 级</span>　${gr==='A'?'机构可直接引用':'需人工复核后引用'}</div></div>
+    ${r.evidence.photo?`<img class="dt-photo" src="${r.evidence.photo}" alt="">`:''}
+    ${r.note?`<div class="dt-note">“${r.note}”</div>`:''}
+    <div class="dt-sec">同一点位的同一项</div>
+    ${same.length?same.map(x=>`<div class="same-row">
+      <div class="tm">${fmtShort(x.ts)}</div>
+      <div class="v">${obsText(x.obs)}</div>
+      <div class="who">${x.observer.no}</div>
+    </div>`).join(''):'<div class="empty" style="text-align:left">还没有别的记录。<br>第一条永远是最难的。</div>'}
+    ${same.length>=2?`<div class="dt-note" style="border-left-color:#5B8FA8">这一项已经有 ${same.length+1} 条记录，
+      跨越 ${Math.max(1,Math.round((r.ts-Math.min(...same.map(x=>x.ts)))/86400000))} 天。
+      这就是「时间序列」的样子。</div>`:''}
+  `;
+  show('s-detail');
+}
+$('dt-back').onclick=()=>{ show('s-records'); renderRecords(); };
+$('dt-close').onclick=()=>{ show('s-records'); renderRecords(); };
+
+/* ============================================================
+   自然笔记
+   ============================================================ */
+function openExplore(){
+  EX={photo:null, state:'idle'};
+  renderExplore(); show('s-explore');
+}
+function renderExplore(){
+  const st=$('ex-state'), cands=$('ex-cands'), card=$('ex-card'), shoot=$('ex-shoot');
+  cands.innerHTML=''; card.innerHTML=''; card.classList.remove('on');
+  const todayCnt=S.notes.filter(n=>dkey(new Date(n.ts))===dkey()).length;
+
+  if(EX.state==='idle'){
+    st.textContent='今天已有 '+todayCnt+' 张自然笔记　·　共 '+S.notes.length+' 张';
+    shoot.innerHTML=`<div class="ic">◉</div>
+      <div class="lb">拍照 / 从相册选</div>
+      <input type="file" accept="image/*" capture="environment" hidden id="ex-file">`;
+    shoot.onclick=()=>$('ex-file').click();
+    $('ex-file').onchange=e=>{
+      const f=e.target.files[0]; if(!f) return;
+      const rd=new FileReader();
+      rd.onload=ev=>{
+        EX.photo=ev.target.result; EX.state='pick'; renderExplore();
+      };
+      rd.readAsDataURL(f);
+    };
+  }else if(EX.state==='pick'){
+    st.textContent='看起来像下面这些，是哪一个？';
+    shoot.innerHTML=EX.photo?`<img src="${EX.photo}" alt="">`:'';
+    KB.forEach(k=>{
+      const b=document.createElement('button'); b.textContent=k.n;
+      b.onclick=()=>{ EX.state='done'; EX.pick=k; renderExplore(); };
+      cands.appendChild(b);
+    });
+  }else if(EX.state==='done'){
+    const k=EX.pick;
+    st.textContent='这一张，记下了。';
+    shoot.innerHTML=EX.photo?`<img src="${EX.photo}" alt="">`:'';
+    card.classList.add('on');
+    card.innerHTML=`<div class="tag">${k.tag}</div>
+      <div class="nm">${k.n}</div>
+      <div class="row"><div class="l">一</div><div class="t">${k.f1}</div></div>
+      <div class="row"><div class="l">二</div><div class="t">${k.f2}</div></div>
+      <div class="row"><div class="l">三</div><div class="t">${k.f3}</div></div>`;
+    $('ex-n').textContent=S.notes.length;
+    $('ex-notes').onclick=showNotes;
+  }
+  $('ex-n').textContent=S.notes.length;
+}
+
+$('ex-back').onclick=()=>{ show('s-home'); renderHome(); };
+
+function saveNote(){
+  const k=EX.pick; if(!k) return;
+  addPts(10);
+  S.notes.unshift({n:k.n,tag:k.tag,photo:EX.photo,ts:Date.now()});
+  if(S.notes.length>30) S.notes.length=30;
+  addRec({gateId:null, type:'笔记', source:'explore',
+    obs:{key:'自然笔记', value:1, unit:'张', txt:k.n},
+    label:k.n+' · '+k.tag, note:'', evidence:{has:!!EX.photo,photo:EX.photo}, pts:10});
+  toast('自然笔记 +1　·　+10 分');
+  save(); renderExplore();
+}
+
+// 在 done 状态点卡片即保存
+$('ex-card').onclick=()=>{ if(EX.state==='done') saveNote(); };
+
+function showNotes(){
+  const r=S.notes;
+  if(!r.length){ toast('还没有自然笔记'); return; }
+  const s=$('ex-state');
+  s.textContent='我的自然笔记　·　'+r.length+' 张';
+  $('ex-shoot').innerHTML='';
+  $('ex-cands').innerHTML='';
+  $('ex-card').classList.add('on');
+  $('ex-card').innerHTML='<div class="tag">我 的 笔 记</div>'+
+    r.slice(0,10).map(n=>`<div class="row">
+      <div class="l">·</div>
+      <div class="t"><b>${n.n}</b>　${n.tag}<br><span style="color:#8FB0B1;font-size:11px">${fmtTime(n.ts)}</span></div>
+    </div>`).join('');
+}
+
+/* ============================================================
+   守点
+   ============================================================ */
+function openGuard(){
+  if(S.ck.total>0){
+    $('gu-lock-t').innerHTML='你已经来过河边了。这一层需要<b>正式版的账号体系</b>，是路线图 P1 的内容，目前只做展示。';
+  }
+  show('s-guard');
+}
+$('gu-back').onclick=()=>{ show('s-home'); renderHome(); };
+$('tr-guard').onclick=openGuard;
+
+/* ============================================================
+   Tab 与导航
+   ============================================================ */
+$$('#tabbar button').forEach(b=>{
+  b.onclick=()=>{
+    switchTab(b.dataset.tab);
+    renderHome();
+  };
+});
+const gTrail=$('go-trail'); if(gTrail) gTrail.onclick=openTrail;
+
+$('ht-back').onclick=()=>{ show('s-home'); renderHome(); };
+$('ck-back').onclick=()=>{ show('s-home'); renderHome(); };
+$('sh-back').onclick=()=>{ renderHunt(); show('s-hunt'); };
+$('fd-back').onclick=()=>{ show('s-home'); renderHome(); };
+$('tr-back').onclick=()=>{ show('s-home'); renderHome(); };
+$('st-back').onclick=()=>{ openTrail(); };
+$('rc-back').onclick=()=>{ show('s-home'); renderHome(); };
+$('up-close').onclick=()=>{ $('up').classList.remove('on'); renderHome(); };
+
+$('btn-reset').onclick=()=>{
+  if(!confirm('清空这台设备上的护照与记录？此操作不可撤销。')) return;
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  S={name:'',no:'',pts:0,quiz:{done:false,right:0,seen:[]},
+     ck:{dates:[],streak:0,total:0,km:0,lastGate:null},
+     hunt:{},notes:[],cards:[],recs:[],loc:{state:'away',gate:null,km:null,demo:false},claim:null};
+  inName.value=''; agree.classList.remove('sel'); chkReg();
+  S.recs=seedRecords();
+  show('s-boot');
+};
+
+/* 键盘：1-4 选项，Enter 下一题 */
+document.addEventListener('keydown',e=>{
+  if($('s-quiz').classList.contains('on')){
+    if(e.key>='1'&&e.key<='4'){
+      const opts=$$('#q-opts .opt'), i=+e.key-1;
+      if(opts[i]&&!opts[i].classList.contains('dead')) opts[i].click();
+    }
+    if(e.key==='Enter'&&!$('btn-next').disabled) $('btn-next').click();
+    return;
+  }
+  if($('s-field').classList.contains('on')){
+    if(e.key>='1'&&e.key<='3'){
+      const opts=$$('#fd-opts .fopt'), i=+e.key-1;
+      if(opts[i]) opts[i].click();
+    }
+    if(e.key==='Enter'&&!$('btn-field-ok').disabled) $('btn-field-ok').click();
+  }
+});
+
+/* ============================================================
+   深链
+   #boot #register #intro #quiz?q=2 #home #checkin #hunt #field?g=3
+   #trail #station?id=3 #records #explore #guard
+   加 ?demo=here / ?demo=away / ?name=
+   ============================================================ */
+(function(){
+  const raw=location.hash.replace('#','');
+  if(!raw){ boot(); return; }
+  const parts=raw.split('?');
+  const h=parts[0];
+  const P=new URLSearchParams(parts[1]||'');
+  const nm=P.get('name');
+
+  const ready=()=>{
+    const has=load();
+    if(!has){
+      S.name=nm||'小石头';
+      S.no='NO.0371';
+      S.quiz={done:true,right:6,seen:[1,2,3,4,5,6]};
+      S.pts=parseInt(P.get('pts')||'220',10);
+      save();
+    }else if(nm){ S.name=nm; save(); }
+
+    if(P.get('demo')==='here') S.loc={state:'here',gate:GATES[2],km:0.05,demo:true};
+    else if(P.get('demo')==='away') S.loc={state:'away',gate:null,km:8.4,demo:true};
+
+    S.recs=seedRecords().concat(S.recs.filter(r=>!r.seed));
+
+    const map={
+      boot:()=>show('s-boot'),
+      register:()=>{ show('s-register'); chkReg(); },
+      intro:()=>show('s-intro'),
+      quiz:()=>{
+        QSET=pickQuiz();
+        QI=Math.max(0,Math.min(QSET.length-1,parseInt(P.get('q')||'0',10)));
+        qCombo=0; $('q-pts').textContent=S.pts;
+        show('s-quiz'); renderQ();
+      },
+      home:()=>{
+        if(S.loc.state!=='here'&&P.get('demo')!=='away') locate();
+        const tb=P.get('tab');
+        if(tb) switchTab(tb);
+        show('s-home'); renderHome();
+      },
+      checkin:()=>{
+        if(S.loc.state!=='here') S.loc={state:'here',gate:GATES[2],km:0.05,demo:true};
+        renderHome(); openCheckin();
+      },
+      hunt:()=>{
+        if(S.loc.state!=='here') S.loc={state:'here',gate:GATES[2],km:0.05,demo:true};
+        renderHome(); openHunt();
+      },
+      field:()=>{
+        if(S.loc.state!=='here') S.loc={state:'here',gate:GATES[2],km:0.05,demo:true};
+        const gid=parseInt(P.get('g')||'3',10);
+        S.loc.gate=gateById(gid)||GATES[2];
+        renderHome(); openField(gid);
+      },
+      trail:()=>{ openTrail(); },
+      station:()=>{
+        const gid=parseInt(P.get('id')||'3',10);
+        if(S.loc.state!=='here') S.loc={state:'away',gate:null,km:8,demo:true};
+        openStation(gid);
+      },
+      records:()=>{ openRecords(); },
+      explore:()=>{ openExplore(); },
+      guard:()=>{ openGuard(); }
+    };
+    (map[h]||map.home)();
+  };
+  if(document.readyState==='complete') ready(); else window.addEventListener('load',ready);
+})();
+
+</script>
+</body>
+</html>
