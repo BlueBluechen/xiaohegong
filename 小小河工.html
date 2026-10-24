@@ -67,14 +67,114 @@ body{
 .bt-rule{width:32px;height:1px;background:var(--gold);margin:18px 0 24px;}
 .bt-h1{font-family:"Songti SC",serif;font-size:52px;font-weight:400;color:#F3F0E7;letter-spacing:7px;line-height:1.2;}
 .bt-sub{font-family:"Songti SC",serif;font-size:16px;letter-spacing:3px;color:var(--gold-l);margin-top:12px;}
-.bt-quote{margin-top:26px;font-size:13px;line-height:2.05;color:#A9C3C1;max-width:300px;}
+.bt-quote{font-size:15px;line-height:1.95;color:#A9C3C1;letter-spacing:1.2px;
+  padding:0 26px;margin:0 0 6px;}
+.bt-quote span{color:var(--gold-l);}
+
+/* 封面主视觉：一条河。flex:1 让它吃掉中间所有空白，
+   河占满还是缩小都由屏幕高度决定，不用写死高度。 */
+.bt-river{flex:1 1 auto;min-height:0;display:flex;align-items:center;
+  padding:6px 0 0;overflow:hidden;}
+.bt-river svg{width:100%;height:100%;display:block;}
+
+/* ============================================================
+   护照页
+   ------------------------------------------------------------
+   纸质感靠三件事：暖白纸、极细的金线、一个印章。
+   不要用阴影做大卡片（那是 UI 卡片，不是证件）。
+   ============================================================ */
+/* 注意：这里不能写 display —— ID 选择器优先级高于 .screen{display:none}，
+   一写 display:flex 这一页就永远显示，叠在别的页面底下。 */
+#s-passport{background:#072F35;}
+.pp-top{padding:44px 26px 0;flex:0 0 auto;}
+.pp-k{font-size:9px;letter-spacing:2.6px;color:#7E9B9B;}
+.pp-h1{font-family:"Songti SC",serif;font-size:27px;letter-spacing:8px;
+  color:#F3F0E7;line-height:1.45;margin-top:14px;}
+
+.pp-card{
+  position:relative;margin:22px 26px 0;flex:1 1 auto;min-height:0;
+  background:#F7F4EC;padding:24px 20px 14px;
+  display:flex;flex-direction:column;
+  box-shadow:0 10px 26px rgba(0,0,0,.34);
+  animation:ppIn .7s cubic-bezier(.2,.9,.25,1) both;
+}
+@keyframes ppIn{
+  from{opacity:0;transform:translateY(20px) rotate(-1.2deg);}
+  to{opacity:1;transform:none;}
+}
+/* 纸张暗纹：极淡的斜线，像水印纸 */
+.pp-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(135deg,
+    rgba(150,130,90,.045) 0 1px, transparent 1px 7px);
+}
+/* 印章位置：原来在右上角，正好压住「姓名」那行的名字末尾。
+   挪到水脉右下的空白处 —— 那里本来就没内容，盖上去反而像真的盖了章。 */
+.pp-seal{
+  position:absolute;right:20px;bottom:56px;
+  width:46px;height:46px;border-radius:50%;
+  border:1.5px solid rgba(181,67,47,.48);color:rgba(181,67,47,.62);
+  font-family:"Songti SC",serif;font-size:11px;line-height:1.15;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  letter-spacing:1px;transform:rotate(-8deg);
+  pointer-events:none;
+}
+.pp-row{display:flex;align-items:baseline;gap:12px;padding:9px 0;
+  border-bottom:1px solid rgba(58,58,58,.1);}
+.pp-lb{font-size:9px;letter-spacing:2px;color:#9B8270;flex:0 0 44px;}
+.pp-vl{font-family:"Songti SC",serif;font-size:17px;letter-spacing:2px;color:#2F3330;}
+.pp-mono{font-family:ui-monospace,Menlo,monospace;font-size:14px;letter-spacing:1.6px;}
+
+.pp-river{margin:10px 0 0;flex:1 1 auto;min-height:0;display:flex;
+  flex-direction:column;justify-content:center;opacity:.92;}
+.pp-river svg{width:118%;margin-left:-9%;}
+.pp-river svg{width:100%;height:auto;display:block;}
+.pp-river-lb{display:flex;justify-content:space-between;
+  font-size:8px;letter-spacing:1.4px;color:#A89870;margin-top:2px;}
+
+.pp-foot{display:flex;justify-content:space-between;
+  font-size:8px;letter-spacing:1.2px;color:#A89870;margin-top:10px;}
+
+.pp-tip{padding:14px 26px 0;flex:0 0 auto;text-align:center;
+  font-size:10px;line-height:1.9;color:#5C8388;}
+.pp-bot{padding:16px 26px 34px;flex:0 0 auto;}
+
+/* ============================================================
+   岔路页
+   ============================================================ */
+#s-fork{background:#072F35;}
+.fk-top{padding:52px 26px 0;flex:0 0 auto;}
+.fk-k{font-size:9px;letter-spacing:3px;color:#C9A24B;}
+.fk-h1{font-family:"Songti SC",serif;font-size:24px;letter-spacing:3px;
+  color:#F3F0E7;margin-top:16px;line-height:1.5;}
+.fk-d{font-size:12px;line-height:1.9;color:#7E9B9B;margin-top:10px;}
+
+.fk-list{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
+  justify-content:center;gap:12px;padding:20px 26px;}
+.fk-item{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(11,71,78,.5);border:1px solid rgba(201,162,75,.2);
+  padding:16px 14px;cursor:pointer;transition:.16s;
+}
+.fk-item:active{transform:scale(.985);background:rgba(11,71,78,.78);}
+.fk-item.on-pick{border-color:rgba(201,162,75,.7);}
+.fk-ic{
+  flex:0 0 40px;width:40px;height:40px;border-radius:1px;
+  border:1px solid rgba(201,162,75,.34);
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Songti SC",serif;font-size:17px;color:#C9A24B;
+}
+.fk-tx{flex:1 1 auto;min-width:0;}
+.fk-t{font-family:"Songti SC",serif;font-size:16px;letter-spacing:2px;color:#F3F0E7;}
+.fk-s{font-size:11px;line-height:1.8;color:#8FB0AE;margin-top:5px;}
+.fk-m{font-size:9px;letter-spacing:.6px;color:#5C8388;margin-top:6px;}
+.fk-ar{flex:0 0 auto;color:#C9A24B;font-size:20px;opacity:.7;}
+.fk-bot{padding:0 26px 34px;flex:0 0 auto;}
+
+/* 封面页脚：一行小字，比按钮弱 */
+.bt-foot{text-align:center;font-size:9.5px;letter-spacing:1.6px;
+  color:#5C8388;margin-top:14px;line-height:1.9;}
 .bt-quote b{color:#F3F0E7;font-weight:500;}
-.bt-agenda{flex:1;padding:24px 26px 0;display:flex;flex-direction:column;justify-content:center;gap:0;}
-.ag{display:grid;grid-template-columns:74px 1fr;gap:13px;padding:11px 0;}
-.ag .k{font-size:9.5px;letter-spacing:1.2px;color:#5C8388;padding-top:3px;white-space:nowrap;}
-.ag .t{font-size:12.5px;color:#DCEAE8;line-height:1.55;}
-.ag .t b{color:var(--gold-l);font-weight:500;}
-.ag .t i{font-style:normal;font-size:10.5px;color:#7FA6A4;display:block;margin-top:1px;}
 .bt-bot{padding:18px 26px 34px;}
 
 /* ================= 建档 ================= */
@@ -82,7 +182,10 @@ body{
 .gd-h1{font-family:"Songti SC",serif;font-size:27px;letter-spacing:1.5px;line-height:1.45;margin:8px 0 12px;}
 .gd-h1 em{font-style:normal;color:var(--teal);}
 .gd-desc{font-size:13px;line-height:1.95;color:var(--body);}
-.gd-body{flex:1;padding:24px 26px 0;}
+/* 建档页内容只有三个元素（名字、勾选、隐私），
+   flex:1 会把输入框拉到页面正中、下面空一大片。
+   改成 flex:0 让它贴着标题自然往下排，空白留给底部按钮区。 */
+.gd-body{flex:0 0 auto;padding:32px 26px 0;}
 .field{margin-bottom:18px;}
 .field-l{font-size:11px;letter-spacing:2px;color:var(--mut);margin-bottom:8px;}
 .field-i{
@@ -100,7 +203,7 @@ body{
 .agree .tx{font-size:12.5px;line-height:1.7;color:var(--body);}
 .privacy{font-size:11px;line-height:1.85;color:var(--mut);padding-left:13px;border-left:2px solid var(--line);}
 .privacy b{color:var(--teal);font-weight:500;}
-.gd-bot{padding:18px 26px 30px;}
+.gd-bot{padding:18px 26px 30px;margin-top:auto;}
 
 /* ================= 老周开场 ================= */
 #s-intro{background:var(--dark);}
@@ -917,63 +1020,197 @@ body{
     <circle cx="372" cy="116" r="94" fill="none" stroke="#C9A24B" stroke-opacity=".06"/>
   </svg>
   <div class="bt-top">
-    <div class="bt-mark">AI+ 公民河流教育计划</div>
+    <div class="bt-mark">站　点　北　京　清　河</div>
     <div class="bt-rule"></div>
     <div class="bt-h1">小小<br>河工</div>
-    <div class="bt-sub">走一趟，替这条河记十件事</div>
-    <div class="bt-quote">
-      这条河不需要更多赞美。<br>
-      它需要的是——<b>同一个点位，<br>被同一个孩子，看过十二次。</b>
-    </div>
+    <div class="bt-sub">AI+ 公民河流教育计划</div>
   </div>
-  <div class="bt-agenda">
-    <div class="ag"><div class="k">在任何地方</div>
-      <div class="t">答几道题，领一本护照<b>　零门槛</b>
-        <i>不在河边也能开始</i></div></div>
-    <div class="ag"><div class="k">走到河边</div>
-      <div class="t">签到、抽四宫格、做一次观察<b>　到场即有奖</b>
-        <i>走出家门本身就是公益</i></div></div>
-    <div class="ag"><div class="k">留下来</div>
-      <div class="t">认领一个点位，双周回来<b>　深度参与</b>
-        <i>让观察变成时间序列</i></div></div>
+
+  <!-- 一条河：十座闸排成水脉，最低处红点是起点。
+       这张图就是封面主视觉，也是护照和足迹图的同一个母题。 -->
+  <div class="bt-river">
+    <svg viewBox="0 0 430 340" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="btr1" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="#7FAEC4" stop-opacity=".18"/>
+          <stop offset=".5" stop-color="#BFD9E4" stop-opacity=".58"/>
+          <stop offset="1" stop-color="#7FAEC4" stop-opacity=".16"/>
+        </linearGradient>
+        <linearGradient id="btr2" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="#C9A24B" stop-opacity=".05"/>
+          <stop offset=".5" stop-color="#BFD9E4" stop-opacity=".34"/>
+          <stop offset="1" stop-color="#C9A24B" stop-opacity=".05"/>
+        </linearGradient>
+      </defs>
+      <path d="M-30 300 C 60 286, 96 236, 150 214 S 250 196, 286 150 S 350 96, 460 74"
+            fill="none" stroke="url(#btr1)" stroke-width="54" stroke-linecap="round"/>
+      <path d="M-30 300 C 60 286, 96 236, 150 214 S 250 196, 286 150 S 350 96, 460 74"
+            fill="none" stroke="url(#btr2)" stroke-width="15" stroke-linecap="round"/>
+      <g fill="#0A444B" stroke="#BFD9E4" stroke-width="3">
+        <circle cx="52"  cy="288" r="7"/>
+        <circle cx="96"  cy="252" r="7"/>
+        <circle cx="132" cy="222" r="7"/>
+        <circle cx="170" cy="212" r="7"/>
+        <circle cx="212" cy="200" r="7"/>
+        <circle cx="248" cy="178" r="7"/>
+        <circle cx="282" cy="146" r="7"/>
+        <circle cx="316" cy="120" r="7"/>
+        <circle cx="352" cy="98"  r="7"/>
+        <circle cx="392" cy="80"  r="7"/>
+      </g>
+      <circle cx="24" cy="300" r="13" fill="#B5432F" opacity=".95"/>
+      <circle cx="24" cy="300" r="22" fill="#B5432F" opacity=".16"/>
+    </svg>
   </div>
+
+  <div class="bt-quote">
+    一条河不需要更多赞美。<br>
+    <span>它需要更多记录。</span>
+  </div>
+
   <div class="bt-bot">
     <button class="btn btn-gold" id="btn-boot">开始</button>
-    <!-- 全新访客的第二条路。
-         推介会上扫码的人还没打算注册，但可能愿意玩一下拓印。
-         把入口放在开场页，才真的「零门槛」；放在注册之后就不成立了。 -->
-    <button class="btn btn-line" id="btn-boot-stamp" style="margin-top:9px">先印一张拓印卡试试</button>
-    <div style="margin-top:11px;text-align:center;font-size:10px;letter-spacing:2px;color:#5C8388">
-      23.6 公里　·　十座水闸　·　四条支流
-    </div>
+    <div class="bt-foot">23.6 公里　·　十座水闸　·　四条支流　·　沿岸九十余种鸟类</div>
   </div>
 </div>
 
 <!-- 建档 -->
 <div class="screen" id="s-register">
   <div class="gd-head">
-    <div class="eyebrow">第一步　·　建档</div>
-    <h1 class="gd-h1">这本护照是给孩子的，<br>所以<em>请家长来填</em>。</h1>
-    <p class="gd-desc">按现行规定，未成年人的账号需要监护人代为注册。
-      这一页由家长完成，孩子只管在后面答题。</p>
+    <div class="eyebrow">第　一　步</div>
+    <h1 class="gd-h1">你怎么称呼？</h1>
   </div>
   <div class="gd-body">
     <div class="field">
-      <div class="field-l">孩子怎么称呼</div>
-      <input class="field-i" id="in-name" maxlength="8" placeholder="写个小名就行，比如「小石头」" autocomplete="off">
+      <input class="field-i" id="in-name" maxlength="8" placeholder="小名就行，比如「小石头」" autocomplete="off">
     </div>
     <div class="agree" id="agree">
       <div class="bx"></div>
       <div class="tx">我是孩子的家长或监护人，代其注册这本护照</div>
     </div>
     <div class="privacy">
-      我们只保存 <b>这个昵称</b> 和 <b>一个护照编号</b>。<br>
-      不收集孩子的真实姓名、生日、手机号。<br>
-      定位仅用于判断是否到达河边，不上传轨迹。
+      只存 <b>这个昵称</b> 和 <b>一个护照编号</b>；<br>
+      不要真实姓名、生日、手机号；<br>
+      定位只用来判断是否到河边，不上传轨迹。
     </div>
   </div>
   <div class="gd-bot">
     <button class="btn btn-teal" id="btn-make" disabled>生成护照</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     发护照
+     ------------------------------------------------------------
+     为什么单独做一页：
+       原来点「生成护照」直接跳去老周开场答题，孩子还没看见
+       「我拿到了一本护照」就被推进考核。护照是这个产品的
+       身份凭证，签发这个动作必须可见、可记住。
+     设计：
+       主视觉沿用足迹图的十闸水脉（同一母题，孩子会在多处见到），
+       顶部是护照基本信息 —— 名字、编号、站点。
+   ============================================================ -->
+<div class="screen" id="s-passport">
+  <div class="pp-top">
+    <div class="pp-k">中 华 人 民 共 和 国 · 公 民 河 流 记 录</div>
+    <div class="pp-h1">小小河工<br>护　照</div>
+  </div>
+
+  <div class="pp-card" id="pp-card">
+    <div class="pp-seal">清<br>河</div>
+    <div class="pp-row">
+      <div class="pp-lb">姓　名</div>
+      <div class="pp-vl" id="pp-name">—</div>
+    </div>
+    <div class="pp-row">
+      <div class="pp-lb">编　号</div>
+      <div class="pp-vl pp-mono" id="pp-no">NO.0000</div>
+    </div>
+    <div class="pp-row">
+      <div class="pp-lb">站　点</div>
+      <div class="pp-vl">北京清河</div>
+    </div>
+    <div class="pp-row">
+      <div class="pp-lb">职　级</div>
+      <div class="pp-vl" id="pp-rank">见习河工</div>
+    </div>
+
+    <!-- 十闸水脉：与足迹图同一套点阵 -->
+    <div class="pp-river">
+      <svg viewBox="0 0 300 92" preserveAspectRatio="xMidYMid meet">
+        <path d="M-14 82 C 34 74, 60 54, 96 44 S 176 34, 206 20 S 258 8, 316 4"
+              fill="none" stroke="#BFD9E4" stroke-opacity=".34" stroke-width="15" stroke-linecap="round"/>
+        <path d="M-14 82 C 34 74, 60 54, 96 44 S 176 34, 206 20 S 258 8, 316 4"
+              fill="none" stroke="#7FAEC4" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/>
+        <g fill="#0A444B" stroke="#BFD9E4" stroke-opacity=".72" stroke-width="2">
+          <circle cx="16"  cy="79" r="3.6"/>
+          <circle cx="44"  cy="66" r="3.6"/>
+          <circle cx="72"  cy="52" r="3.6"/>
+          <circle cx="100" cy="43" r="3.6"/>
+          <circle cx="130" cy="38" r="3.6"/>
+          <circle cx="160" cy="31" r="3.6"/>
+          <circle cx="192" cy="23" r="3.6"/>
+          <circle cx="222" cy="16" r="3.6"/>
+          <circle cx="252" cy="10" r="3.6"/>
+          <circle cx="282" cy="6"  r="3.6"/>
+        </g>
+      </svg>
+      <div class="pp-river-lb"><span>安河闸</span><span>沙子营闸</span></div>
+    </div>
+
+    <div class="pp-foot">
+      <span id="pp-date">2026.01.01</span>
+      <span>23.6 km · 十座闸</span>
+    </div>
+  </div>
+
+  <div class="pp-tip">这本护照存在这台手机上。<br>换手机不会自动带走。</div>
+
+  <div class="pp-bot">
+    <button class="btn btn-gold" id="btn-pp-go">收好了，往下走</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     岔路：拿到护照后，选一条路
+     ------------------------------------------------------------
+     两条路对应两种人：
+       上岗培训 —— 想认真干的孩子，先认河再下河
+       拓印体验 —— 只想玩一下的，拍照印卡立刻拿到东西
+     这里必须给选择而不是直接推进考核，否则「枯燥答题」
+     会挡掉一大半想玩的人。
+   ============================================================ -->
+<div class="screen" id="s-fork">
+  <div class="fk-top">
+    <div class="fk-k" id="fk-k">护 照 已 签 发</div>
+    <div class="fk-h1" id="fk-h1">接下来想做什么？</div>
+    <div class="fk-d" id="fk-d">两条路都能走，先走哪条都行。</div>
+  </div>
+
+  <div class="fk-list">
+    <div class="fk-item" id="fk-quiz">
+      <div class="fk-ic">闸</div>
+      <div class="fk-tx">
+        <div class="fk-t">上岗培训</div>
+        <div class="fk-s">听看闸人老周讲这条河，答六道题。</div>
+        <div class="fk-m">通过后才能去河边签到、做记录</div>
+      </div>
+      <div class="fk-ar">›</div>
+    </div>
+
+    <div class="fk-item" id="fk-stamp">
+      <div class="fk-ic">印</div>
+      <div class="fk-tx">
+        <div class="fk-t">拓印体验</div>
+        <div class="fk-s">拍一张你看见的，印成一张卡带走。</div>
+        <div class="fk-m">不用考核，现在就能玩</div>
+      </div>
+      <div class="fk-ar">›</div>
+    </div>
+  </div>
+
+  <div class="fk-bot">
+    <button class="btn btn-line on-dark" id="fk-skip">先随便看看 ›</button>
   </div>
 </div>
 
@@ -1875,8 +2112,60 @@ btnMake.onclick=()=>{
   const n=inName.value.trim().slice(0,8); if(!n) return;
   S.name=n;
   S.no='NO.'+String(Math.floor(Math.random()*9000)+1000);
-  save(); show('s-intro');
+  save();
+  openPassport();
 };
+
+/* ============================================================
+   发护照 → 岔路
+   ------------------------------------------------------------
+   流程从「建档 → 答题」改成「建档 → 发护照 → 选路」：
+     建完档立刻看到护照，是「我拿到了东西」；
+     看到护照之后再选要不要考核，是把选择权交给孩子，
+     而不是默认推他进答题。
+   ============================================================ */
+/* 护照上的日期：2026.10.24 这种写法，比 toLocaleDateString 稳
+   （后者在不同系统语言下格式不一样，护照上不能出现各国格式） */
+function fmtDate(d){
+  const p2=n=>String(n).padStart(2,'0');
+  return d.getFullYear()+'.'+p2(d.getMonth()+1)+'.'+p2(d.getDate());
+}
+
+function openPassport(){
+  $('pp-name').textContent = S.name || '—';
+  $('pp-no').textContent   = S.no || 'NO.0000';
+  $('pp-rank').textContent = rankName();
+  $('pp-date').textContent = fmtDate(new Date());
+  show('s-passport');
+  // 卡片每进一次重播入场动画，让「签发」这个动作有存在感
+  const c=$('pp-card');
+  c.style.animation='none';
+  void c.offsetWidth;
+  c.style.animation='';
+  vibrate([10,40,18]);
+}
+
+$('btn-pp-go').onclick=()=>{ renderFork(); show('s-fork'); };
+
+function renderFork(){
+  const done = S.quiz.done;
+  if(done){
+    $('fk-k').textContent='护 照 已 转 正';
+    $('fk-h1').textContent='继续往哪走？';
+    $('fk-d').textContent='考核已经过了，河边随时可以去。';
+    $('fk-quiz').querySelector('.fk-t').textContent='再认认这条河';
+    $('fk-quiz').querySelector('.fk-s').textContent='换了新题，还能拿「十闸通」。';
+    $('fk-quiz').querySelector('.fk-m').textContent='已通过 · 可继续挑战';
+  }else{
+    $('fk-k').textContent='护 照 已 签 发';
+    $('fk-h1').textContent='接下来想做什么？';
+    $('fk-d').textContent='两条路都能走，先走哪条都行。';
+  }
+}
+
+$('fk-quiz').onclick=()=>{ show('s-intro'); };
+$('fk-stamp').onclick=()=>{ location.href=STAMP_PAGE; };
+$('fk-skip').onclick=()=>{ locate(); show('s-home'); switchTab('explore'); renderHome(); };
 
 /* ============================================================
    L0 上岗考核 —— 从 10 题抽 6
@@ -2102,9 +2391,12 @@ function finishQuiz(){
   vibrate([14,60,24]);
 }
 
+/* 考核结束后回岔路，不回主页：
+   通过考核的孩子应该看到「上岗培训」这一项已经变成了可再挑战，
+   并且能顺手去拓印 —— 直接跳主页会把这个衔接丢掉。 */
 function goHome(){
   $('grant').classList.remove('on');
-  locate(); show('s-home'); renderHome();
+  renderFork(); show('s-fork');
 }
 $('gr-go').onclick=goHome;
 
