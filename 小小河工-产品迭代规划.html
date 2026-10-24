@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小小河工 · 产品迭代规划 V1.0</title>
+<style>
+  :root{
+    --dark:#07363C; --teal:#0E5C63; --teal2:#2E7D82;
+    --gold:#C9A24B; --gold-d:#9A7A2E; --gold-l:#E4C987;
+    --cream:#F7F4EC; --paper:#FDFCF8;
+    --ink:#1B2A2A; --body:#4A5A59; --mut:#8B9998;
+    --line:#DCE3DF; --line-w:#E4E0D4; --seal:#B5432F;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--cream); color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:15px; line-height:1.75; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:0 40px 120px;}
+
+  /* ---------- 封面 ---------- */
+  .cover{
+    background:var(--dark); color:#F3F0E7;
+    margin:0 -40px 72px; padding:72px 40px 64px;
+    position:relative; overflow:hidden;
+  }
+  .cover:after{
+    content:""; position:absolute; right:-80px; top:-60px;
+    width:340px; height:340px; border-radius:50%;
+    border:1px solid rgba(201,162,75,.28);
+  }
+  .cover:before{
+    content:""; position:absolute; right:20px; top:-120px;
+    width:340px; height:340px; border-radius:50%;
+    border:1px solid rgba(201,162,75,.14);
+  }
+  .kicker{
+    font-size:11px; letter-spacing:3px; color:var(--gold-l);
+    text-transform:uppercase; position:relative; z-index:2;
+  }
+  .cover h1{
+    font-family:"Songti SC",serif; font-size:54px; font-weight:400;
+    letter-spacing:5px; margin:22px 0 14px; position:relative; z-index:2;
+  }
+  .cover .sub{
+    font-family:"Songti SC",serif; font-size:19px; color:var(--gold-l);
+    letter-spacing:2px; position:relative; z-index:2;
+  }
+  .cover .lede{
+    max-width:620px; margin-top:30px; padding-top:26px;
+    border-top:1px solid rgba(201,162,75,.4);
+    font-size:14.5px; line-height:2; color:#C7D8D6; position:relative; z-index:2;
+  }
+  .cover .lede b{color:#F3F0E7;font-weight:500;}
+  .cover .meta{
+    margin-top:34px; font-size:11.5px; color:#7FA6A4; letter-spacing:1.6px;
+    position:relative; z-index:2;
+  }
+
+  /* ---------- 章节 ---------- */
+  section{margin-bottom:76px;}
+  .sec-no{
+    font-family:"Songti SC",serif; font-size:12px; letter-spacing:2px;
+    color:var(--gold-d); font-weight:600; margin-bottom:8px;
+  }
+  h2{
+    font-family:"Songti SC",serif; font-size:30px; font-weight:400;
+    letter-spacing:1.5px; line-height:1.4; margin-bottom:10px;
+  }
+  h2 em{font-style:normal;color:var(--teal);}
+  .sec-desc{color:var(--body); font-size:14px; max-width:680px; margin-bottom:36px;}
+  h3{
+    font-size:16px; font-weight:600; letter-spacing:.5px;
+    margin:38px 0 16px; padding-left:12px; border-left:3px solid var(--gold);
+  }
+  h4{font-size:14px;font-weight:600;color:var(--teal);margin:26px 0 10px;letter-spacing:.5px;}
+  p{margin-bottom:14px;color:var(--body);}
+  p strong,li strong{color:var(--ink);font-weight:600;}
+  code{
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:.88em;background:#EFEBDE;color:#7A5E1F;
+    padding:1px 5px;border-radius:2px;
+  }
+  .hl{color:var(--teal);font-weight:600;}
+  .warn{color:var(--seal);font-weight:600;}
+
+  /* ---------- 诊断卡 ---------- */
+  .levels{display:grid;gap:14px;margin:24px 0 10px;}
+  .lv{
+    display:grid;grid-template-columns:64px 1fr;gap:22px;
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:4px; padding:22px 26px;
+  }
+  .lv-tag{
+    font-family:"Songti SC",serif; font-size:26px; color:var(--gold);
+    line-height:1.1; letter-spacing:0;
+  }
+  .lv-tag span{display:block;font-size:10px;letter-spacing:1.6px;color:var(--mut);
+    font-family:"PingFang SC",sans-serif;margin-top:6px;}
+  .lv h5{font-size:15px;font-weight:600;margin-bottom:6px;}
+  .lv p{font-size:13.5px;margin-bottom:0;line-height:1.7;}
+
+  /* ---------- 表 ---------- */
+  table{width:100%;border-collapse:collapse;margin:20px 0 24px;font-size:13.5px;}
+  th{
+    text-align:left; font-size:10.5px; letter-spacing:1.8px; color:var(--mut);
+    font-weight:500; padding:0 12px 10px; border-bottom:1px solid var(--line-w);
+  }
+  td{padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--body);}
+  td.f{color:var(--gold-d);font-size:12px;letter-spacing:.5px;white-space:nowrap;}
+  td.n{color:var(--ink);font-weight:500;}
+  tr:last-child td{border-bottom:none;}
+  .sev{
+    display:inline-block;font-size:10px;letter-spacing:1px;padding:2px 8px;
+    border-radius:2px;white-space:nowrap;
+  }
+  td:last-child{text-align:right;}
+  .sev-a{background:#FCEBEB;color:#A32D2D;}
+  .sev-b{background:#FAEEDA;color:#854F0B;}
+  .sev-c{background:#F1EFE8;color:#5F5E5A;}
+
+  /* ---------- 方向卡 ---------- */
+  .dirs{display:grid;gap:0;margin-top:8px;}
+  .dir{
+    border-top:1px solid var(--line-w);padding:26px 0 22px;
+    display:grid;grid-template-columns:1fr 200px;gap:36px;
+  }
+  .dir:last-child{border-bottom:1px solid var(--line-w);}
+  .dir-h{display:flex;align-items:baseline;gap:12px;margin-bottom:8px;}
+  .dir-h .code{
+    font-family:"Songti SC",serif;font-size:13px;color:var(--gold-d);
+    font-weight:600;letter-spacing:1px;
+  }
+  .dir-h h5{font-size:16px;font-weight:600;letter-spacing:.5px;}
+  .dir p{font-size:13.5px;margin-bottom:8px;}
+  .dir .why{font-size:12.5px;color:var(--mut);line-height:1.7;}
+  .dir .why b{color:var(--teal);font-weight:500;}
+  .verdict{
+    font-size:12px;line-height:1.7;color:var(--body);
+    border-left:2px solid var(--line);padding-left:14px;
+  }
+  .verdict strong{display:block;font-size:10.5px;letter-spacing:1.6px;
+    color:var(--mut);margin-bottom:6px;font-weight:500;}
+
+  /* ---------- 路线图 ---------- */
+  .phases{display:grid;gap:16px;margin-top:12px;}
+  .ph{
+    background:var(--paper);border:1px solid var(--line);border-radius:4px;
+    overflow:hidden;
+  }
+  .ph-head{
+    display:flex;align-items:center;gap:16px;
+    padding:16px 24px;border-bottom:1px solid var(--line);
+    background:#FBFAF5;
+  }
+  .ph-p{
+    font-family:"Songti SC",serif;font-size:15px;letter-spacing:1px;
+    color:#fff;padding:3px 12px;border-radius:2px;font-weight:600;
+  }
+  .p0 .ph-p{background:#A32D2D;} .p1 .ph-p{background:#BA7517;}
+  .p2 .ph-p{background:#0F6E56;} .p3 .ph-p{background:#5F5E5A;}
+  .ph-head h5{font-size:15px;font-weight:600;flex:1;}
+  .ph-time{font-size:11.5px;color:var(--mut);letter-spacing:1px;}
+  .ph-body{padding:20px 24px 22px;display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+  .ph-body h6{
+    font-size:10.5px;letter-spacing:1.8px;color:var(--mut);
+    font-weight:500;margin-bottom:9px;
+  }
+  .ph-body ul{list-style:none;font-size:13px;line-height:1.85;color:var(--body);}
+  .ph-body ul li{padding-left:14px;position:relative;margin-bottom:4px;}
+  .ph-body ul li:before{
+    content:"";position:absolute;left:0;top:10px;
+    width:4px;height:4px;border-radius:50%;background:var(--line);
+  }
+  .gate{
+    grid-column:1/-1;margin-top:4px;padding:12px 16px;
+    background:#F4F1E6;border-radius:3px;font-size:12.5px;color:var(--body);
+  }
+  .gate b{color:var(--gold-d);font-weight:600;letter-spacing:1px;font-size:10.5px;
+    margin-right:8px;}
+  .no-go{color:var(--mut);font-size:12.5px;line-height:1.8;grid-column:1/-1;
+    padding-top:2px;border-top:1px dashed var(--line);margin-top:6px;padding-top:14px;}
+  .no-go b{color:var(--seal);font-weight:500;}
+
+  /* ---------- 指标 ---------- */
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0;}
+  .m{background:var(--paper);border:1px solid var(--line);padding:20px 20px 18px;border-radius:4px;}
+  .m .t{font-size:10.5px;letter-spacing:1.6px;color:var(--mut);margin-bottom:10px;}
+  .m .v{font-family:"Songti SC",serif;font-size:22px;color:var(--teal);line-height:1.3;margin-bottom:8px;}
+  .m .d{font-size:12px;color:var(--body);line-height:1.65;}
+
+  /* ---------- 决策 ---------- */
+  .dcd{border-left:2px solid var(--gold);padding:2px 0 2px 22px;margin:22px 0;}
+  .dcd h5{font-size:14.5px;font-weight:600;margin-bottom:6px;}
+  .dcd p{font-size:13.5px;margin-bottom:6px;}
+  .dcd .tradeoff{font-size:12.5px;color:var(--mut);line-height:1.75;}
+  .dcd .tradeoff b{color:var(--gold-d);font-weight:500;}
+  .dcd .pick{font-size:12.5px;color:var(--teal);margin-top:6px;}
+  .dcd .pick:before{content:"→ ";color:var(--gold);}
+
+  /* ---------- 引用块 ---------- */
+  .quote{
+    background:var(--dark);color:#DCEAE8;padding:34px 38px;border-radius:4px;
+    margin:40px 0;font-family:"Songti SC",serif;font-size:18px;line-height:1.9;
+    letter-spacing:1px;
+  }
+  .quote b{color:var(--gold-l);font-weight:400;}
+  .quote .who{display:block;margin-top:14px;font-size:11.5px;letter-spacing:2px;
+    color:#7FA6A4;font-family:"PingFang SC",sans-serif;}
+
+  .footnote{
+    margin-top:56px;padding-top:22px;border-top:1px solid var(--line-w);
+    font-size:11.5px;color:var(--mut);letter-spacing:.5px;line-height:1.9;
+  }
+
+  @media print{
+    body{background:#fff;font-size:12px;}
+    .wrap{padding:0 16px 40px;max-width:none;}
+    .cover{margin:0 0 32px;padding:40px 24px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .cover h1{font-size:40px;}
+    section{page-break-inside:avoid;margin-bottom:34px;}
+    .dir{page-break-inside:avoid;}
+    .ph{page-break-inside:avoid;}
+  }
+  @media(max-width:720px){
+    .wrap{padding:0 20px 80px;}
+    .cover{margin:0 -20px 44px;padding:48px 20px 40px;}
+    .cover h1{font-size:38px;}
+    .dir,.ph-body{grid-template-columns:1fr;gap:14px;}
+    .metrics{grid-template-columns:1fr;}
+    .lv{grid-template-columns:1fr;gap:10px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="cover">
+  <div class="kicker">Product Roadmap · V1.0</div>
+  <h1>小小河工</h1>
+  <div class="sub">产品迭代规划</div>
+  <div class="lede">
+    把 Demo 变成产品，不是加功能。是<b>换掉三面承重墙</b>，
+    并把「完成」的单位从<b>十站</b>改成<b>一个点位</b>。
+  </div>
+  <div class="meta">ACC 清河文旅　·　北京清河　·　2026.10</div>
+</div>
+
+<!-- ============ 01 诊断 ============ -->
+<section>
+  <div class="sec-no">01　诊断</div>
+  <h2>问题有三层，<em>别在同一层里改</em></h2>
+  <p class="sec-desc">
+    现在的问题不是「功能不够」。是三个承诺都还停在叙事层，
+    外加一个会让复访归零的结构设计。按修复的先后顺序分成三层——
+    跳层去改，等于在白纸上刷漆。
+  </p>
+
+  <div class="levels">
+    <div class="lv">
+      <div class="lv-tag">L1<span>承重墙</span></div>
+      <div>
+        <h5>三个核心承诺都还是模拟的</h5>
+        <p>「到达验证」是一个按钮，没有调用定位；记录不落盘，刷新即清零；
+        「AI 读懂照片」是假加载加写死的词条。
+        这三件事任缺其一，产品就只是一个好看的幻灯片。</p>
+      </div>
+    </div>
+    <div class="lv">
+      <div class="lv-tag">L2<span>结构</span></div>
+      <div>
+        <h5>只有「一次到场」这一种玩法</h5>
+        <p>原来只有一条从十站打卡到底的线性路径：孩子在河边能做的事，和他在家里的差别仅仅是一道门。
+        于是<b>「来不了」的孩子被完全挡在门外</b>，「来了」的孩子除了盖章也没有更多可做。
+        两头都没接住——这才是结构问题，不是功能问题。</p>
+      </div>
+    </div>
+    <div class="lv">
+      <div class="lv-tag">L3<span>体验</span></div>
+      <div>
+        <h5>好品味用在了错的地方</h5>
+        <p>水墨、印章、闸名年份——审美与内容密度远超同类。但记录只有三个选项、
+        没有观测值、没有单位；印章十枚平铺，没有稀缺性；
+        家长角色在《小小河工》里消失了（反而是小天鹅那条线有亲子设计）。</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>问题清单（按修复成本排）</h3>
+  <table>
+    <thead>
+      <tr><th style="width:60px">层级</th><th style="width:190px">问题</th><th>证据与影响</th><th style="width:70px;text-align:right">优先级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="f">L1</td><td class="n">到达验证是纯 UI</td>
+        <td>代码中无 <code>navigator.geolocation</code>，「我已到达」只翻转一个布尔值。
+        意味着任何人任何地点都能产出「现场记录」——整个数据可信度归零。</td>
+        <td><span class="sev sev-a">P0</span></td>
+      </tr>
+      <tr>
+        <td class="f">L1</td><td class="n">无持久化</td>
+        <td>无 localStorage / IndexedDB，所有状态在内存里。刷新、切后台、锁屏都清零。
+        一个要「持续一个季节」的产品，连一次会话都保不住。</td>
+        <td><span class="sev sev-a">P0</span></td>
+      </tr>
+      <tr>
+        <td class="f">L1</td><td class="n">记录没有观测值</td>
+        <td>任务是三选一，<code>rec</code> 是写死的短句（如「透明度：低」）。
+        这是问卷，不是观测。字段表里说的「可统计、可作图」目前无从谈起。</td>
+        <td><span class="sev sev-a">P0</span></td>
+      </tr>
+      <tr>
+        <td class="f">L2</td><td class="n">必须顺序解锁</td>
+        <td>地图上点未来站点只提示「先走完前面的站」。用户在自己家附近的点位，
+        若不在前三站，就完全够不着。</td>
+        <td><span class="sev sev-a">P0</span></td>
+      </tr>
+      <tr>
+        <td class="f">L2</td><td class="n">没有复访理由</td>
+        <td>十站走完即「巡河收官」。没有季节任务、没有定时提醒、没有同点位纵向对比的
+        钩子。产品的留存模型是「一次性打卡」，与数据产品的目标直接冲突。</td>
+        <td><span class="sev sev-a">P0</span></td>
+      </tr>
+      <tr>
+        <td class="f">L2</td><td class="n">AI 探索与记录无关</td>
+        <td>自由探索的 8 条词条与巡河数据是两套互不连接的模型。探索产生的内容
+        不进数据集、也不影响点位认知——它只是一个独立的科普玩具。</td>
+        <td><span class="sev sev-b">P1</span></td>
+      </tr>
+      <tr>
+        <td class="f">L2</td><td class="n">数据没有出口</td>
+        <td>没有后台、没有审核、没有导出。研究机构即使想要这批数据，
+        也没有任何可用的交付形式。价值主张的最后一段是断的。</td>
+        <td><span class="sev sev-b">P1</span></td>
+      </tr>
+      <tr>
+        <td class="f">L3</td><td class="n">缺家长与教师角色</td>
+        <td>8–12 岁的孩子不独立出行。产品假设了一个自己坐地铁跨区的用户，
+        却没有任何面向家长的陪伴设计或面向教师的班级组织设计。</td>
+        <td><span class="sev sev-b">P1</span></td>
+      </tr>
+      <tr>
+        <td class="f">L3</td><td class="n">印章通胀</td>
+        <td>十枚章一一对应十站，拿到即「民间河长」。没有稀有度、没有组合、
+        没有跨季节的成就。奖励的手感在第三次后就消失了。</td>
+        <td><span class="sev sev-c">P2</span></td>
+      </tr>
+      <tr>
+        <td class="f">L3</td><td class="n">合规结构缺位</td>
+        <td>涉及儿童、照片与位置。目前照片以 dataURL 存在内存里（反而是安全的），
+        但一旦接后端，位置剥离、监护人同意、数据分级访问都必须在结构层设计。</td>
+        <td><span class="sev sev-a">P0</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 02 方向 ============ -->
+<section>
+  <div class="sec-no">02　迭代方向</div>
+  <h2>五个方向，<em>只有一个是真正的手术</em></h2>
+  <p class="sec-desc">
+    下面每条都写清「做什么／为什么」和「代价」。方向 A 是唯一改变产品命运的，
+    其余四条是让 A 站得住。如果只能做一件事，就做 A。
+  </p>
+
+  <div class="dirs">
+
+    <div class="dir">
+      <div>
+        <div class="dir-h"><span class="code">A</span><h5>按「离河多远」分四层——能力随距离解锁</h5></div>
+        <p>不是把产品拆成两个，而是<strong>一个 App、四层能力</strong>，按用户与这条河的距离逐层解锁。
+        任何地方的任何孩子都从第 0 层进来，不必先有地理条件。</p>
+        <table style="margin:14px 0 12px">
+          <thead><tr><th style="width:88px">层</th><th style="width:120px">条件</th><th>做什么</th></tr></thead>
+          <tbody>
+            <tr><td class="f">L0 上岗考核</td><td class="f">任何地方</td>
+              <td>十题库抽 6 道，答对 4 道过关，发护照。<strong>零门槛入口</strong></td></tr>
+            <tr><td class="f">L1 到岸签到</td><td class="f">河边 1 公里内</td>
+              <td>签到即奖励。<strong>走出家门本身就是公益</strong>，不必先成为专家</td></tr>
+            <tr><td class="f">L2 四宫格</td><td class="f">到岸后</td>
+              <td>抽一张与点位匹配的寻宝图（如清河之洲：黑天鹅/汇芳桥/白芦苇/树村闸），拍照匹配四样</td></tr>
+            <tr><td class="f">L3 现场记录</td><td class="f">到岸后</td>
+              <td>每站点一组真实任务（能见度/岸型/垃圾/水鸟），产出带数值的记录。
+                <strong>唯一进数据集的层</strong></td></tr>
+            <tr><td class="f">L4 守点</td><td class="f">认领 + 复访</td>
+              <td>认领点位、双周回访、时间序列。<strong>数据产品真正的价值所在</strong></td></tr>
+          </tbody>
+        </table>
+        <p class="why">为什么这是手术：数据产品需要的是<b>同一位置的时间序列</b>，
+        而线性打卡天然只能产出<b>横向的一次性快照</b>。这两者是几何上的互斥，
+        不能靠加功能弥合。但更关键的是——<b>不能因为要数据，就把没到河边的孩子挡在门外</b>。
+        四层结构让「来不了」的孩子也有事可做，让「来了」的孩子立刻有奖励，
+        让「留下来」的孩子产出真正的数据。</p>
+      </div>
+      <div class="verdict">
+        <strong>代价与风险</strong>
+        五层意味着五套内容要维护，且每层都要有独立的奖励逻辑，否则会出现「上层攒分、下层白干」。
+        缓解方式：L0 满分封顶 220 分，L1–L3 的收益必须明显高于重复刷题——
+        <strong>一次到场的收益（签到 30 + 四宫格 55 + 一条记录 25–30）就已经接近重刷全部题目</strong>，
+        这一条是五层结构能否成立的关键约束。
+      </div>
+    </div>
+
+    <div class="dir">
+      <div>
+        <div class="dir-h"><span class="code">B</span><h5>把「可信」做成可体验的证据链</h5></div>
+        <p>四道关，全部对用户可见（这是产品感的关键——让用户看到自己的数据被对待得很严肃）：
+        <strong>定位围栏</strong>（点位 100m 内才解锁，且记录精度做模糊化）、
+        <strong>照片强制现拍</strong>（禁相册、剥离 EXIF）、
+        <strong>AI 交叉校验</strong>（照片判断的结果与表单选项矛盾时当场提示重拍）、
+        <strong>同点位众数</strong>（同一时段多条记录取众数，离群值标灰而不是删除）。</p>
+        <p class="why">为什么重要：孩子的观察凭什么能用，这是对外提案里最硬的一页，
+        现在它还只是文字。把它做成用户能看见的流程，同时解决了两件事——
+        <b>机构信任</b>和<b>用户成就感</b>（我的记录有三道校验标记）。</p>
+      </div>
+      <div class="verdict">
+        <strong>代价与风险</strong>
+        强校验会牺牲转化。必须有降级通道：定位失败可做「培训模式」，但记录进
+        <code>explore</code> 流而不是 <code>field</code> 流。宁可少，不可假。
+      </div>
+    </div>
+
+    <div class="dir">
+      <div>
+        <div class="dir-h"><span class="code">C</span><h5>内容从「十段故事」到「点位 × 季节」矩阵</h5></div>
+        <p>现在的内容是每个闸一段故事，一次性消费。改成二维矩阵：
+        <strong>10 个点位 × 12 个月份</strong>，每个月每个点位有一件这个时节才会发生的事
+        （四月看柳絮与水位、七月看藻华、十月看芦苇转白、一月看冰线）。
+        同一件任务，不同月份给出不同的问题。</p>
+        <p class="why">为什么重要：这是复访的唯一燃料。也是唯一可持续的差异化——
+        竞品可以抄交互，抄不走「清河闸在十一月的水位长什么样」。内容团队的工作量
+        从「写 10 篇」变成「填 120 格」，但每格只需要 3 行，且可以边跑边填。</p>
+      </div>
+      <div class="verdict">
+        <strong>代价与风险</strong>
+        120 格是长期负担。先只填当前季节的 3 个月（30 格），验证复访成立后再扩。
+        务必留一个「本月无任务」的空态——不要为了填满而编。
+      </div>
+    </div>
+
+    <div class="dir">
+      <div>
+        <div class="dir-h"><span class="code">D</span><h5>补齐三个角色，而不是只服务孩子</h5></div>
+        <p><strong>家长端</strong>：一张「孩子这个月在河边发现了什么」的月度小报，可转发。
+        <strong>教师端</strong>：一个班 30 人、一段河、一学期，教师能看到班级记录热力图。
+        <strong>机构端</strong>：只读的导出页，按点位/时间/类型筛，带数据质量标记。</p>
+        <p class="why">为什么重要：C 端没有付费方，产品必须有一个机构买单的理由。
+        但机构不会为「孩子的游戏」付费，只会为「我能用的数据」付费——所以机构端
+        哪怕只有一张导出页，也比一百个游戏功能更能促成合作。</p>
+      </div>
+      <div class="verdict">
+        <strong>代价与风险</strong>
+        教师端会把产品拖进校园采购的长周期。建议先做家长端（成本低、传播强），
+        教师端以「一份可打印的班级任务包」这种零开发形式试水。
+      </div>
+    </div>
+
+    <div class="dir">
+      <div>
+        <div class="dir-h"><span class="code">E</span><h5>交付形态：从单文件 H5 到「小程序 + 轻后台」</h5></div>
+        <p>现阶段的单文件 HTML 是最好的提案工具，但它不是产品形态：没有账号、
+        没有持久化、没有拍照上传、没有推送。目标形态是<strong>微信小程序</strong>
+        （获得分享链路与相机能力，且家长不必装 App）+ 一个极简后台
+        （记录审核、导出、点位配置）。</p>
+        <p class="why">为什么现在提：这不是技术选型问题，是<b>它会反向约束前四条</b>——
+        定位权限的申请方式、照片的合规处理、季节任务的推送能力，都取决于形态。
+        越晚决定，返工越多。</p>
+      </div>
+      <div class="verdict">
+        <strong>代价与风险</strong>
+        小程序对儿童用户有账号与实名约束。首版可以「家长微信登录 + 孩子子档案」，
+        绕开儿童独立注册的合规难点。
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 03 路线图 ============ -->
+<section>
+  <div class="sec-no">03　路线图</div>
+  <h2>四段推进，<em>每段都有明确的过闸条件</em></h2>
+  <p class="sec-desc">
+    每个阶段的末尾都有一个「不达标就不许进下一阶段」的闸门。
+    这是防止这个项目变成「一直在做，永远没验证」的唯一办法。
+  </p>
+
+  <div class="phases">
+
+    <div class="ph p0">
+      <div class="ph-head">
+        <span class="ph-p">P0</span><h5>变真 —— 把三个模拟换成真的</h5>
+        <span class="ph-time">2 周　·　不可省</span>
+      </div>
+      <div class="ph-body">
+        <div>
+          <h6>做什么</h6>
+          <ul>
+            <li>接入定位围栏（点位 100m，精度模糊化到 50m）</li>
+            <li>本地持久化（localStorage 起步，保留升级路径）</li>
+            <li>取消顺序锁：任意已开放点位可进入</li>
+            <li>任务改为真观测：数值输入 + 单位 + 枚举下拉</li>
+            <li>填充 <b>种子数据</b>（每点位 8–12 条历史记录，明确标注来源）</li>
+            <li>照片禁相册、剥离 EXIF、仅存本地</li>
+          </ul>
+        </div>
+        <div>
+          <h6>交付</h6>
+          <ul>
+            <li>可在真实现场走通的 v1 小程序或 H5</li>
+            <li>一份《记录字段与校验规则》规格</li>
+            <li>种子数据集（含来源标注约定）</li>
+          </ul>
+        </div>
+        <div class="gate">
+          <b>过闸</b>带 5 个真实孩子到真实点位，其中至少 4 人能独立完成一条记录，且记录含有效数值。
+        </div>
+        <div class="no-go">
+          <b>明确不做</b>　不做账号体系、不做 AI 识别、不做推送、不做教师端。这一阶段唯一目标是「真」。
+        </div>
+      </div>
+    </div>
+
+    <div class="ph p1">
+      <div class="ph-head">
+        <span class="ph-p">P1</span><h5>单点闭环 —— 证明一个点位能被守下来</h5>
+        <span class="ph-time">6 周</span>
+      </div>
+      <div class="ph-body">
+        <div>
+          <h6>做什么</h6>
+          <ul>
+            <li>认领点位：孩子绑定 1 个「我的点位」，主页围绕它重构</li>
+            <li>双周任务：同一观察项，隔两周再来一次</li>
+            <li>真多模态识别：拍照 → 给出候选 + 追问，结果回填记录</li>
+            <li>同点位时间轴：同一位置的历史记录纵向排列</li>
+            <li>极简后台：审核队列、导出 CSV、点位配置</li>
+            <li>合规底座：监护人同意、数据分级访问</li>
+          </ul>
+        </div>
+        <div>
+          <h6>交付</h6>
+          <ul>
+            <li>认领 + 双周任务的完整闭环</li>
+            <li>可导出的结构化数据集（首批 200 条）</li>
+            <li>一份数据使用说明（给机构的）</li>
+          </ul>
+        </div>
+        <div class="gate">
+          <b>过闸</b>30 天后，认领用户的复访率 ≥ 40%，且至少 1 个点位产生 ≥ 10 条跨时间的同项记录。
+        </div>
+        <div class="no-go">
+          <b>明确不做</b>　不做排行榜、不做社交、不做多河域、不做复杂成就系统。
+        </div>
+      </div>
+    </div>
+
+    <div class="ph p2">
+      <div class="ph-head">
+        <span class="ph-p">P2</span><h5>数据可见 —— 让「变化」成为屏幕上的一件事</h5>
+        <span class="ph-time">8 周</span>
+      </div>
+      <div class="ph-body">
+        <div>
+          <h6>做什么</h6>
+          <ul>
+            <li>季节内容矩阵：先填当季 3 个月 × 全部点位</li>
+            <li>时间轴对比：滑动看同一位置两个月前的样子</li>
+            <li>物候日历：这条河什么时候该出现什么</li>
+            <li>家长月报（可转发的小图）与班级任务包</li>
+            <li>机构导出页（筛选 + 质量标记）</li>
+          </ul>
+        </div>
+        <div>
+          <h6>交付</h6>
+          <ul>
+            <li>一份对外开放的季节数据集</li>
+            <li>家长侧传播物料</li>
+            <li>至少 1 个机构的书面使用意向</li>
+          </ul>
+        </div>
+        <div class="gate">
+          <b>过闸</b>有一家机构（河长办/学校/研究组）真的把这批数据用进了某份材料——口头称赞不算。
+        </div>
+        <div class="no-go">
+          <b>明确不做</b>　不做全 120 格内容、不做多语言、不做硬件联动。
+        </div>
+      </div>
+    </div>
+
+    <div class="ph p3">
+      <div class="ph-head">
+        <span class="ph-p">P3</span><h5>复制 —— 从一条河到一个模板</h5>
+        <span class="ph-time">Q2 起</span>
+      </div>
+      <div class="ph-body">
+        <div>
+          <h6>做什么</h6>
+          <ul>
+            <li>点位与任务配置化，抽出「河域包」概念</li>
+            <li>B 端共建套餐（点位共建／课程采购／数据赞助）</li>
+            <li>河长办数据接口（标准化字段 + 推送）</li>
+            <li>第二条河的冷启动手册（含种子数据方法）</li>
+          </ul>
+        </div>
+        <div>
+          <h6>交付</h6>
+          <ul>
+            <li>可复制到第二条河的完整方案</li>
+            <li>一份可签约的共建方案</li>
+          </ul>
+        </div>
+        <div class="gate">
+          <b>过闸</b>清河之外的第二个河域上线，且不依赖原团队驻场。
+        </div>
+        <div class="no-go">
+          <b>明确不做</b>　在 P2 闸门通过前，不谈复制、不谈融资、不谈多城市。
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 04 指标 ============ -->
+<section>
+  <div class="sec-no">04　指标</div>
+  <h2>一个北极星，<em>其余都是护栏</em></h2>
+
+  <div class="metrics">
+    <div class="m">
+      <div class="t">北极星</div>
+      <div class="v">同点位有效记录数</div>
+      <div class="d">单个点位在 90 天内累积的、通过校验的现场记录条数。
+      这个数直接等于产品价值，不接受任何替代口径。</div>
+    </div>
+    <div class="m">
+      <div class="t">复访</div>
+      <div class="v">D30 ≥ 40%</div>
+      <div class="d">认领点位的用户，30 天内是否回来第二次。低于这个数，
+      说明守点模型不成立，不要往下加功能。</div>
+    </div>
+    <div class="m">
+      <div class="t">数据质量</div>
+      <div class="v">审核通过率 ≥ 85%</div>
+      <div class="d">通过 AI 预校验 + 同点位众数 + 人工抽检三道关的比例。
+      低于 85% 说明任务设计得太难理解，不是孩子的问题。</div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:200px">护栏指标</th><th style="width:120px">阈值</th><th>为什么设这条</th></tr></thead>
+    <tbody>
+      <tr><td class="n">单条记录耗时</td><td class="f">≤ 4 分钟</td>
+        <td>超过 4 分钟，家长会接管操作，孩子变成旁观者——产品的教育目标失效。</td></tr>
+      <tr><td class="n">定位失败率</td><td class="f">≤ 15%</td>
+        <td>高失败率会摧毁信任。必须给「降级到培训模式」的明确出口，不能卡死。</td></tr>
+      <tr><td class="n">跨站完成率</td><td class="f">不作为 KPI</td>
+        <td>十站走完是彩蛋不是目标。一旦把它当 KPI，团队会不自觉地逼用户跑长途。</td></tr>
+      <tr><td class="n">照片上传占比</td><td class="f">≥ 60%</td>
+        <td>照片是证据链的关键。占比太低说明拍摄流程有摩擦，不是用户不愿意。</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 05 决策 ============ -->
+<section>
+  <div class="sec-no">05　需要现在决策</div>
+  <h2>三个岔路口，<em>越晚决定返工越贵</em></h2>
+  <p class="sec-desc">
+    这三件事不是执行细节，是会影响未来半年所有取舍的选择。下面是我的建议，
+    但每一个都值得被推翻——前提是有人能说清推翻之后怎么走。
+  </p>
+
+  <div class="dcd">
+    <h5>一　定位精度与作弊容忍度，取哪个？</h5>
+    <p>严格（100m 围栏 + 禁相册）数据可信但转化差；宽松（自行确认）转化好但数据废。</p>
+    <div class="tradeoff">
+      <b>我的建议</b>：严格，但把「宽松」做成合法的另一条流。定位失败 → 自动进培训模式，
+      记录标记为 <code>explore</code>，照样盖章、照样进护照，只是不进数据集。
+      用户不会觉得被拒绝，机构也不会被污染。
+    </div>
+    <div class="pick">宁可让一个孩子少一条数据，不能让一条假数据毁掉整批数据的可用性。</div>
+  </div>
+
+  <div class="dcd">
+    <h5>二　要不要做教师端？</h5>
+    <p>做，等于进校园，有采购可能但周期极长；不做，等于放弃最有组织度的用户群。</p>
+    <div class="tradeoff">
+      <b>我的建议</b>：先不做软件端的教师功能，做一份<b>可打印的班级任务包</b>
+      （一页纸 + 一个班的编号段）。用它去谈一所学校，让学校自己组织到河边。
+      如果一所学校真的跑通了一个学期，再投入做教师后台——那时候需求才是真的。
+    </div>
+    <div class="pick">用最便宜的形态验证最大胆的假设。</div>
+  </div>
+
+  <div class="dcd">
+    <h5>三　数据开放到什么程度？</h5>
+    <p>全量 CC BY-NC 开放（传播强、不可控）／ 只开放聚合（安全、无用）／ 机构申请制（可控、有摩擦）。</p>
+    <div class="tradeoff">
+      <b>我的建议</b>：<b>分层</b>。聚合指标全开放（做公信力），原始记录机构申请制
+      （做严肃性），儿童照片永不开放（做底线）。三层对应三种人，各取所需，
+      也和方案里「四类人各取所需」那页是同一个逻辑。
+    </div>
+    <div class="pick">开放的是结论，保护的是证据。</div>
+  </div>
+</section>
+
+<div class="quote">
+  这条河不需要更多赞美。<br>
+  它需要的是——<b>同一个点位，被同一个孩子，看过十二次。</b>
+  <span class="who">这句话替换掉现在结尾的那句。前者是宣言，后者是产品。</span>
+</div>
+
+<section>
+  <div class="sec-no">06　一页话总结</div>
+  <h2>如果只记三件事</h2>
+  <table>
+    <tbody>
+      <tr><td class="f" style="width:80px">一</td>
+        <td>先把<b>定位、持久化、真字段</b>做真。两周，不讨论其他任何事。
+        这三件不做，后面所有规划都是纸上作业。</td></tr>
+      <tr><td class="f">二</td>
+        <td>把「完成」的单位从<b>十站</b>换成<b>一个点位</b>。
+        这是唯一能同时解决留存与数据价值的手术，也是竞品最难抄的部分
+        （因为它要求内容团队真的去河边站十二次）。</td></tr>
+      <tr><td class="f">三</td>
+        <td>每个阶段设<b>过闸条件</b>，不达标不进下一阶段。
+        这个项目最大的风险不是做不出来，是做得很好看但从未被验证。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footnote">
+    本文基于 <code>demo-m.template.html</code> / <code>demo.html</code> 的实现现状、
+    《小小河工·AI 公民河流教育计划 对外方案 6 页》与《小天鹅寻母记 内容设计稿》整理。
+    所有「现状」判断均已核对源码，不是推测。<br>
+    文档版本 V1.0　·　2026.10.23　·　ACC 清河文旅
+  </div>
+</section>
+
+</div>
+</body>
+</html>

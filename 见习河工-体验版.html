@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#07363C">
+<title>见习河工 · 上岗考核 | 小小河工</title>
+<style>
+:root{
+  --dark:#07363C; --teal:#0E5C63; --teal2:#2E7D82;
+  --gold:#C9A24B; --gold-d:#9A7A2E; --gold-l:#E4C987;
+  --cream:#F7F4EC; --paper:#FDFCF8;
+  --ink:#1B2A2A; --body:#4A5A59; --mut:#8B9998;
+  --line:#DCE3DF; --seal:#B5432F;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  background:#08282d;
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--ink); display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+#app{
+  position:relative; width:100%; max-width:430px; height:100%; max-height:900px;
+  background:var(--cream); overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);
+}
+@media(min-width:520px){ #app{height:calc(100% - 48px); border-radius:14px;} }
+
+.screen{
+  position:absolute; inset:0; display:none; flex-direction:column;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
+.screen.on{display:flex;}
+.pad{padding:0 26px;}
+
+/* ---------- 通用 ---------- */
+.btn{
+  display:block; width:100%; border:none; outline:none; cursor:pointer;
+  font-family:inherit; font-size:16px; font-weight:600; letter-spacing:2px;
+  border-radius:2px; padding:17px; background:transparent;
+  transition:transform .14s, opacity .14s;
+}
+.btn:active{transform:scale(.985);}
+.btn:disabled{opacity:.35; cursor:default; transform:none;}
+.btn-gold{background:linear-gradient(135deg,#D9BA6B,#C9A24B); color:#3a2d0d;}
+.btn-teal{background:var(--teal); color:#F3F0E7;}
+.btn-line{background:transparent; border:1px solid var(--line); color:var(--body); font-weight:400; font-size:13.5px; letter-spacing:1px; padding:13px;}
+.btn-line.on-dark{border-color:rgba(255,255,255,.24); color:#A9C3C1;}
+.eyebrow{font-size:10.5px; letter-spacing:3px; color:var(--gold-d); font-weight:600;}
+.hint-l{font-size:11.5px; color:var(--mut); line-height:1.8;}
+
+/* ---------- 封面 ---------- */
+#s-cover{background:var(--dark); justify-content:space-between;}
+.cov-top{padding:54px 26px 0; position:relative; z-index:2;}
+.cov-mark{font-size:10px; letter-spacing:3.5px; color:var(--gold-l);}
+.cov-rule{width:34px; height:1px; background:var(--gold); margin:20px 0 26px;}
+.cov-h1{
+  font-family:"Songti SC",serif; font-size:62px; font-weight:400;
+  color:#F3F0E7; letter-spacing:8px; line-height:1.18;
+}
+.cov-sub{
+  font-family:"Songti SC",serif; font-size:19px; letter-spacing:4px;
+  color:var(--gold-l); margin-top:12px;
+}
+.cov-line{
+  margin-top:34px; font-size:13px; line-height:2.1; color:#A9C3C1;
+  max-width:280px;
+}
+.cov-line b{color:#F3F0E7; font-weight:500;}
+.cov-bot{padding:0 26px 40px; position:relative; z-index:2;}
+.cov-meta{
+  display:flex; gap:22px; margin-bottom:22px;
+  font-size:10.5px; letter-spacing:1.6px; color:#6E9498;
+}
+.cov-prev{
+  padding:14px 16px; background:rgba(201,162,75,.1);
+  border:1px solid rgba(201,162,75,.32); margin-bottom:14px;
+}
+.cov-prev .t{font-size:10px; letter-spacing:2px; color:var(--gold); margin-bottom:6px;}
+.cov-prev .n{font-size:13px; color:#F3F0E7;}
+.cov-prev .n b{font-family:"Songti SC",serif; font-size:16px; color:var(--gold-l);}
+.cov-tip{
+  margin-top:14px; text-align:center; font-size:10px;
+  letter-spacing:2px; color:#5C8388;
+}
+
+/* 水墨装饰 */
+.ink-deco{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; opacity:.5;}
+
+/* ---------- 家长确认 ---------- */
+#s-guardian{background:var(--cream);}
+.gd-head{padding:46px 26px 0;}
+.gd-h1{font-family:"Songti SC",serif; font-size:29px; letter-spacing:2px; line-height:1.45; margin-bottom:12px;}
+.gd-h1 em{font-style:normal; color:var(--teal);}
+.gd-desc{font-size:13px; line-height:1.95; color:var(--body);}
+.gd-body{flex:1; padding:26px 26px 0;}
+.field{margin-bottom:20px;}
+.field-l{font-size:11px; letter-spacing:2px; color:var(--mut); margin-bottom:9px;}
+.field-i{
+  width:100%; border:1px solid var(--line); background:var(--paper);
+  border-radius:2px; padding:14px 16px; font-family:inherit; font-size:16px;
+  color:var(--ink); outline:none; transition:border-color .15s;
+}
+.field-i:focus{border-color:var(--teal2);}
+.field-i::placeholder{color:#C3CCC9; font-size:14px;}
+.agree{
+  display:flex; gap:11px; align-items:flex-start; cursor:pointer;
+  padding:14px 16px; background:var(--paper); border:1px solid var(--line);
+  border-radius:2px; margin-bottom:16px;
+}
+.agree .bx{
+  flex:0 0 18px; width:18px; height:18px; border:1px solid #C0CBC7;
+  border-radius:2px; margin-top:1px; position:relative; transition:.15s;
+}
+.agree.sel .bx{background:var(--teal); border-color:var(--teal);}
+.agree.sel .bx:after{
+  content:""; position:absolute; left:5px; top:2px; width:5px; height:9px;
+  border:1.5px solid #fff; border-top:none; border-left:none; transform:rotate(42deg);
+}
+.agree .tx{font-size:12.5px; line-height:1.7; color:var(--body);}
+.privacy{
+  font-size:11px; line-height:1.85; color:var(--mut);
+  padding-left:13px; border-left:2px solid var(--line);
+}
+.privacy b{color:var(--teal); font-weight:500;}
+.gd-bot{padding:20px 26px 34px;}
+
+/* ---------- 开场对话 ---------- */
+#s-intro{background:var(--dark);}
+.in-top{padding:50px 26px 0;}
+.in-role{display:flex; align-items:center; gap:14px; margin-bottom:28px;}
+.in-av{
+  width:46px; height:46px; border-radius:50%; flex:0 0 46px;
+  background:linear-gradient(160deg,#1C5559,#0A3F45);
+  border:1px solid rgba(201,162,75,.45);
+  display:flex; align-items:center; justify-content:center;
+  font-family:"Songti SC",serif; font-size:19px; color:var(--gold-l);
+}
+.in-role .nm{font-size:13.5px; color:#F3F0E7; letter-spacing:1px;}
+.in-role .tg{font-size:10px; letter-spacing:1.8px; color:#6E9498; margin-top:4px;}
+.in-body{flex:1; padding:0 26px; display:flex; flex-direction:column; justify-content:center;}
+.bub{
+  background:rgba(255,255,255,.055); border-left:2px solid var(--gold);
+  padding:18px 20px; margin-bottom:14px; border-radius:0 3px 3px 0;
+  font-size:14.5px; line-height:1.95; color:#DCEAE8;
+  opacity:0; transform:translateY(10px); animation:bubIn .5s forwards;
+}
+.bub b{color:var(--gold-l); font-weight:500;}
+.bub .em{font-family:"Songti SC",serif; font-size:16px;}
+.bub:nth-child(1){animation-delay:.1s;}
+.bub:nth-child(2){animation-delay:.55s;}
+.bub:nth-child(3){animation-delay:1s;}
+@keyframes bubIn{to{opacity:1;transform:translateY(0);}}
+.in-bot{padding:22px 26px 38px;}
+
+/* ---------- 答题 ---------- */
+#s-quiz{background:var(--cream);}
+.qz-top{
+  padding:20px 22px 0; background:var(--cream);
+  border-bottom:1px solid #EDE9DD; padding-bottom:16px; flex:0 0 auto;
+}
+.qz-bar{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+.qz-step{font-size:10.5px; letter-spacing:2px; color:var(--mut);}
+.qz-pts{font-size:11px; letter-spacing:1px; color:var(--gold-d); font-weight:600;}
+.qz-pts b{font-family:"Songti SC",serif; font-size:15px;}
+.qz-nodes{display:flex; gap:7px;}
+.qz-nodes i{
+  flex:1; height:3px; background:#E2DED1; border-radius:2px;
+  transition:background .4s;
+}
+.qz-nodes i.done{background:var(--gold);}
+.qz-nodes i.now{background:var(--teal2);}
+.qz-body{flex:1; padding:24px 22px 0; overflow-y:auto;}
+.qz-gate{
+  display:inline-flex; align-items:center; gap:8px; margin-bottom:16px;
+}
+.qz-gate .dot{width:5px; height:5px; border-radius:50%; background:var(--seal);}
+.qz-gate span{font-size:10.5px; letter-spacing:2px; color:var(--gold-d); font-weight:600;}
+.qz-q{
+  font-family:"Songti SC",serif; font-size:23px; line-height:1.6;
+  letter-spacing:.5px; color:var(--ink); margin-bottom:22px;
+}
+.qz-q .num{
+  font-family:"PingFang SC",sans-serif; font-size:12px; color:var(--gold);
+  letter-spacing:1px; display:block; margin-bottom:8px; font-weight:600;
+}
+.opt{
+  display:flex; gap:13px; align-items:flex-start;
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:2px; padding:15px 16px; margin-bottom:9px;
+  cursor:pointer; transition:.16s;
+}
+.opt .k{
+  flex:0 0 21px; width:21px; height:21px; border-radius:50%;
+  border:1px solid #C7D0CD; display:flex; align-items:center; justify-content:center;
+  font-size:11px; color:var(--mut); margin-top:1px; transition:.16s;
+}
+.opt .t{font-size:14.5px; line-height:1.6; color:var(--ink);}
+.opt:active{transform:scale(.99);}
+.opt.dead{opacity:.34; pointer-events:none;}
+.opt.ok{border-color:var(--gold); background:#FAF6E9;}
+.opt.ok .k{border-color:var(--gold); background:var(--gold); color:#fff;}
+.opt.ok .t{color:#5C4A16; font-weight:500;}
+.opt.no{border-color:#D3C6C2; background:#FAF5F3; animation:shake .36s;}
+.opt.no .k{border-color:#C0A9A3; color:#A08A85;}
+@keyframes shake{
+  0%,100%{transform:translateX(0);} 20%{transform:translateX(-6px);}
+  45%{transform:translateX(5px);} 70%{transform:translateX(-3px);}
+}
+
+/* 提示条 */
+.tip{
+  margin-top:4px; padding:12px 15px; background:#F1EFE6;
+  border-left:2px solid var(--gold); font-size:12.5px; line-height:1.85;
+  color:var(--body); display:none;
+}
+.tip.on{display:block; animation:bubIn .3s forwards;}
+.tip b{color:var(--gold-d); letter-spacing:.5px;}
+
+/* 答题后知识卡 */
+.know{
+  margin-top:16px; padding:17px 18px; background:var(--dark);
+  border-radius:2px; position:relative; overflow:hidden;
+  display:none;
+}
+.know.on{display:block; animation:bubIn .4s forwards;}
+.know .kh{
+  font-size:9.5px; letter-spacing:2.4px; color:var(--gold);
+  margin-bottom:9px; display:flex; align-items:center; gap:7px;
+}
+.know .kh:before{content:""; width:14px; height:1px; background:var(--gold);}
+.know .kt{font-size:13px; line-height:1.9; color:#DCEAE8;}
+.know .kt b{color:var(--gold-l); font-weight:500;}
+.know .gain{
+  margin-top:13px; padding-top:12px; border-top:1px solid #1C4C51;
+  display:flex; align-items:center; gap:16px;
+  font-size:11px; letter-spacing:1px; color:#8FB0B1;
+}
+.know .gain .p{color:var(--gold-l); font-weight:600; font-size:12.5px;}
+
+.qz-bot{padding:16px 22px 30px; flex:0 0 auto;}
+.qz-foot{
+  margin-top:14px; text-align:center; font-size:10.5px;
+  letter-spacing:1.6px; color:#B3BDB9;
+}
+
+/* 连击 */
+.combo{
+  position:absolute; right:22px; top:52px; text-align:right;
+  opacity:0; transform:translateY(6px) scale(.9); transition:.28s;
+  pointer-events:none;
+}
+.combo.on{opacity:1; transform:none;}
+.combo .n{
+  font-family:"Songti SC",serif; font-size:26px; color:var(--seal);
+  line-height:1; font-weight:600;
+}
+.combo .l{font-size:9px; letter-spacing:2px; color:var(--seal); opacity:.75; margin-top:2px;}
+
+/* 飘分 */
+.float-pt{
+  position:fixed; font-family:"Songti SC",serif; font-size:24px;
+  color:var(--gold-d); font-weight:600; pointer-events:none; z-index:99;
+  animation:floatUp 1s ease-out forwards;
+}
+@keyframes floatUp{
+  0%{opacity:0; transform:translateY(0) scale(.8);}
+  25%{opacity:1; transform:translateY(-10px) scale(1.05);}
+  100%{opacity:0; transform:translateY(-58px) scale(1);}
+}
+
+/* ---------- 结算 ---------- */
+#s-result{background:var(--dark);}
+.rs-body{flex:1; padding:36px 22px 0; display:flex; flex-direction:column; align-items:center;}
+.rs-eyebrow{font-size:10px; letter-spacing:3.5px; color:var(--gold); margin-bottom:16px;}
+.rs-lead{
+  font-family:"Songti SC",serif; font-size:22px; letter-spacing:1.5px;
+  color:#F3F0E7; margin-bottom:24px; text-align:center;
+}
+
+.passport{
+  width:100%; background:var(--cream); border-radius:3px; overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.4); position:relative;
+}
+.pp-top{
+  background:var(--teal); padding:16px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.pp-top .l{font-size:10px; letter-spacing:2.6px; color:var(--gold-l);}
+.pp-top .r{font-family:"Songti SC",serif; font-size:11px; color:#A9C3C1; letter-spacing:1px;}
+.pp-main{padding:22px 20px 0;}
+.pp-name{
+  font-family:"Songti SC",serif; font-size:30px; letter-spacing:3px;
+  color:var(--ink); line-height:1.3;
+}
+.pp-no{
+  font-family:ui-monospace,monospace; font-size:12.5px; color:var(--mut);
+  letter-spacing:1.5px; margin-top:7px;
+}
+.pp-rank{
+  display:inline-block; margin-top:16px; padding:5px 13px;
+  background:var(--gold); color:#3a2d0d;
+  font-size:11.5px; letter-spacing:2px; font-weight:600; border-radius:2px;
+}
+.pp-stats{
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px;
+  background:var(--line); margin:22px 0 0;
+}
+.pp-stats div{background:var(--cream); padding:14px 10px; text-align:center;}
+.pp-stats .v{
+  font-family:"Songti SC",serif; font-size:21px; color:var(--teal);
+  line-height:1.2;
+}
+.pp-stats .v small{font-size:11px; color:var(--mut); margin-left:1px;}
+.pp-stats .k{font-size:9.5px; letter-spacing:1.6px; color:var(--mut); margin-top:5px;}
+.pp-seal{
+  position:absolute; right:16px; top:66px; width:74px; height:74px;
+  border:2.5px solid var(--seal); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--seal); opacity:0;
+  transform:scale(2.2) rotate(-24deg);
+  transition:transform .42s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+}
+.pp-seal.on{opacity:.88; transform:scale(1) rotate(-13deg);}
+.pp-seal .in{
+  text-align:center; font-family:"Songti SC",serif;
+  font-size:13px; line-height:1.25; letter-spacing:1px; font-weight:600;
+}
+.pp-foot{
+  padding:16px 20px 18px; border-top:1px dashed #D5D0C1;
+  font-size:11px; line-height:1.85; color:var(--mut);
+}
+.pp-foot b{color:var(--teal); font-weight:500;}
+
+.rs-note{
+  margin-top:20px; padding:16px 18px; background:rgba(255,255,255,.055);
+  border-left:2px solid var(--gold); width:100%;
+  font-size:12.5px; line-height:1.9; color:#C7D8D6;
+}
+.rs-note b{color:var(--gold-l); font-weight:500;}
+.rs-bot{padding:22px 22px 34px; width:100%;}
+
+/* 奖牌 */
+.medal-row{display:flex; gap:8px; margin-top:18px; width:100%;}
+.medal{
+  flex:1; text-align:center; padding:11px 4px; border-radius:2px;
+  border:1px solid rgba(255,255,255,.14);
+  font-size:9.5px; letter-spacing:1px; color:#6E9498;
+  background:rgba(255,255,255,.03);
+}
+.medal.on{border-color:var(--gold); color:var(--gold-l); background:rgba(201,162,75,.1);}
+.medal .ic{font-family:"Songti SC",serif; font-size:15px; display:block; margin-bottom:4px; opacity:.5;}
+.medal.on .ic{opacity:1;}
+
+/* toast */
+#toast{
+  position:fixed; left:50%; bottom:80px; transform:translateX(-50%) translateY(14px);
+  background:rgba(7,54,60,.95); color:#F3F0E7; font-size:12.5px;
+  letter-spacing:1px; padding:11px 20px; border-radius:2px;
+  opacity:0; pointer-events:none; transition:.25s; z-index:120; white-space:nowrap;
+  border:1px solid rgba(201,162,75,.35);
+}
+#toast.on{opacity:1; transform:translateX(-50%) translateY(0);}
+
+@media(max-height:700px){
+  .cov-h1{font-size:48px;}
+  .qz-q{font-size:20px; margin-bottom:16px;}
+  .pp-name{font-size:25px;}
+  .gz-body,.qz-body{padding-top:16px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ============ 封面 ============ -->
+<div class="screen on" id="s-cover">
+  <svg class="ink-deco" viewBox="0 0 430 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="inkg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0E5C63" stop-opacity="0"/>
+        <stop offset="1" stop-color="#0E5C63" stop-opacity=".55"/>
+      </linearGradient>
+    </defs>
+    <path d="M-20 620 C 90 590, 150 660, 240 640 C 330 620, 380 560, 460 585"
+      fill="none" stroke="url(#inkg)" stroke-width="46" stroke-linecap="round"/>
+    <path d="M-20 700 C 110 670, 180 740, 280 715 C 370 692, 400 650, 460 668"
+      fill="none" stroke="url(#inkg)" stroke-width="22" stroke-linecap="round" opacity=".7"/>
+    <circle cx="370" cy="120" r="68" fill="none" stroke="#C9A24B" stroke-opacity=".13"/>
+    <circle cx="370" cy="120" r="98" fill="none" stroke="#C9A24B" stroke-opacity=".07"/>
+  </svg>
+
+  <div class="cov-top">
+    <div class="cov-mark">小小河工　·　体验版</div>
+    <div class="cov-rule"></div>
+    <div class="cov-h1">见习<br>河工</div>
+    <div class="cov-sub">上岗考核</div>
+    <div class="cov-line">
+      六道题，两分钟。<br>
+      答对四道就算过关。<br>
+      答完领到你的 <b>护照号</b>，<br>
+      带着它，去清河上第一班。
+    </div>
+  </div>
+
+  <div class="cov-bot">
+    <div class="cov-meta">
+      <span>23.6 公里</span><span>十座水闸</span><span>六道题</span>
+    </div>
+    <div class="cov-prev" id="cov-prev" style="display:none">
+      <div class="t">你的护照已经在这里了</div>
+      <div class="n"><b id="prev-no">NO.0000</b>　<span id="prev-name">小小河工</span>　<span id="prev-rank">见习河工</span></div>
+    </div>
+    <button class="btn btn-gold" id="btn-start">开始考核</button>
+    <div class="cov-tip">现场体验　·　约 2 分钟　·　无需下载</div>
+  </div>
+</div>
+
+<!-- ============ 家长确认 ============ -->
+<div class="screen" id="s-guardian">
+  <div class="gd-head">
+    <div class="eyebrow">第一步　·　建档</div>
+    <h1 class="gd-h1">这本护照是给孩子的，<br>所以<em>请家长来填</em>。</h1>
+    <p class="gd-desc">
+      按现行规定，未成年人的账号需要监护人代为注册。
+      这一页由家长完成，孩子只管在后面答题。
+    </p>
+  </div>
+
+  <div class="gd-body">
+    <div class="field">
+      <div class="field-l">孩子怎么称呼</div>
+      <input class="field-i" id="in-name" maxlength="8" placeholder="写个小名就行，比如「小石头」" autocomplete="off">
+    </div>
+
+    <div class="agree" id="agree">
+      <div class="bx"></div>
+      <div class="tx">我是孩子的家长或监护人，代其注册这本护照</div>
+    </div>
+
+    <div class="privacy">
+      我们只保存 <b>这个昵称</b> 和 <b>一个护照编号</b>。<br>
+      不收集孩子的真实姓名、生日、手机号、位置。<br>
+      本次为异地体验，不涉及实地定位与照片上传。
+    </div>
+  </div>
+
+  <div class="gd-bot">
+    <button class="btn btn-teal" id="btn-make" disabled>生成护照</button>
+  </div>
+</div>
+
+<!-- ============ 开场 ============ -->
+<div class="screen" id="s-intro">
+  <div class="in-top">
+    <div class="in-role">
+      <div class="in-av">闸</div>
+      <div>
+        <div class="nm">看闸人　老周</div>
+        <div class="tg">清河 · 安河闸　·　工龄 31 年</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="in-body">
+    <div class="bub">欢迎上工。<br>我是这一段的看闸人，姓周。</div>
+    <div class="bub">在拿到第一枚章之前，先认认这条河——<br>它 <span class="em">23.6 公里</span>，<b>十座闸</b>，从西山一直流到温榆河。</div>
+    <div class="bub">六道题。答对四道就算过关。<br>答错了不要紧，<b>我在这儿</b>。</div>
+  </div>
+
+  <div class="in-bot">
+    <button class="btn btn-gold" id="btn-go">第一题</button>
+  </div>
+</div>
+
+<!-- ============ 答题 ============ -->
+<div class="screen" id="s-quiz">
+  <div class="qz-top">
+    <div class="qz-bar">
+      <div class="qz-step" id="q-step">第 1 题　/　共 6 题</div>
+      <div class="qz-pts">积分 <b id="q-pts">0</b></div>
+    </div>
+    <div class="qz-nodes" id="q-nodes"></div>
+    <div class="combo" id="combo"><div class="n">×2</div><div class="l">连　击</div></div>
+  </div>
+
+  <div class="qz-body">
+    <div class="qz-gate"><span class="dot"></span><span id="q-gate">清河干流</span></div>
+    <div class="qz-q" id="q-text"></div>
+    <div id="q-opts"></div>
+    <div class="tip" id="q-tip"></div>
+    <div class="know" id="q-know">
+      <div class="kh">知识卡</div>
+      <div class="kt" id="q-kt"></div>
+      <div class="gain">
+        <span class="p" id="q-gain">+20</span>
+        <span id="q-gain-l">积分已计入护照</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="qz-bot">
+    <button class="btn btn-teal" id="btn-next" disabled>下一题</button>
+    <div class="qz-foot" id="q-foot">清河 · 十闸 · 二十三公里</div>
+  </div>
+</div>
+
+<!-- ============ 结算 ============ -->
+<div class="screen" id="s-result">
+  <div class="rs-body">
+    <div class="rs-eyebrow">考核完成</div>
+    <div class="rs-lead" id="r-lead">你已经是见习河工了。</div>
+
+    <div class="passport">
+      <div class="pp-top">
+        <span class="l">河　工　护　照</span>
+        <span class="r">北京 · 清河</span>
+      </div>
+      <div class="pp-main">
+        <div class="pp-name" id="r-name">小石头</div>
+        <div class="pp-no" id="r-no">NO.0371</div>
+        <div class="pp-rank" id="r-rank">见习河工</div>
+        <div class="pp-stats">
+          <div><div class="v" id="r-pts">0</div><div class="k">初始积分</div></div>
+          <div><div class="v" id="r-right">0<small>/6</small></div><div class="k">一次答对</div></div>
+          <div><div class="v" id="r-km">0<small>km</small></div><div class="k">待巡里程</div></div>
+        </div>
+      </div>
+      <div class="pp-seal" id="r-seal"><div class="in">见习<br>河工</div></div>
+      <div class="pp-foot">
+        本证由 <b>小小河工</b> 发放。凭此编号可在正式版输入，
+        <b>积分与身份原样带入</b>，不必重头再考。
+      </div>
+    </div>
+
+    <div class="medal-row" id="r-medals">
+      <div class="medal" data-m="gold"><span class="ic">金</span>金牌见习</div>
+      <div class="medal" data-m="silver"><span class="ic">银</span>银牌见习</div>
+      <div class="medal" data-m="bronze"><span class="ic">铜</span>铜牌见习</div>
+    </div>
+
+    <div class="rs-note" id="r-note"></div>
+  </div>
+
+  <div class="rs-bot">
+    <button class="btn btn-gold" id="btn-share">保存我的护照</button>
+    <button class="btn btn-line on-dark" id="btn-again" style="margin-top:10px">换一位体验者</button>
+  </div>
+</div>
+
+</div>
+<div id="toast"></div>
+
+<script>
+/* ============ 题库 ============ */
+const QS=[
+  {gate:'清河干流',
+   q:'清河，从西山碧云寺流到温榆河口。<br>它一共有多少公里？',
+   opts:['12.8 公里','23.6 公里','41.2 公里','没量过，反正挺长'],
+   ans:1,
+   hint:'十座水闸把它分成了十段，平均每段两公里出头。',
+   k:'清河干流 <b>23.6 公里</b>。西起西山碧云寺，东至温榆河口，沿线十座水闸、四条支流、六处古迹。'},
+
+  {gate:'安河闸　·　第 1 站',
+   q:'1965 年建成、被叫作「清0」的那一座，<br>是十座闸里的哪一个？',
+   opts:['肖家河闸','安河闸','树村闸','沈家闸'],
+   ans:1,
+   hint:'它就在京密引水渠东岸，南距颐和园北如意门约一公里。',
+   k:'<b>安河闸</b>是清河的零公里起点。1965 年建，2008、2014 两次改建，双孔平板钢闸门，主要管泄洪。'},
+
+  {gate:'树村闸　·　第 3 站',
+   q:'闸上带楼、闸桥一体，<br>被公认为十座闸里最美的一座是——',
+   opts:['京包闸','下清河闸','树村闸','羊坊闸'],
+   ans:2,
+   hint:'它就在圆明园正北，一座楼就长在闸上面。',
+   k:'<b>树村闸</b>在圆明园正北，闸上带楼、闸桥一体。十座闸里，只有它既是水利设施，也是一处景。'},
+
+  {gate:'沙子营闸　·　第 10 站',
+   q:'十座闸里，唯一一座翻板式钢闸——<br>全开时会平躺下来，可以当桥走。它是？',
+   opts:['外环跌水闸','沙子营闸','沈家闸','清河闸'],
+   ans:1,
+   hint:'它在清河的尾端，再往东就是温榆河了。',
+   k:'<b>沙子营闸</b>在清河尾端，是唯一的翻板式钢闸。闸门全开时平卧河底，人可以直接走过去。'},
+
+  {gate:'外环跌水闸　·　第 8 站',
+   q:'十座闸里，唯一一座其实不是「闸」、<br>而是「拦水坝」的，是哪一座？',
+   opts:['外环跌水闸','羊坊闸','京包闸','肖家河闸'],
+   ans:0,
+   hint:'它在地铁 13 号线外 150 米，名字里就写着它的作用。',
+   k:'<b>外环跌水闸</b>是十座里唯一的拦水坝。它不开关，只负责把水位落差消化掉——所以水声最大。'},
+
+  {gate:'上岗须知　·　各自记下',
+   q:'你走到河边，二十米外的浅滩上<br>站着一只白鹭。你该怎么做？',
+   opts:['走近一点，拍清楚些','原地站着看，不靠近','扔块石头，看它飞起来','大声叫朋友一起来看'],
+   ans:1,
+   hint:'记录的目的是看见它，不是惊动它。',
+   k:'观察水鸟时<b>保持距离</b>。<br>这条河真正需要的记录者，是不打扰它的那一种。'}
+];
+
+/* ============ 状态 ============ */
+const KEY='xxhg_passport_v1';
+let S={name:'', no:'', pts:0, i:0, right:0, combo:0, firstTry:true, answered:false, locked:false};
+
+const $=id=>document.getElementById(id);
+function show(id){
+  document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));
+  $(id).classList.add('on');
+  const el=$(id); if(el) el.scrollTop=0;
+}
+function toast(m){
+  const t=$('toast'); t.textContent=m; t.classList.add('on');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'),1900);
+}
+
+/* ============ 封面 ============ */
+function boot(){
+  let saved=null;
+  try{ saved=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){}
+  if(saved && saved.no){
+    S.name=saved.name; S.no=saved.no; S.pts=saved.pts||0;
+    $('cov-prev').style.display='block';
+    $('prev-no').textContent=saved.no;
+    $('prev-name').textContent=saved.name;
+    $('prev-rank').textContent=saved.rank||'见习河工';
+    $('btn-start').textContent='继续我的考核';
+  }
+}
+boot();
+
+$('btn-start').onclick=()=>{
+  if(S.no){ startQuiz(); } else { show('s-guardian'); }
+};
+
+/* ============ 家长确认 ============ */
+const inName=$('in-name'), agree=$('agree'), btnMake=$('btn-make');
+function chk(){
+  btnMake.disabled=!(inName.value.trim().length>=1 && agree.classList.contains('sel'));
+}
+inName.addEventListener('input',chk);
+agree.onclick=()=>{ agree.classList.toggle('sel'); chk(); };
+
+btnMake.onclick=()=>{
+  const n=inName.value.trim().slice(0,8);
+  if(!n) return;
+  S.name=n;
+  S.no='NO.'+String(Math.floor(Math.random()*9000)+1000);
+  save();
+  startQuiz();
+};
+
+/* ============ 开场 ============ */
+$('btn-go').onclick=()=>{ show('s-quiz'); render(); };
+function startQuiz(){ show('s-intro'); }
+
+/* ============ 存档 ============ */
+function save(rank){
+  try{
+    localStorage.setItem(KEY, JSON.stringify({
+      name:S.name, no:S.no, pts:S.pts, rank:rank||rankOf(), ts:Date.now()
+    }));
+  }catch(e){}
+}
+function rankOf(){
+  if(S.right>=6) return '见习河工 · 金';
+  if(S.right>=5) return '见习河工 · 银';
+  return '见习河工';
+}
+
+/* ============ 渲染题目 ============ */
+function render(){
+  const q=QS[S.i];
+  S.answered=false; S.firstTry=true; S.locked=false;
+
+  $('q-step').textContent=`第 ${S.i+1} 题　/　共 ${QS.length} 题`;
+  $('q-pts').textContent=S.pts;
+  $('q-gate').textContent=q.gate;
+  $('q-text').innerHTML=`<span class="num">Q ${String(S.i+1).padStart(2,'0')}</span>${q.q}`;
+
+  // 进度节点
+  const nd=$('q-nodes'); nd.innerHTML='';
+  QS.forEach((_,k)=>{
+    const i=document.createElement('i');
+    if(k<S.i) i.className='done';
+    else if(k===S.i) i.className='now';
+    nd.appendChild(i);
+  });
+
+  // 选项
+  const box=$('q-opts'); box.innerHTML='';
+  q.opts.forEach((t,k)=>{
+    const d=document.createElement('div');
+    d.className='opt';
+    d.innerHTML=`<span class="k">${'ABCD'[k]}</span><span class="t">${t}</span>`;
+    d.onclick=()=>pick(k,d);
+    box.appendChild(d);
+  });
+
+  $('q-tip').className='tip';
+  $('q-know').className='know';
+  $('btn-next').disabled=true;
+  $('btn-next').textContent=S.i>=QS.length-1?'看看我的护照':'下一题';
+  document.querySelector('.qz-body').scrollTop=0;
+  updateCombo();
+}
+
+function updateCombo(){
+  const c=$('combo');
+  if(S.combo>=2){ c.classList.add('on'); c.querySelector('.n').textContent='×'+S.combo; }
+  else c.classList.remove('on');
+}
+
+function pick(k,el){
+  const q=QS[S.i];
+  if(S.locked) return;
+
+  if(k===q.ans){
+    // 正确
+    S.locked=true;
+    const all=[...document.querySelectorAll('#q-opts .opt')];
+    all.forEach(o=>o.classList.add('dead'));
+    el.classList.remove('dead'); el.classList.add('ok');
+
+    S.combo++;
+    let gain=20, note='积分已计入护照';
+    if(S.firstTry){ gain+=10; note='一次答对　·　额外 +10'; }
+    if(S.combo>=3){ gain+=10; note='连击 ×'+S.combo+'　·　额外 +10'; }
+    S.pts+=gain;
+    if(S.firstTry) S.right++;
+
+    $('q-pts').textContent=S.pts;
+    $('q-gain').textContent='+'+gain;
+    $('q-gain-l').textContent=note;
+    $('q-kt').innerHTML=q.k;
+    $('q-know').classList.add('on');
+    $('q-tip').className='tip';
+    $('btn-next').disabled=false;
+
+    floatPt(gain);
+    updateCombo();
+    sealFlash();
+    setTimeout(()=>{ const b=document.querySelector('.qz-body'); b.scrollTop=b.scrollHeight; },120);
+
+  }else{
+    // 错误
+    el.classList.add('no','dead');
+    S.firstTry=false;
+    S.combo=0;
+    updateCombo();
+    const t=$('q-tip');
+    t.innerHTML=`<b>老周说</b>　${q.hint}<br>再试试，答错不扣分。`;
+    t.classList.add('on');
+    setTimeout(()=>{ const b=document.querySelector('.qz-body'); b.scrollTop=b.scrollHeight; },80);
+  }
+}
+
+function floatPt(n){
+  const r=document.querySelector('.qz-pts').getBoundingClientRect();
+  const d=document.createElement('div');
+  d.className='float-pt'; d.textContent='+'+n;
+  d.style.left=(r.left-26)+'px'; d.style.top=(r.top-6)+'px';
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),1000);
+}
+
+function sealFlash(){
+  if(navigator.vibrate) navigator.vibrate(14);
+}
+
+$('btn-next').onclick=()=>{
+  S.i++;
+  if(S.i>=QS.length){ finish(); }
+  else render();
+};
+
+/* ============ 结算 ============ */
+function finish(){
+  const rank=rankOf();
+  save(rank);
+
+  $('r-name').textContent=S.name;
+  $('r-no').textContent=S.no;
+  $('r-rank').textContent=rank;
+  $('r-right').innerHTML=S.right+'<small>/'+QS.length+'</small>';
+  $('r-km').innerHTML='0<small>km</small>';
+  $('r-seal').querySelector('.in').innerHTML = S.right>=6?'金牌\n见习'.replace('\n','<br>')
+    : (S.right>=5?'银牌<br>见习':'见习<br>河工');
+
+  document.querySelectorAll('.medal').forEach(m=>{
+    const g=m.dataset.m;
+    const earned = (g==='gold'&&S.right>=6)||(g==='silver'&&S.right===5)||(g==='bronze'&&S.right<5);
+    m.classList.toggle('on',earned);
+  });
+
+  const notes={
+    high:'六道一次全对。老周说，这样的人上手最快——你已经可以领第一段河了。',
+    mid:'五道一次答对。差一点就是金牌，那一道多半是被我的提示骗了。',
+    low:'过了。记住答错的那几道，正式版里还会再问一次——这次算预习。'
+  };
+  $('r-lead').innerHTML = S.right>=6?'满分。<br>你已经可以领一段河了。'
+    : (S.right>=5?'很不错。<br>你现在是见习河工了。'
+    : '过了。<br>现在是见习河工了。');
+  $('r-note').innerHTML = S.right>=6? notes.high : (S.right>=5? notes.mid : notes.low);
+
+  show('s-result');
+  // 数字滚动
+  roll($('r-pts'), S.pts, 620);
+  setTimeout(()=>$('r-seal').classList.add('on'), 380);
+}
+
+function roll(el,target,dur){
+  const t0=performance.now();
+  let done=false;
+  function fin(){ if(done) return; done=true; el.textContent=target; }
+  function step(t){
+    if(done) return;
+    let p=(t-t0)/dur;
+    if(!isFinite(p)) p=1;
+    p=Math.max(0,Math.min(1,p));
+    const e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(target*e);
+    if(p<1) requestAnimationFrame(step); else fin();
+  }
+  requestAnimationFrame(step);
+  setTimeout(fin, dur+120);
+}
+
+/* ============ 护照导出为图片 ============ */
+function exportPassport(){
+  const W=900,H=1080, P=64;
+  const c=document.createElement('canvas');
+  c.width=W; c.height=H;
+  const x=c.getContext('2d');
+  const SERIF='"Songti SC","STSong",serif';
+  const SANS='"PingFang SC","Hiragino Sans GB",sans-serif';
+
+  // 底
+  x.fillStyle='#07363C'; x.fillRect(0,0,W,H);
+
+  // 卡片
+  const cx=P, cy=96, cw=W-P*2, ch=812, r=6;
+  function rr(a,b,w,h,rad){
+    x.beginPath();
+    x.moveTo(a+rad,b);
+    x.arcTo(a+w,b,a+w,b+h,rad);
+    x.arcTo(a+w,b+h,a,b+h,rad);
+    x.arcTo(a,b+h,a,b,rad);
+    x.arcTo(a,b,a+w,b,rad);
+    x.closePath();
+  }
+  x.fillStyle='#F7F4EC'; rr(cx,cy,cw,ch,r); x.fill();
+
+  // 顶部 teal 条
+  x.save(); x.beginPath(); rr(cx,cy,cw,ch,r); x.clip();
+  x.fillStyle='#0E5C63'; x.fillRect(cx,cy,cw,86);
+  x.restore();
+
+  x.fillStyle='#E4C987';
+  x.font='500 21px '+SANS;
+  x.fillText('河　工　护　照', cx+38, cy+54);
+  x.fillStyle='#A9C3C1';
+  x.font='400 19px '+SANS;
+  x.textAlign='right';
+  x.fillText('北京 · 清河', cx+cw-38, cy+54);
+  x.textAlign='left';
+
+  // 姓名
+  x.fillStyle='#1B2A2A';
+  x.font='400 68px '+SERIF;
+  x.fillText(S.name, cx+38, cy+190);
+
+  // 编号
+  x.fillStyle='#8B9998';
+  x.font='400 22px ui-monospace,monospace';
+  x.fillText(S.no, cx+40, cy+228);
+
+  // 职级标签
+  const rank=rankOf();
+  x.font='600 21px '+SANS;
+  const rw=x.measureText(rank).width+44;
+  x.fillStyle='#C9A24B';
+  x.fillRect(cx+38, cy+256, rw, 44);
+  x.fillStyle='#3a2d0d';
+  x.fillText(rank, cx+60, cy+285);
+
+  // 朱印
+  if(true){
+    const sx=cx+cw-152, sy=cy+96, sr=62;
+    x.save();
+    x.translate(sx+sr, sy+sr); x.rotate(-13*Math.PI/180);
+    x.strokeStyle='rgba(181,67,47,.85)'; x.lineWidth=5;
+    x.beginPath(); x.arc(0,0,sr,0,Math.PI*2); x.stroke();
+    x.fillStyle='rgba(181,67,47,.9)';
+    x.font='600 26px '+SERIF; x.textAlign='center';
+    const t1=S.right>=6?'金牌':(S.right>=5?'银牌':'见习');
+    const t2=S.right>=5?'见习':'河工';
+    x.fillText(t1,0,-6); x.fillText(t2,0,28);
+    x.restore();
+    x.textAlign='left';
+  }
+
+  // 分隔 + 三栏数据
+  const sy2=cy+360;
+  x.strokeStyle='#DCE3DF'; x.lineWidth=2;
+  x.beginPath(); x.moveTo(cx+38,sy2); x.lineTo(cx+cw-38,sy2); x.stroke();
+
+  const cols=[
+    {v:String(S.pts), k:'初始积分'},
+    {v:S.right+'/6', k:'一次答对'},
+    {v:'0km', k:'待巡里程'}
+  ];
+  const colW=cw/3;
+  cols.forEach((col,i)=>{
+    const px=cx+colW*i+colW/2;
+    if(i>0){
+      x.strokeStyle='#E4E0D4'; x.lineWidth=1.5;
+      x.beginPath(); x.moveTo(cx+colW*i, sy2+30); x.lineTo(cx+colW*i, sy2+160); x.stroke();
+    }
+    x.fillStyle='#0E5C63'; x.font='400 52px '+SERIF; x.textAlign='center';
+    x.fillText(col.v, px, sy2+104);
+    x.fillStyle='#8B9998'; x.font='400 19px '+SANS;
+    x.fillText(col.k, px, sy2+146);
+  });
+  x.textAlign='left';
+
+  // 说明
+  const ny=cy+560;
+  x.strokeStyle='#D5D0C1'; x.lineWidth=1.5;
+  x.setLineDash([8,7]);
+  x.beginPath(); x.moveTo(cx+38,ny); x.lineTo(cx+cw-38,ny); x.stroke();
+  x.setLineDash([]);
+
+  x.fillStyle='#4A5A59'; x.font='400 20px '+SANS;
+  const lines=[
+    '本证由 小小河工 发放。凭此编号在正式版输入，',
+    '积分与身份原样带入，不必重头再考。'
+  ];
+  lines.forEach((l,i)=> x.fillText(l, cx+38, ny+48+i*36));
+
+  x.fillStyle='#8B9998'; x.font='400 18px '+SANS;
+  x.fillText('签发　'+new Date().toLocaleDateString('zh-CN'), cx+38, ny+150);
+  x.fillText('清　河　·　二　十　三　点　六　公　里', cx+38, ny+186);
+
+  // 页脚
+  x.fillStyle='#6E9498'; x.font='400 18px '+SANS;
+  x.textAlign='center';
+  x.fillText('小 小 河 工 · A I + 公 民 河 流 教 育 计 划', W/2, cy+ch+72);
+  x.fillStyle='#3F6A6E'; x.font='400 16px '+SANS;
+  x.fillText('下次去清河，记得带上它', W/2, cy+ch+108);
+  x.textAlign='left';
+
+  return c;
+}
+
+$('btn-share').onclick=()=>{
+  try{
+    const c=exportPassport();
+    const url=c.toDataURL('image/png');
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='小小河工护照-'+S.no.replace('NO.','')+'.png';
+    document.body.appendChild(a); a.click(); a.remove();
+
+    // 预览浮层（移动端微信内下载受限时，可长按保存）
+    const mask=document.createElement('div');
+    mask.style.cssText='position:fixed;inset:0;background:rgba(4,26,29,.94);z-index:200;'
+      +'display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+    mask.innerHTML='<img src="'+url+'" style="max-width:100%;max-height:78vh;border-radius:3px;'
+      +'box-shadow:0 20px 60px rgba(0,0,0,.5)">'
+      +'<div style="margin-top:18px;font-size:12px;letter-spacing:1.5px;color:#A9C3C1;text-align:center;line-height:1.9">'
+      +'已生成图片　·　长按可保存到相册<br>'
+      +'<span style="color:#C9A24B">点任意处关闭</span></div>';
+    mask.onclick=()=>mask.remove();
+    document.body.appendChild(mask);
+  }catch(e){
+    toast('这台设备不支持导出，请直接截图');
+  }
+};
+
+$('btn-again').onclick=()=>{
+  S={name:'',no:'',pts:0,i:0,right:0,combo:0,firstTry:true,answered:false,locked:false};
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  inName.value=''; agree.classList.remove('sel'); chk();
+  $('cov-prev').style.display='none';
+  $('btn-start').textContent='开始考核';
+  $('r-seal').classList.remove('on');
+  show('s-cover');
+};
+
+/* 键盘：1-4 选项，Enter 下一题 —— 方便桌面演示 */
+document.addEventListener('keydown',e=>{
+  if(!$('s-quiz').classList.contains('on')) return;
+  if(e.key>='1'&&e.key<='4'){
+    const opts=document.querySelectorAll('#q-opts .opt');
+    const i=+e.key-1;
+    if(opts[i]&&!opts[i].classList.contains('dead')) opts[i].click();
+  }
+  if(e.key==='Enter'&&!$('btn-next').disabled) $('btn-next').click();
+});
+
+/* ============ hash 深链：便于逐屏演示与截图 ============ */
+(function(){
+  const raw=location.hash.replace('#','');
+  if(!raw) return;
+  const parts=raw.split('?');
+  const h=parts[0];
+  const P=new URLSearchParams(parts[1]||'');
+  const demoName=P.get('name');
+
+  const go=()=>{
+    if(h==='guardian'){ show('s-guardian'); chk(); }
+    else if(h==='intro'){
+      S.name=S.name||demoName||'小石头';
+      S.no=S.no||'NO.0371';
+      save(); show('s-intro');
+    }
+    else if(h==='quiz'){
+      S.name=S.name||demoName||'小石头';
+      S.no=S.no||'NO.0371';
+      const at=parseInt(P.get('q')||'0',10);
+      S.i=Math.max(0,Math.min(QS.length-1,at));
+      save(); show('s-quiz'); render();
+    }
+    else if(h==='result'){
+      S.name=S.name||demoName||'小石头';
+      S.no=S.no||'NO.0371';
+      const r=parseInt(P.get('right')||'6',10);
+      S.right=Math.max(0,Math.min(QS.length,r));
+      S.pts=parseInt(P.get('pts')||'190',10);
+      finish();
+    }
+  };
+  if(document.readyState==='complete') go(); else window.addEventListener('load',go);
+})();
+</script>
+</body>
+</html>
