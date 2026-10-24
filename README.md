@@ -112,18 +112,38 @@ https://my.feishu.cn/base/CACyb67OaaFXZPskQQtc6IDTnDc
 选它而不是对象存储的原因：TOS 默认域名对 `text/html` 强制
 `Content-Disposition: attachment`（会变成下载而不是预览），绑自定义域名需要 ICP 备案，暂无备案。
 
+**线上地址**
+https://spia36dgovq41agn99emn.apigateway-cn-beijing.volceapi.com
+
 **部署步骤**
 
 ```bash
 # 1. 同步主文件到部署目录
 python3 deploy_prepare.py
 
-# 2. 部署（需先 vefaas login）
+# 2. 推代码（需先 vefaas login --accessKey xxx --secretKey xxx）
 cd deploy && vefaas push --funcId c3avz9rf --outputPath ./
+
+# 3. 触发发布
+vefaas fn release --id c3avz9rf
 ```
 
-函数：`xiaohegong`（ID `c3avz9rf`，native-node20，512 MB，端口 8080）
-启动命令：`node server.js`
+**资源配置**
+
+| 项 | 值 |
+|---|---|
+| 函数 | `xiaohegong` / `c3avz9rf`（native-node20，512 MB，端口 8080） |
+| 启动命令 | `node server.js` |
+| 网关 | `cybercultivate` / `gd5usigss60ctn1dbli3g`（serverless 型，免托管费） |
+| 网关服务 | `xiaohegong` / `spia36dgovq41agn99emn`（独立域名，与同网关下其他业务隔离） |
+| 路由 | `GET,HEAD /` |
+
+**踩过的坑**
+
+- `vefaas deploy` 不能用——它是「构建 + 输出目录」模式。传已有代码要用 `vefaas push --outputPath`
+- 网关路由用 `vefaas trigger apig bind` 一条命令建（service + upstream + route 一起）
+- 不要先手工 `ve apig CreateUpstream`，会和 CLI 冲突报 `DuplicatedResource`
+- 两个 CLI 凭据分离：`vefaas` 用 `~/.vefaas/auth.enc`，`ve` 用环境变量。切账号要物理移走 `auth.enc` 再 `--accessKey` 登录
 
 ---
 
